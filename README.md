@@ -120,6 +120,8 @@ Set environment variables for backend/frontend via .env files:
 
 **frontend/.env**
 
+**Hint:** copy ```.env.example``` to ```.env``` and fill in the required data before running the project.
+
 
 (Templates will be provided later)
 
