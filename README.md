@@ -84,7 +84,7 @@ Our AI-based system matches users with training programs created by verified coa
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-org/urtraining.git
+git clone https://github.com/IU-Capstone-Project-2025/UrTraining.git
 cd urtraining
 ```
 
