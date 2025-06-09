@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  backend:
+    build: .
+    container_name: urtraining-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: urtraining-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: uruser
+      POSTGRES_PASSWORD: urpassword
+      POSTGRES_DB: urtraining
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
