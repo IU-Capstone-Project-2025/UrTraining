@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import router
+from app.routes.base import router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="UrTraining Backend API")
