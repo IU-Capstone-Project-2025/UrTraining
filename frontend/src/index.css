@@ -26,6 +26,16 @@
 }
 
 @font-face {
+  font-family: 'TT Travels Bold';
+  src: local('TT Travels Bold'), url('./fonts/TTTravels/TTTravels-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'TT Travels Medium';
+  src: local('TT Travels Medium'), url('./fonts/TTTravels/TTTravels-Medium.ttf') format('truetype');
+}
+
+@font-face {
   font-family: 'TT Travels Regular';
   src: local('TT Travels Regular'), url('./fonts/TTTravels/TTTravels-Regular.ttf') format('truetype');
 }

@@ -2,3 +2,28 @@
   max-width: 1280px;
   text-align: center;
 }
+
+.btn-basic-black, .btn-basic-white {
+  font-family: TT Travels Medium;
+  font-size: 20px;
+
+  min-width: 112px;
+  height: 56px;
+  padding: 16px 40px;
+
+  border-radius: 64px;
+}
+
+.btn-basic-black {
+  border: none;
+
+  background-color: #000000;
+  color: #F3F3F3;
+}
+
+.btn-basic-white {
+  border: 2px solid #000000;
+
+  background-color: #F3F3F3;
+  color: #000000;
+}
