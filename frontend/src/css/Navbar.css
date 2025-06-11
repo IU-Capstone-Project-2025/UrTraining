@@ -5,6 +5,7 @@
     padding: 48px 96px;
 
     display: flex;
+    position: absolute;
     justify-content: space-between;
 }
 

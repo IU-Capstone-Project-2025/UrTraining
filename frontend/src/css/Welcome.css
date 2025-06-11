@@ -1,0 +1,47 @@
+.welcome-page {
+    width: 100vw;
+    height: 100vh;
+
+    padding: 0px 96px;
+
+    /*Navbar padding (160px)*/
+    padding-top: 160px;
+}
+
+.welcome-page_info {
+    width: 50%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 64px;
+}
+
+.welcome-page_info_text {
+    text-align: left;
+
+    display: flex;
+    gap: 32px;
+    flex-direction: column;
+}
+
+.welcome-page_info_text h1 {
+    font-family: TT Travels Bold;
+    font-size: 64px;
+    line-height: 65px;
+}
+
+.welcome-page_info_text h3 {
+    font-family: TT Travels Regular;
+    font-size: 24px;
+    line-height: 29px;
+}
+
+.welcome-page_info_buttons {
+    width: 100%;
+
+    display: flex;
+    gap: 16px;
+}
