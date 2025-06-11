@@ -12,6 +12,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 app.include_router(router)
 
 @app.get("/")
