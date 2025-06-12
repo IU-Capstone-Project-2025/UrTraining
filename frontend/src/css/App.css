@@ -1,14 +1,9 @@
-#root {
-  max-width: 1280px;
-  text-align: center;
-}
-
 .btn-basic-black, .btn-basic-white {
   font-family: TT Travels Medium;
   font-size: 20px;
 
-  min-width: 112px;
-  height: 56px;
+  min-width: 96px;
+  height: auto;
   padding: 16px 40px;
 
   border-radius: 64px;
@@ -26,4 +21,36 @@
 
   background-color: #F3F3F3;
   color: #000000;
+}
+
+.form-basic-white {
+  border: 2px solid #00000054;
+  border-radius: 8px;
+  font-family: TT Travels Regular;
+
+  padding: 8px;
+
+  color: #000000;
+  background-color: #F3F3F3;
+  height: 28px;
+}
+
+.checkbox-basic-white:before {
+  border: none;
+  width: 100px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.basic-page {
+    width: 100vw;
+    height: 100vh;
+
+    padding: 96px;
+
+    /*Navbar padding (160px)*/
+    padding-top: 168px;
 }
