@@ -1,13 +1,17 @@
 """
 Commands:
-- python generate_profiles.py -n 50 -m gemma -t 0.9 -o gemma_profiles.json
-- python generate_profiles.py -n 50 -m deepseek_r1 -t 0.8 -o deepseek_profiles.json -b 5
+python client_form_synt_data.py -n 10 -m gemma -t 0.9 -o gemma_profiles.json -b 5
+python client_form_synt_data.py -n 10 -m deepseek_r1 -t 0.8 -o deepseek_profiles.json -b 5
+python client_form_synt_data.py -n 10 -m llama3.1_8b -t 0.8 -o llama_profiles.json -b 5
+python client_form_synt_data.py -n 10 -m qwen235b -t 0.8 -o qwen_profiles.json -b 5
 """
 import os
 import json
 import argparse
+import random
 import time
 from tqdm import tqdm
+import pandas as pd
 from dotenv import load_dotenv
 from typing import Dict, Optional, List
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -76,13 +80,13 @@ def extract_regular_content(raw_answer: str) -> str:
     return regular_content
 
 
-def generate_single_profile(model_name: str, temperature: float) -> str:
+def generate_single_profile(model_name: str, temperature: float, seed: int = 1337) -> str:
     """
     Generate a single synthetic profile
     """
     response: ChatCompletion = get_response(
         model_name=model_name,
-        user_prompt=prefix,
+        user_prompt=get_prompt_with_seed(seed),
         temperature=temperature,
     )
     content: str = response.choices[0].message.content
@@ -97,6 +101,96 @@ def try_parse_json(content: str) -> Optional[Dict]:
     except Exception as e:
         print(f"Error parsing JSON: {e}")
         return None
+
+
+def get_prompt_with_seed(seed_number: int):
+    """Generate a prompt with a random seed to ensure variety in outputs"""
+
+    random.seed(seed_number)
+    gender_options = [
+        {"gender": "male", "letters": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
+        {"gender": "female", "letters": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"}
+    ]
+    
+    # Select gender
+    gender_option = random.choice(gender_options)
+    chosen_gender = gender_option["gender"]
+    first_letter = random.choice(gender_option["letters"])
+    
+    age_ranges = [
+        "in their early 20s",
+        "in their late 20s", 
+        "in their early 30s",
+        "in their late 30s",
+        "in their 40s",
+        "in their 50s",
+        "in their 60s"
+    ]
+    chosen_age = random.choice(age_ranges)
+    
+    characteristics = [
+        "a busy professional",
+        "a college student",
+        "a parent",
+        "a retiree",
+        "an athlete",
+        "a beginner in fitness",
+        "someone recovering from injury",
+        "a digital nomad",
+        "an office worker",
+        "a fitness enthusiast",
+    ]
+
+    locations = [
+        "from New York",
+        "from California",
+        "from Russia",
+        "from London",
+        "from Paris",
+        "from Tokyo",
+        "from Moscow",
+        "from Sydney",
+        "from Berlin",
+        "from a small town",
+        "from a big city",
+    ]
+
+    backgrounds = [
+        "who recently decided to get in shape",
+        "who has been trying different workout routines",
+        "who wants to improve their overall health",
+        "who is training for a specific event",
+        "who is coming back to fitness after a break",
+        "who needs a structured training plan",
+        "who wants to maintain their current fitness level",
+        "who is looking for variety in their workouts",
+    ]
+
+    body_types = [
+        "with a slim build",
+        "with an athletic build",
+        "with a muscular build",
+        "with a stocky build", 
+        "with a lean build",
+        "with an average build",
+        ""
+    ]
+    chosen_body = random.choice(body_types)
+    characteristic = random.choice(characteristics)
+    location = random.choice(locations)
+    background = random.choice(backgrounds)
+
+    # Construct the seed phrase
+    seed_text = (
+        f"\nFor this profile, create a {chosen_gender} {chosen_age} {characteristic} {location} {background} {chosen_body}. "
+        f"The person's name should start with the letter '{first_letter}'. "
+        f"Make sure the profile details are realistic and consistent with this background."
+    )
+
+    full_prompt = prefix + seed_text
+
+    return full_prompt
+
 
 
 def generate_profiles(
@@ -124,10 +218,10 @@ def generate_profiles(
     # Function to process a single batch
     def process_batch(batch_idx: int, size: int) -> List[Dict]:
         batch_results = []
-
+        seed_base: int = 42
         with ThreadPoolExecutor(max_workers=size) as executor:
             futures = {
-                executor.submit(generate_single_profile, model_name, temperature): i
+                executor.submit(generate_single_profile, model_name, temperature, seed_base + batch_idx * size + i): i
                 for i in range(size)
             }
 
@@ -154,9 +248,8 @@ def generate_profiles(
             profiles.extend(batch_profiles)
             pbar.update(len(batch_profiles))
 
-
-    with open(output_file, "w") as f:
-        json.dump(profiles, f, indent=2)
+    with open(output_file, "w") as file:
+        file.write(json.dumps(profiles, ensure_ascii=False, indent=2))
 
     print(
         f"Generated {len(profiles)} profiles in {time.time() - start_time:.2f} seconds"
