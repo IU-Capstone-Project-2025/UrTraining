@@ -1,10 +1,21 @@
+"""
+Commands:
+- python generate_profiles.py -n 50 -m gemma -t 0.9 -o gemma_profiles.json
+- python generate_profiles.py -n 50 -m deepseek_r1 -t 0.8 -o deepseek_profiles.json -b 5
+"""
 import os
+import json
+import argparse
+import time
+from tqdm import tqdm
 from dotenv import load_dotenv
-from typing import Dict, Optional, Any
+from typing import Dict, Optional, List
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from ml.scripts.prompts import CLIENT_FORM_SYNT_DATA_PROMPT as prefix
+from prompts import CLIENT_FORM_SYNT_DATA_PROMPT as prefix
 
 from openai import OpenAI
+from openai.types.chat import ChatCompletion
 
 load_dotenv()
 
@@ -15,7 +26,6 @@ MODELS: Dict[str, str] = {
     "llama3.1_8b": "klusterai/Meta-Llama-3.1-8B-Instruct-Turbo",
     "qwen235b": "Qwen/Qwen3-235B-A22B-FP8",
 }
-print(KLUSTER_AI_TOKEN)
 client = OpenAI(
     base_url="https://api.kluster.ai/v1",
     api_key=KLUSTER_AI_TOKEN,
@@ -27,8 +37,8 @@ def get_response(
     user_prompt: str,
     system_prompt: Optional[str] = None,
     temperature: Optional[float] = 0.25,
-    top_k: Optional[int] = 50,
-) -> Dict[str, Any]:
+    top_p: Optional[float] = 0.9,
+) -> ChatCompletion:
     model_id: str = MODELS.get(model_name, None)
     assert (
         model_id is not None
@@ -40,11 +50,183 @@ def get_response(
 
     messages.append({"role": "user", "content": user_prompt})
 
-    response: Dict[str, Any] = client.chat.completions.create(
-        model=model_id, messages=messages, temperature=temperature
+    response = client.chat.completions.create(
+        model=model_id, messages=messages, temperature=temperature, top_p=top_p
     )
 
     return response
 
 
-print(get_response("gemma", "Привет. Ты кто?"))
+def extract_thinking(raw_answer: str) -> str:
+    thinking_idx: int = raw_answer.find("</think>")
+    if thinking_idx == -1:
+        return ""
+
+    thinking: str = raw_answer[:thinking_idx].strip()
+    return thinking
+
+
+def extract_regular_content(raw_answer: str) -> str:
+    thinking_end_idx = raw_answer.find("</think>")
+
+    if thinking_end_idx == -1:
+        return raw_answer.strip()
+
+    regular_content: str = raw_answer[thinking_end_idx + len("</think>") :].strip()
+    return regular_content
+
+
+def generate_single_profile(model_name: str, temperature: float) -> str:
+    """
+    Generate a single synthetic profile
+    """
+    response: ChatCompletion = get_response(
+        model_name=model_name,
+        user_prompt=prefix,
+        temperature=temperature,
+    )
+    content: str = response.choices[0].message.content
+    return extract_regular_content(content)
+
+
+def try_parse_json(content: str) -> Optional[Dict]:
+    try:
+        content = content.replace("```json", "")
+        content = content.replace("```", "")
+        return json.loads(content)
+    except Exception as e:
+        print(f"Error parsing JSON: {e}")
+        return None
+
+
+def generate_profiles(
+    model_name: str,
+    count: int,
+    output_file: str,
+    batch_size: int = 5,
+    temperature: float = 0.7,
+    timeout: int = 600,
+) -> None:
+    """
+    Generate multiple synthetic profiles in batches
+
+    Args:
+        model_name: Model to use for generation
+        count: Number of profiles to generate
+        output_file: File to save the profiles to
+        batch_size: Number of profiles to generate in parallel
+        temperature: Temperature for generation diversity
+        timeout: Maximum time (in seconds) to wait for a batch
+    """
+    profiles = []
+    start_time = time.time()
+
+    # Function to process a single batch
+    def process_batch(batch_idx: int, size: int) -> List[Dict]:
+        batch_results = []
+
+        with ThreadPoolExecutor(max_workers=size) as executor:
+            futures = {
+                executor.submit(generate_single_profile, model_name, temperature): i
+                for i in range(size)
+            }
+
+            for future in as_completed(futures):
+                try:
+                    content = future.result()
+                    profile = try_parse_json(content)
+                    if profile:
+                        batch_results.append(profile)
+                    else:
+                        print(f"Failed to parse profile in batch {batch_idx}")
+                except Exception as e:
+                    print(f"Error generating profile: {e}")
+
+        return batch_results
+
+    with tqdm(total=count, desc="Generating profiles...") as pbar:
+        for i in range(0, count, batch_size):
+            current_batch_size = min(batch_size, count - i)
+
+            batch_start_time = time.time()
+            batch_profiles = process_batch(i // batch_size + 1, current_batch_size)
+
+            profiles.extend(batch_profiles)
+            pbar.update(len(batch_profiles))
+
+
+    with open(output_file, "w") as f:
+        json.dump(profiles, f, indent=2)
+
+    print(
+        f"Generated {len(profiles)} profiles in {time.time() - start_time:.2f} seconds"
+    )
+    print(f"Results saved to {output_file}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Generate synthetic client profiles")
+
+    parser.add_argument(
+        "-n", "--count", type=int, required=True, help="Number of profiles to generate"
+    )
+
+    parser.add_argument(
+        "-m",
+        "--model",
+        type=str,
+        default="deepseek_r1",
+        choices=list(MODELS.keys()),
+        help=f"Model to use for generation. Available models: {', '.join(MODELS.keys())}",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        default="synthetic_profiles.json",
+        help="Output file to save the profiles to",
+    )
+    parser.add_argument(
+        "-b",
+        "--batch-size",
+        type=int,
+        default=5,
+        help="Number of profiles to generate in parallel",
+    )
+    parser.add_argument(
+        "-t",
+        "--temperature",
+        type=float,
+        default=0.7,
+        help="Temperature for generation diversity (0.0-1.0)",
+    )
+    parser.add_argument(
+        "--timeout",
+        type=int,
+        default=600,
+        help="Maximum time (in seconds) to wait for generation",
+    )
+
+    args = parser.parse_args()
+
+    if args.count <= 0:
+        parser.error("Count must be a positive integer")
+
+    if args.batch_size <= 0:
+        parser.error("Batch size must be a positive integer")
+
+    if not (0.0 <= args.temperature <= 1.0):
+        parser.error("Temperature must be between 0.0 and 1.0")
+
+    generate_profiles(
+        model_name=args.model,
+        count=args.count,
+        output_file=args.output,
+        batch_size=args.batch_size,
+        temperature=args.temperature,
+        timeout=args.timeout,
+    )
+
+
+if __name__ == "__main__":
+    main()

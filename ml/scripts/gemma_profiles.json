@@ -1,0 +1,372 @@
+[
+  {
+    "personal_data": {
+      "full_name": "David Miller"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 35,
+      "height_cm": 180,
+      "weight_kg": 85
+    },
+    "training_goals": [
+      "muscle_gain",
+      "improve_endurance"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 4,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "David Miller"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 35,
+      "height_cm": 180,
+      "weight_kg": 88
+    },
+    "training_goals": [
+      "muscle_gain",
+      "weight_loss"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 3,
+      "hiit": 4,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "David Miller"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 35,
+      "height_cm": 180,
+      "weight_kg": 88
+    },
+    "training_goals": [
+      "muscle_gain",
+      "weight_loss"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 3,
+      "hiit": 4,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "David Miller"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 35,
+      "height_cm": 180,
+      "weight_kg": 85
+    },
+    "training_goals": [
+      "muscle_gain",
+      "improve_endurance"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 4,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "David Miller"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 35,
+      "height_cm": 180,
+      "weight_kg": 85
+    },
+    "training_goals": [
+      "muscle_gain",
+      "improve_endurance"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 4,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "David Miller"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 35,
+      "height_cm": 180,
+      "weight_kg": 88
+    },
+    "training_goals": [
+      "muscle_gain",
+      "weight_loss"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 3,
+      "hiit": 4,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "David Miller"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 35,
+      "height_cm": 180,
+      "weight_kg": 85
+    },
+    "training_goals": [
+      "muscle_gain",
+      "weight_loss"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 3,
+      "hiit": 4,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "David Miller"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 35,
+      "height_cm": 180,
+      "weight_kg": 85
+    },
+    "training_goals": [
+      "muscle_gain",
+      "improve_endurance"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 4,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "David Miller"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 32,
+      "height_cm": 180,
+      "weight_kg": 85
+    },
+    "training_goals": [
+      "muscle_gain",
+      "improve_endurance"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 4,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "David Miller"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 35,
+      "height_cm": 180,
+      "weight_kg": 85
+    },
+    "training_goals": [
+      "muscle_gain",
+      "improve_endurance"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 4,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  }
+]
