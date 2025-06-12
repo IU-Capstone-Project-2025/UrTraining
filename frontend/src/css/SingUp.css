@@ -1,0 +1,83 @@
+.signup-section_form {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    border-radius: 32px;
+    box-shadow: 0px 4px 24px 0px #00000082;
+    background-color: #a6939306;
+}
+
+.signup-section_form_input_title {
+    font: TT Travels Bold;
+    font-size: 40px;
+}
+
+.signup-section_form_image, .signup-section_form_input{
+    width: 50%;
+    height: 100%;
+}
+
+.signup-section_form_image {
+    position: relative;
+    overflow: hidden;
+    
+    border-radius: 32px;
+}
+
+.signup-section_form_image > img {
+    position: absolute;
+
+    height: 100%;
+    width: auto;
+
+    right: -200px;
+}
+
+.signup-section_form_input, .signup-section_form_input_options {
+    display: flex;
+    flex-direction: column;
+}
+
+.signup-section_form_input {
+    justify-content: center;
+    gap: 32px;
+
+    padding: 48px 84px;
+}
+
+.signup-section_form_input > h2 {
+    font-family: TT Travels Bold;
+    text-align: center;
+}
+
+.signup-section_form_input_options {
+    font-family: TT Travels Regular;
+    gap: 16px;
+}
+
+.signup-section_form_input_division {
+    width: 100%;
+    height: 2px;
+
+    background-color: black;
+}
+
+.signup-section_form_input_other, .signup-section_form_input_other > button{
+    width: 100%;
+}
+
+.signup-section_form_input_other {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.btn-basic-black, .btn-basic-white {
+    font-family: TT Travels Regular;
+    font-size: 18px;
+
+    height: 46px;
+    padding: 0;
+}

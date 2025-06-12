@@ -3,7 +3,7 @@ import '../css/Welcome.css'
 
 const Welcome = () => {
     return (
-        <div className="welcome-page">
+        <div className="welcome-page basic-page">
             <div className='welcome-page_info'>
                 <div className='welcome-page_info_text'>
                     <h1>Smart approach to training with AI assistant</h1>
