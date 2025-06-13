@@ -1,7 +1,7 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 :root {
@@ -12,35 +12,30 @@
 
   color-scheme: light dark;
   color: #181818;
-  background-color: #f3f3f3;
+  background-color: #F3F3F3;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  font-family: TT Travels Regular;
 }
 
 @font-face {
-  font-family: "Deltha";
-  src: local("Deltha"), url(./fonts/deltha-deltha-400.ttf) format("truetype");
+  font-family: 'Deltha';
+  src: local('Deltha'), url(./fonts/deltha-deltha-400.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: "TT Travels Bold";
-  src: local("TT Travels Bold"),
-    url("./fonts/TTTravels/TTTravels-Bold.ttf") format("truetype");
+  font-family: 'TT Travels Bold';
+  src: local('TT Travels Bold'), url('./fonts/TTTravels/TTTravels-Bold.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: "TT Travels Medium";
-  src: local("TT Travels Medium"),
-    url("./fonts/TTTravels/TTTravels-Medium.ttf") format("truetype");
+  font-family: 'TT Travels Medium';
+  src: local('TT Travels Medium'), url('./fonts/TTTravels/TTTravels-Medium.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: "TT Travels Regular";
-  src: local("TT Travels Regular"),
-    url("./fonts/TTTravels/TTTravels-Regular.ttf") format("truetype");
+  font-family: 'TT Travels Regular';
+  src: local('TT Travels Regular'), url('./fonts/TTTravels/TTTravels-Regular.ttf') format('truetype');
 }
