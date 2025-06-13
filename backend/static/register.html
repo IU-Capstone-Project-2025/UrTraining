@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrTraining - Register</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .form-group small {
+            color: #6c757d;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+        .message {
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-text {
+            display: block;
+            margin-top: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .status-text.available {
+            color: #28a745;
+        }
+
+        .status-text.taken {
+            color: #dc3545;
+        }
+
+        .status-text.checking {
+            color: #6c757d;
+        }
+
+        .status-text.match {
+            color: #28a745;
+        }
+
+        .status-text.no-match {
+            color: #dc3545;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 1rem;
+            color: #666;
+        }
+
+        .switch-form a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏋️ UrTraining</h1>
+            <p>Create your account to get started with your fitness journey!</p>
+        </div>
+
+        <!-- Messages -->
+        <div id="message"></div>
+
+        <!-- Registration Form -->
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="regFullName">Full Name:</label>
+                <input type="text" id="regFullName" name="full_name" required minlength="2" maxlength="100">
+            </div>
+            <div class="form-group">
+                <label for="regUsername">Username:</label>
+                <input type="text" id="regUsername" name="username" required minlength="3" maxlength="50">
+                <small id="usernameStatus" class="status-text"></small>
+            </div>
+            <div class="form-group">
+                <label for="regEmail">Email:</label>
+                <input type="email" id="regEmail" name="email" required>
+                <small id="emailStatus" class="status-text"></small>
+            </div>
+            <div class="form-group">
+                <label for="regPassword">Password:</label>
+                <input type="password" id="regPassword" name="password" required minlength="6">
+                <small>Minimum 6 characters</small>
+            </div>
+            <div class="form-group">
+                <label for="regConfirmPassword">Confirm Password:</label>
+                <input type="password" id="regConfirmPassword" name="confirm_password" required>
+                <small id="passwordMatchStatus" class="status-text"></small>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+
+        <div class="switch-form">
+            <p>Already have an account? <a href="/">Sign in here</a></p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        const registerForm = document.getElementById('registerForm');
+        const messageDiv = document.getElementById('message');
+
+        // Show message function
+        function showMessage(message, type = 'info') {
+            messageDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        // Set loading state
+        function setLoading(element, loading) {
+            if (loading) {
+                element.classList.add('loading');
+            } else {
+                element.classList.remove('loading');
+            }
+        }
+
+        // Username availability checker
+        let usernameCheckTimeout;
+        document.getElementById('regUsername').addEventListener('input', function(e) {
+            const username = e.target.value;
+            const statusElement = document.getElementById('usernameStatus');
+            
+            if (username.length < 3) {
+                statusElement.textContent = '';
+                statusElement.className = 'status-text';
+                return;
+            }
+
+            clearTimeout(usernameCheckTimeout);
+            statusElement.textContent = 'Checking...';
+            statusElement.className = 'status-text checking';
+
+            usernameCheckTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`${API_BASE}/auth/check-availability?username=${encodeURIComponent(username)}`);
+                    const data = await response.json();
+                    
+                    if (data.username_available) {
+                        statusElement.textContent = '✓ Username available';
+                        statusElement.className = 'status-text available';
+                    } else {
+                        statusElement.textContent = '✗ Username taken';
+                        statusElement.className = 'status-text taken';
+                    }
+                } catch (error) {
+                    statusElement.textContent = 'Error checking availability';
+                    statusElement.className = 'status-text taken';
+                }
+            }, 500);
+        });
+
+        // Email availability checker
+        let emailCheckTimeout;
+        document.getElementById('regEmail').addEventListener('input', function(e) {
+            const email = e.target.value;
+            const statusElement = document.getElementById('emailStatus');
+            
+            if (!email || !email.includes('@')) {
+                statusElement.textContent = '';
+                statusElement.className = 'status-text';
+                return;
+            }
+
+            clearTimeout(emailCheckTimeout);
+            statusElement.textContent = 'Checking...';
+            statusElement.className = 'status-text checking';
+
+            emailCheckTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`${API_BASE}/auth/check-availability?email=${encodeURIComponent(email)}`);
+                    const data = await response.json();
+                    
+                    if (data.email_available) {
+                        statusElement.textContent = '✓ Email available';
+                        statusElement.className = 'status-text available';
+                    } else {
+                        statusElement.textContent = '✗ Email already registered';
+                        statusElement.className = 'status-text taken';
+                    }
+                } catch (error) {
+                    statusElement.textContent = 'Error checking availability';
+                    statusElement.className = 'status-text taken';
+                }
+            }, 500);
+        });
+
+        // Password confirmation checker
+        function checkPasswordMatch() {
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const statusElement = document.getElementById('passwordMatchStatus');
+            
+            if (!confirmPassword) {
+                statusElement.textContent = '';
+                statusElement.className = 'status-text';
+                return;
+            }
+            
+            if (password === confirmPassword) {
+                statusElement.textContent = '✓ Passwords match';
+                statusElement.className = 'status-text match';
+            } else {
+                statusElement.textContent = '✗ Passwords do not match';
+                statusElement.className = 'status-text no-match';
+            }
+        }
+
+        document.getElementById('regPassword').addEventListener('input', checkPasswordMatch);
+        document.getElementById('regConfirmPassword').addEventListener('input', checkPasswordMatch);
+
+        // Registration form handler
+        registerForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(registerForm);
+            const password = formData.get('password');
+            const confirmPassword = formData.get('confirm_password');
+            
+            // Validate password match
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match', 'error');
+                return;
+            }
+            
+            const registerData = {
+                username: formData.get('username'),
+                password: password,
+                email: formData.get('email'),
+                full_name: formData.get('full_name')
+            };
+
+            setLoading(registerForm, true);
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(registerData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(`Account created successfully! Welcome, ${data.user_info.full_name}!`, 'success');
+                    
+                    // Clear status messages
+                    document.getElementById('usernameStatus').textContent = '';
+                    document.getElementById('emailStatus').textContent = '';
+                    document.getElementById('passwordMatchStatus').textContent = '';
+                    
+                    // Redirect to login after short delay
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    showMessage(data.detail || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                showMessage('Network error. Please try again.', 'error');
+                console.error('Registration error:', error);
+            } finally {
+                setLoading(registerForm, false);
+            }
+        });
+
+        // Check if already logged in
+        const authToken = localStorage.getItem('authToken');
+        if (authToken) {
+            // Verify token and redirect if valid
+            fetch(`${API_BASE}/auth/verify-token`, {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                }
+            }).then(response => {
+                if (response.ok) {
+                                            window.location.href = '/dashboard';
+                }
+            }).catch(error => {
+                console.error('Token verification error:', error);
+            });
+        }
+    </script>
+</body>
+</html> 
