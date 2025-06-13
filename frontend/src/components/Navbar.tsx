@@ -20,7 +20,7 @@ const Header = () => {
         </div>
         <div className='navbar__auth'>
           <button className='btn-basic-white' style={{ padding: "4px 20px" }}>
-            <Link to="/signup">
+            <Link to="/login">
               Sign In
             </Link>
           </button>
