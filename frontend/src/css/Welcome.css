@@ -1,4 +1,9 @@
-.welcome-page_info {
+.welcome {
+    display: flex;
+    align-items: center;
+}
+
+.welcome__info {
     width: 50%;
     height: 100%;
 
@@ -10,7 +15,7 @@
     gap: 4rem;
 }
 
-.welcome-page_info_text {
+.welcome__info__text {
     text-align: left;
     overflow: hidden;
 
@@ -21,19 +26,19 @@
 
 }
 
-.welcome-page_info_text > h1 {
+.welcome__info__text > h1 {
     font-family: TT Travels Bold;
     font-size: 4rem;
     line-height: 1.1;
 }
 
-.welcome-page_info_text > h3 {
+.welcome__info__text > h3 {
     font-family: TT Travels Regular;
     font-size: 1.5rem;
     line-height: 1.4;
 }
 
-.welcome-page_info_buttons {
+.welcome__info__buttons {
     width: 100%;
 
     display: flex;

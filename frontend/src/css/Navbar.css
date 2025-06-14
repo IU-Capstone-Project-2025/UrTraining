@@ -8,12 +8,13 @@
     justify-content: space-between;
     align-items: center;
 
-    padding: 2rem 4rem;
+    padding: 2rem 6rem;
     box-sizing: border-box;
 }
 
 .navbar > * {
     height: 72px;
+    background-color: #F3F3F3;
 
     display: flex;
     flex-direction: row;
@@ -45,4 +46,8 @@
 .navbar__auth {
     padding: 1rem;
     gap: 1rem;
+}
+
+.navbar__auth > button {
+    padding: 0.75rem 1.25rem
 }

@@ -8,23 +8,35 @@ const Header = () => {
       <div className='navbar'>
         <div className='navbar__logo'>
           <Link to="/">
-            <h1>URTRAINING</h1>
+            <h1>
+              URTRAINING
+            </h1>
           </Link>
         </div>
         <div className='navbar__links'>
-          <Link to="/">Profile</Link>
-          <Link to="/">Catalogue</Link>
-          <Link to="/">Recommendations</Link>
-          <Link to="/">Upload</Link>
-          <Link to="/">About Us</Link>
+          <Link to="/">
+            Profile
+          </Link>
+          <Link to="/">
+            Catalogue
+          </Link>
+          <Link to="/">
+            Recommendations
+          </Link>
+          <Link to="/">
+            Upload
+          </Link>
+          <Link to="/">
+            About Us
+          </Link>
         </div>
         <div className='navbar__auth'>
-          <button className='btn-basic-white' style={{ padding: "4px 20px" }}>
+          <button className='btn-basic-white'>
             <Link to="/signup">
               Sign In
             </Link>
           </button>
-          <button className='btn-basic-black' style={{ padding: "4px 20px" }}>
+          <button className='btn-basic-black'>
             <Link to="/signup">
               Sign Up
             </Link>
