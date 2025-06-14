@@ -1,0 +1,557 @@
+[
+  {
+    "personal_data": {
+      "full_name": "Yuri Volkov"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 38,
+      "height_cm": 182,
+      "weight_kg": 81
+    },
+    "training_goals": [
+      "maintain_fitness",
+      "muscle_gain"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 4,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Oliver Bennett"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 32,
+      "height_cm": 180,
+      "weight_kg": 78
+    },
+    "training_goals": [
+      "improve_endurance",
+      "muscle_gain"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 4,
+      "cardio": 5,
+      "hiit": 4,
+      "yoga_pilates": 2,
+      "functional_training": 3,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Katherine Bell"
+    },
+    "basic_information": {
+      "gender": "female",
+      "age": 42,
+      "height_cm": 170,
+      "weight_kg": 68
+    },
+    "training_goals": [
+      "weight_loss",
+      "maintain_fitness"
+    ],
+    "training_experience": {
+      "level": "beginner",
+      "frequency_last_3_months": "not_trained"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "30_45_min"
+    },
+    "health": {
+      "joint_back_problems": true,
+      "chronic_conditions": false,
+      "health_details": "Recovering from a minor knee injury sustained 6 months ago. Requires low-impact exercises initially."
+    },
+    "training_types": {
+      "strength_training": 2,
+      "cardio": 3,
+      "hiit": 1,
+      "yoga_pilates": 4,
+      "functional_training": 3,
+      "stretching": 5
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Olivia Ramirez"
+    },
+    "basic_information": {
+      "gender": "female",
+      "age": 23,
+      "height_cm": 173,
+      "weight_kg": 68
+    },
+    "training_goals": [
+      "muscle_gain",
+      "improve_endurance"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "1_2_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": true,
+      "chronic_conditions": false,
+      "health_details": "Recovering from a minor knee sprain sustained during volleyball 6 months ago.  Requires modified exercises initially."
+    },
+    "training_types": {
+      "strength_training": 4,
+      "cardio": 3,
+      "hiit": 2,
+      "yoga_pilates": 3,
+      "functional_training": 4,
+      "stretching": 5
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Maya Tanaka"
+    },
+    "basic_information": {
+      "gender": "female",
+      "age": 42,
+      "height_cm": 168,
+      "weight_kg": 68
+    },
+    "training_goals": [
+      "maintain_fitness",
+      "improve_flexibility"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "1_2_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": true,
+      "chronic_conditions": false,
+      "health_details": "Recovering from a knee injury sustained during marathon training in Tokyo. Requires a low-impact, progressive training plan."
+    },
+    "training_types": {
+      "strength_training": 3,
+      "cardio": 3,
+      "hiit": 2,
+      "yoga_pilates": 5,
+      "functional_training": 4,
+      "stretching": 5
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "William Tanaka"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 42,
+      "height_cm": 178,
+      "weight_kg": 85
+    },
+    "training_goals": [
+      "improve_endurance",
+      "competition_preparation"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "outdoors",
+      "location_details": "sports_ground",
+      "session_duration": "over_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 4,
+      "cardio": 5,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Yara Schmidt"
+    },
+    "basic_information": {
+      "gender": "female",
+      "age": 23,
+      "height_cm": 168,
+      "weight_kg": 75
+    },
+    "training_goals": [
+      "weight_loss",
+      "muscle_gain"
+    ],
+    "training_experience": {
+      "level": "beginner",
+      "frequency_last_3_months": "not_trained"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 4,
+      "cardio": 3,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 3,
+      "stretching": 4
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Robert Harrison"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 62,
+      "height_cm": 180,
+      "weight_kg": 88
+    },
+    "training_goals": [
+      "maintain_fitness",
+      "muscle_gain"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "1_2_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": true,
+      "chronic_conditions": false,
+      "health_details": "Mild lower back pain, managed with stretching and occasional physiotherapy."
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 3,
+      "hiit": 2,
+      "yoga_pilates": 3,
+      "functional_training": 4,
+      "stretching": 5
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Greta Schmidt"
+    },
+    "basic_information": {
+      "gender": "female",
+      "age": 32,
+      "height_cm": 175,
+      "weight_kg": 70
+    },
+    "training_goals": [
+      "muscle_gain",
+      "maintain_fitness"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 3,
+      "hiit": 4,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Xavier Rodriguez"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 29,
+      "height_cm": 180,
+      "weight_kg": 85
+    },
+    "training_goals": [
+      "weight_loss",
+      "muscle_gain"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "1_2_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 4,
+      "cardio": 3,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 3,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Yuri Volkov"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 42,
+      "height_cm": 180,
+      "weight_kg": 85
+    },
+    "training_goals": [
+      "muscle_gain",
+      "improve_endurance"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 4,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Sergei Petrov"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 29,
+      "height_cm": 180,
+      "weight_kg": 82
+    },
+    "training_goals": [
+      "maintain_fitness",
+      "muscle_gain"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 4,
+      "cardio": 3,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 3
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "William Carter"
+    },
+    "basic_information": {
+      "gender": "male",
+      "age": 23,
+      "height_cm": 178,
+      "weight_kg": 88
+    },
+    "training_goals": [
+      "muscle_gain",
+      "maintain_fitness"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "1_2_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "small_gym_basic_equipment",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": false,
+      "chronic_conditions": false,
+      "health_details": null
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 3,
+      "hiit": 3,
+      "yoga_pilates": 1,
+      "functional_training": 4,
+      "stretching": 2
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Samantha Rodriguez"
+    },
+    "basic_information": {
+      "gender": "female",
+      "age": 52,
+      "height_cm": 170,
+      "weight_kg": 78
+    },
+    "training_goals": [
+      "muscle_gain",
+      "maintain_fitness"
+    ],
+    "training_experience": {
+      "level": "intermediate",
+      "frequency_last_3_months": "3_4_times_week"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "full_fitness_center",
+      "session_duration": "45_60_min"
+    },
+    "health": {
+      "joint_back_problems": true,
+      "chronic_conditions": false,
+      "health_details": "Mild lower back pain, managed with stretching and occasional physical therapy."
+    },
+    "training_types": {
+      "strength_training": 5,
+      "cardio": 3,
+      "hiit": 3,
+      "yoga_pilates": 2,
+      "functional_training": 4,
+      "stretching": 4
+    }
+  },
+  {
+    "personal_data": {
+      "full_name": "Quinn Abernathy"
+    },
+    "basic_information": {
+      "gender": "female",
+      "age": 42,
+      "height_cm": 170,
+      "weight_kg": 60
+    },
+    "training_goals": [
+      "maintain_fitness",
+      "stress_reduction"
+    ],
+    "training_experience": {
+      "level": "beginner",
+      "frequency_last_3_months": "not_trained"
+    },
+    "preferences": {
+      "training_location": "gym",
+      "location_details": "small_gym_basic_equipment",
+      "session_duration": "30_45_min"
+    },
+    "health": {
+      "joint_back_problems": true,
+      "chronic_conditions": false,
+      "health_details": "Mild lower back pain, aggravated by prolonged sitting.  Working with a physio for management."
+    },
+    "training_types": {
+      "strength_training": 2,
+      "cardio": 3,
+      "hiit": 1,
+      "yoga_pilates": 4,
+      "functional_training": 3,
+      "stretching": 5
+    }
+  }
+]
