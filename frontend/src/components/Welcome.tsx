@@ -10,7 +10,7 @@ const Welcome = () => {
                     <h3>Create and share your training programs as a coach faster. Get AI-personalized workouts based on your goals and condition as user — all in one place</h3>
                 </div>
                 <div className='welcome-page_info_buttons'>
-                    <button className='btn-basic-white'>I Want to Train</button>
+                    <button className='btn-basic-white'>I want to train</button>
                     <button className='btn-basic-black'>I am a Coach</button>
                 </div>
             </div>

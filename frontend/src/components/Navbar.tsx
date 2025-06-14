@@ -12,11 +12,11 @@ const Header = () => {
           </Link>
         </div>
         <div className='navbar__links'>
-          <h3>Profile</h3>
-          <h3>Catalogue</h3>
-          <h3>Recommendations</h3>
-          <h3>Upload</h3>
-          <h3>About Us</h3>
+          <Link to="/">Profile</Link>
+          <Link to="/">Catalogue</Link>
+          <Link to="/">Recommendations</Link>
+          <Link to="/">Upload</Link>
+          <Link to="/">About Us</Link>
         </div>
         <div className='navbar__auth'>
           <button className='btn-basic-white' style={{ padding: "4px 20px" }}>
