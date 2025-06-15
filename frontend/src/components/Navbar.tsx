@@ -32,7 +32,7 @@ const Header = () => {
         </div>
         <div className='navbar__auth'>
           <button className='btn-basic-white'>
-            <Link to="/signup">
+            <Link to="/signin">
               Sign In
             </Link>
           </button>
