@@ -1,4 +1,5 @@
 // import React from 'react'
+import { Link } from "react-router-dom";
 
 interface BeginProps {
     css_style: string;
@@ -26,10 +27,18 @@ const Begin = ({ css_style, text }: BeginProps) => {
                         {text.description}
                     </p>
                 </div>
-                <div className="begin__buttons">
-                    <button className="btn-basic-black">{text.button_1}</button>
-                    <button className="btn-basic-white">{text.button_2}</button>
-                    <button className="btn-basic-white">{text.button_3}</button>
+                <div className={"begin__buttons" + css_style}>
+                    <Link to="/signup">
+                        <button className="btn-basic-black">
+                            {text.button_1}
+                        </button>
+                    </Link>
+                    <button className="btn-basic-white">
+                        {text.button_2}
+                    </button>
+                    <button className="btn-basic-white">
+                        {text.button_3}
+                    </button>
                 </div>
             </div>
         </div>

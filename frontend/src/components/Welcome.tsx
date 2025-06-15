@@ -1,4 +1,5 @@
 // import React from 'react'
+import { Link } from "react-router-dom";
 import '../css/Welcome.css'
 
 const Welcome = () => {
@@ -10,17 +11,21 @@ const Welcome = () => {
                         Smart approach to training with AI assistant
                     </h1>
                     <h3>
-                        Create and share your training programs as a coach faster. 
-                        Get AI—personalized workouts based on your goals and condition as user — 
+                        Create and share your training programs as a coach faster.
+                        Get AI—personalized workouts based on your goals and condition as user —
                         all in one place
                     </h3>
                 </div>
                 <div className='welcome__info__buttons'>
                     <button className='btn-basic-white'>
-                        I want to train
+                        <Link to={"/trainee-begin"}>
+                            I want to train
+                        </Link>
                     </button>
                     <button className='btn-basic-black'>
-                        I am a Coach
+                        <Link to={"/trainer-begin"}>
+                            I am a Coach
+                        </Link>
                     </button>
                 </div>
             </div>
