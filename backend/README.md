@@ -1,3 +1,5 @@
+# Создаем файл .env в папке backend и копируем туда содержимое .env.template
+
 # Прописываем в консоли
 
 docker-compose up --build -d
