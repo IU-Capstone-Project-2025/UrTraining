@@ -1,14 +1,5 @@
-# Активируем виртуальное окружение
+# Прописываем в консоли
 
-python -m venv venv
-venv/Scripts/activate
-
-# Закачиваем зависимости
-
-pip install -r requirements.txt
-
-# Запускаем сервак
-
-uvicorn main:app --reload
+docker-compose up --build -d
 
 # Радуемся жизни и переходим на http://localhost:8000/
