@@ -1,14 +1,7 @@
-# Активируем виртуальное окружение
+# Создаем файл .env в папке backend и копируем туда содержимое .env.template
 
-python -m venv venv
-venv/Scripts/activate
+# Прописываем в консоли
 
-# Закачиваем зависимости
-
-pip install -r requirements.txt
-
-# Запускаем сервак
-
-uvicorn main:app --reload
+docker-compose up --build -d
 
 # Радуемся жизни и переходим на http://localhost:8000/

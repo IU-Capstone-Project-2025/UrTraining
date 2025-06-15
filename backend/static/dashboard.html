@@ -671,18 +671,35 @@
         // Get user info
         async function getUserInfo() {
             try {
-                const response = await fetch(`${API_BASE}/auth/training-profile`, {
+                // First get user basic info
+                const userResponse = await fetch(`${API_BASE}/auth/me`, {
                     headers: {
                         'Authorization': `Bearer ${authToken}`,
                     }
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    displayUserInfo(data);
-                } else {
+                if (!userResponse.ok) {
                     throw new Error('Failed to get user info');
                 }
+
+                const userData = await userResponse.json();
+                const userInfo = userData.user_info;
+
+                // Then get training profile
+                const trainingResponse = await fetch(`${API_BASE}/auth/training-profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                    }
+                });
+
+                if (trainingResponse.ok) {
+                    const trainingData = await trainingResponse.json();
+                    userInfo.training_profile = trainingData.training_profile;
+                } else {
+                    userInfo.training_profile = null;
+                }
+
+                displayUserInfo(userInfo);
             } catch (error) {
                 console.error('Error getting user info:', error);
                 localStorage.removeItem('authToken');
