@@ -27,12 +27,12 @@ const Begin = ({ css_style, text }: BeginProps) => {
                         {text.description}
                     </p>
                 </div>
-                <div className="begin__buttons">
-                    <button className="btn-basic-black">
-                        <Link to={"/signin"}>
+                <div className={"begin__buttons" + css_style}>
+                    <Link to="/signup">
+                        <button className="btn-basic-black">
                             {text.button_1}
-                        </Link>
-                    </button>
+                        </button>
+                    </Link>
                     <button className="btn-basic-white">
                         {text.button_2}
                     </button>

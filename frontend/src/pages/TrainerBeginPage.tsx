@@ -9,8 +9,8 @@ const TrainerBeginPage = () => {
                         UrTraining lets you create structured workouts, reach new clients,
                         and grow your coaching presence — all in one place.`,
         button_1: "Upload first training",
-        button_2: "Grow your audience",
-        button_3: "Monetize your expertise"
+        button_2: "Grow audience",
+        button_3: "Monetize expertise"
     };
 
     return (
