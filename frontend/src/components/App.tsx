@@ -4,8 +4,10 @@ import './Navbar';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from './Navbar'
 import HomePage from '../pages/HomePage';
-import SignUp from '../pages/SignUpPage';
-import SignIn from '../pages/SignInPage';
+import SignInPage from '../pages/SignInPage';
+import SignUpPage from '../pages/SignUpPage';
+import TraineeBeginPage from '../pages/TraineeBeginPage';
+import TrainerBeginPage from '../pages/TrainerBeginPage';
 
 const App = () => {
   return (
@@ -13,8 +15,10 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Navbar />}>
           <Route index element={<HomePage />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="signin" element={<SignIn />} />
+          <Route path="signup" element={<SignUpPage />} />
+          <Route path="signin" element={<SignInPage />} />
+          <Route path="trainee-begin" element={<TraineeBeginPage />} />
+          <Route path="trainer-begin" element={<TrainerBeginPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

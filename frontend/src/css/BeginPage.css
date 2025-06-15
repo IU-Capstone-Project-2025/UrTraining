@@ -1,0 +1,37 @@
+.begin {
+    display: flex;
+    align-items: center
+}
+
+.begin__container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+
+    width: 60%;
+}
+
+.begin__right {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.begin__left {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.begin__title {
+    font-family: "TT Travels Bold", sans-serif;
+    font-size: 1.75rem;
+}
+
+.begin__description {
+    font-family: "TT Travels Regular", sans-serif;
+    font-size: 1.25rem;
+}
+
+.begin__buttons {
+    display: flex;
+    gap: 1rem;
+}

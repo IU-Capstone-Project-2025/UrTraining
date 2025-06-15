@@ -1,13 +1,13 @@
 // import React from 'react'
 import '../css/SingUp.css'
-import SignUp_Image from '../assets/signup_image.jpg'
+import SignIn_Image from '../assets/singin_image.jpg'
 
 const SignIn = () => {
     return (
         <div className="signup basic-page">
             <div className='signup__container'>
                 <div className='signup__image'>
-                    <img src={SignUp_Image} alt="" />
+                    <img src={SignIn_Image} alt="" />
                 </div>
                 <div className='signup__form-area'>
                     <h2 className='signup__form-area__title'>
