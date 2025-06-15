@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   vector-db:
     build: .
@@ -8,4 +6,19 @@ services:
     volumes:
       - ./data:/app/data
     environment:
-      - PYTHONUNBUFFERED=1
+      # Vector DB Configuration
+      - VECTOR_DB_DATA_DIR=/app/data
+
+      # Default Index Configuration
+      - DEFAULT_DISTANCE_METRIC=L2
+      - DEFAULT_INDEX_TYPE=IVF_FLAT
+      - DEFAULT_NLIST=100
+      - DEFAULT_NPROBE=10
+
+      # Default Embedder Configuration
+      - DEFAULT_EMBEDDER_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - EMBEDDER_DEVICE=cpu
+      - EMBEDDER_MAX_LENGTH=512
+      - EMBEDDER_POOLING_STRATEGY=mean
+      - EMBEDDER_NORMALIZE=true
+    restart: unless-stopped
