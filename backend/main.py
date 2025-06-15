@@ -8,7 +8,26 @@ from app.routes.courses import router as courses_router
 from app.routes.users import router as users_router
 from app.routes.admin import router as admin_router
 
+# Database imports
+from app.database import engine
+from app.models.database_models import Base
+
 app = FastAPI(title="UrTraining Backend API")
+
+# Create database tables on startup
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database tables on application startup"""
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("Database tables created successfully!")
+        
+        # Initialize sample data
+        from app.init_sample_data import init_sample_data
+        init_sample_data()
+        
+    except Exception as e:
+        print(f"Error creating database tables: {e}")
 
 app.add_middleware(
     CORSMiddleware,

@@ -343,7 +343,7 @@
         // Load user info for navbar
         async function loadUserInfo() {
             try {
-                const response = await fetch(`${API_BASE}/auth/training-profile`, {
+                const response = await fetch(`${API_BASE}/auth/me`, {
                     headers: {
                         'Authorization': `Bearer ${authToken}`
                     }
@@ -353,7 +353,7 @@
                     const data = await response.json();
                     const navUsername = document.getElementById('navUsername');
                     if (navUsername) {
-                        navUsername.textContent = data.full_name || data.email || 'User';
+                        navUsername.textContent = data.user_info.full_name || data.user_info.email || 'User';
                     }
                 } else {
                     localStorage.removeItem('authToken');

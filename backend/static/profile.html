@@ -708,30 +708,45 @@
             }
 
             try {
-                const response = await fetch('http://localhost:8000/auth/training-profile', {
+                // First get user basic info
+                const userResponse = await fetch('http://localhost:8000/auth/me', {
                     headers: {
                         'Authorization': `Bearer ${authToken}`
                     }
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    currentUser = data;
-                    trainingProfile = data.training_profile;
-                    
-                    // Update navbar username
-                    const navUsername = document.getElementById('navUsername');
-                    if (navUsername) {
-                        navUsername.textContent = data.full_name || data.email || 'User';
-                    }
-                    
-                    populatePersonalForm();
-                    populateTrainingForm();
-                    setupTabs();
-                } else {
+                if (!userResponse.ok) {
                     localStorage.removeItem('authToken');
                     window.location.href = '/';
+                    return;
                 }
+
+                const userData = await userResponse.json();
+                currentUser = userData.user_info;
+
+                // Then get training profile
+                const trainingResponse = await fetch('http://localhost:8000/auth/training-profile', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (trainingResponse.ok) {
+                    const trainingData = await trainingResponse.json();
+                    trainingProfile = trainingData.training_profile;
+                } else {
+                    trainingProfile = null;
+                }
+                
+                // Update navbar username
+                const navUsername = document.getElementById('navUsername');
+                if (navUsername) {
+                    navUsername.textContent = currentUser.full_name || currentUser.email || 'User';
+                }
+                
+                populatePersonalForm();
+                populateTrainingForm();
+                setupTabs();
             } catch (error) {
                 console.error('Error fetching user data:', error);
                 localStorage.removeItem('authToken');
@@ -857,7 +872,7 @@
                     });
                     const data = await response.json();
                     
-                    if (data.email_available) {
+                    if (data.available) {
                         statusElement.textContent = '✓ Email available';
                         statusElement.className = 'status-text success';
                     } else {
@@ -906,9 +921,9 @@
                 });
                 
                 if (response.ok) {
-                    const updatedUser = await response.json();
-                    currentUser = updatedUser;
-                    originalEmail = updatedUser.email;
+                    const updatedData = await response.json();
+                    currentUser = updatedData.user_info;
+                    originalEmail = currentUser.email;
                     alert('Personal information updated successfully!');
                 } else {
                     const errorData = await response.json();
