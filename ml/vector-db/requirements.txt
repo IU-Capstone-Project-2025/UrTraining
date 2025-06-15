@@ -1,0 +1,16 @@
+# Core API dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+
+# Vector database dependencies
+faiss-cpu==1.7.4
+numpy==1.24.3
+
+# ML dependencies
+torch==2.1.0
+pytorch-lightning==2.1.0
+transformers==4.35.0
+
+# Additional utilities
+python-multipart==0.0.6
