@@ -1,0 +1,39 @@
+// import React from 'react'
+
+interface BeginProps {
+    css_style: string;
+    text: {
+        title: string;
+        description: string;
+        button_1: string;
+        button_2: string;
+        button_3: string;
+    };
+}
+
+const Begin = ({ css_style, text }: BeginProps) => {
+
+    return (
+        <div className={"begin basic-page " + css_style}>
+            <div className="begin__container">
+                <div className="begin__title">
+                    <h1>
+                        {text.title}
+                    </h1>
+                </div>
+                <div className="begin__description">
+                    <p>
+                        {text.description}
+                    </p>
+                </div>
+                <div className="begin__buttons">
+                    <button className="btn-basic-black">{text.button_1}</button>
+                    <button className="btn-basic-white">{text.button_2}</button>
+                    <button className="btn-basic-white">{text.button_3}</button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Begin
