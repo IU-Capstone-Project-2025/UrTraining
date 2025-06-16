@@ -1,4 +1,5 @@
-.btn-basic-black, .btn-basic-white {
+.btn-basic-black, 
+.btn-basic-white {
   font-family: TT Travels Regular;
   font-size: 18px;
 
@@ -11,6 +12,18 @@
 
 .btn-basic-black {
   border: none;
+
+  background-color: #000000;
+  color: #F3F3F3;
+}
+
+.radio-basic-black {
+  display: flex;
+  border: none;
+  border-radius: 0.5rem;
+
+  gap: 0.5rem;
+  padding: 0.5rem;
 
   background-color: #000000;
   color: #F3F3F3;
@@ -33,7 +46,7 @@
 
   color: #000;
   background-color: #F3F3F3;
-  height: 3rem;
+  height: 2rem;
 }
 
 .checkbox-basic-white:before {
@@ -45,6 +58,10 @@ a {
   color: inherit;
   text-decoration: none;
   white-space: nowrap;
+}
+
+p {
+  font-family: "TT Travels Regular", sans-serif;
 }
 
 .basic-page {

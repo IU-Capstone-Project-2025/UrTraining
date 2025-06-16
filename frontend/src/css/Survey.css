@@ -1,0 +1,100 @@
+.survey {
+    display: flex;
+    flex-direction: column;
+}
+
+.survey__navbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+
+    min-height: 4rem;
+}
+
+.survey__navbar > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 4;
+    text-align: center;
+    height: 100%;
+}
+
+.survey__navbar__selected {
+    background-color: #000;
+    color: #F3F3F3;
+}
+
+.survey__container {
+    display: flex;
+    height: 90%;
+}
+
+.survey__container > * {
+    flex: 1 2;
+}
+
+.survey__options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    padding: 2rem 2rem;
+}
+
+.survey__options::-webkit-scrollbar { 
+	display: none; 
+}
+
+.survey__options__section {
+    white-space: nowrap;
+}
+
+.survey__section__forms {
+    display: flex;
+}
+
+.survey__section__forms > form {
+    display: flex;
+    width: 100%;
+    gap: 2rem;
+}
+
+
+.survey__section__forms form > * {
+    flex: 1 2;
+}
+
+.survey__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    overflow: hidden;
+
+    padding: 2rem 2rem;
+    border-left: 2px solid #000;
+}
+
+.survey__info__description {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.survey__info__button {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.survey__title {
+    font-family: "TT Travels Bold", sans-serif;
+    font-size: 1.5rem;
+}
