@@ -4,7 +4,7 @@ FastAPI service for vector similarity search and text embeddings. Built with FAI
 
 ## Quick Start
 
-### With Docker Compose (Recommended)
+### With Docker Compose
 
 ```bash
 # Clone or navigate to the project directory

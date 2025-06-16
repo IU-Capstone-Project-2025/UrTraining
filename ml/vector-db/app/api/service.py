@@ -1,7 +1,7 @@
 import os
 import time
 import shutil
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 from datetime import datetime
 
 import numpy as np
@@ -10,6 +10,7 @@ from ..services.config import VectorDBConfig, DistanceMetric, IndexType
 from ..services.vector_db import VectorDB
 from ..services.document import Document
 from ..services.embedder.huggingface import HuggingFaceEmbedder
+from ..services.embedder.api import KlusterAIEmbedder
 from ..services.embedder.base import BaseEmbedder
 
 
@@ -17,17 +18,23 @@ class VectorDBService:
     """Service layer for managing vector databases."""
 
     def __init__(
-        self, data_dir: Optional[str] = None, default_embedder: Optional[str] = None
+        self,
+        data_dir: Optional[str] = None,
+        default_embedder: Optional[str] = None,
+        default_embedder_type: Optional[str] = None,
     ):
         self.data_dir = data_dir or os.getenv("VECTOR_DB_DATA_DIR", "./data")
         self.default_embedder = default_embedder or os.getenv(
-            "DEFAULT_EMBEDDER_MODEL", "sentence-transformers/all-MiniLM-L6-v2"
+            "DEFAULT_EMBEDDER_MODEL", "BAAI/bge-m3"
+        )
+        self.default_embedder_type = default_embedder_type or os.getenv(
+            "DEFAULT_EMBEDDER_TYPE", "klusterai"
         )
         self.default_distance_metric = os.getenv("DEFAULT_DISTANCE_METRIC", "L2")
         self.default_index_type = os.getenv("DEFAULT_INDEX_TYPE", "IVF_FLAT")
         self.default_nlist = int(os.getenv("DEFAULT_NLIST", "100"))
         self.default_nprobe = int(os.getenv("DEFAULT_NPROBE", "10"))
-        self.embedder_device = os.getenv("EMBEDDER_DEVICE", "auto")
+        self.embedder_device = os.getenv("EMBEDDER_DEVICE", "cpu")
         self.embedder_max_length = int(os.getenv("EMBEDDER_MAX_LENGTH", "512"))
         self.embedder_pooling = os.getenv("EMBEDDER_POOLING_STRATEGY", "mean")
         self.embedder_normalize = (
@@ -37,22 +44,36 @@ class VectorDBService:
         self.indices: Dict[str, VectorDB] = {}
         self.embedders: Dict[str, BaseEmbedder] = {}
 
-        # Ensure data directory exists
         os.makedirs(self.data_dir, exist_ok=True)
+        print(self.default_embedder, self.default_embedder_type)
+        self._get_embedder(self.default_embedder, self.default_embedder_type)
 
-        # Load default embedder
-        self._get_embedder(self.default_embedder)
-
-    def _get_embedder(self, model_name: str) -> BaseEmbedder:
+    def _get_embedder(
+        self, model_name: str, model_type: str = "klusterai", **kwargs: Any
+    ) -> BaseEmbedder:
         """Get or create embedder with configured parameters."""
         if model_name not in self.embedders:
-            self.embedders[model_name] = HuggingFaceEmbedder(
-                model_name=model_name,
-                device=self.embedder_device,
-                max_length=self.embedder_max_length,
-                pooling_strategy=self.embedder_pooling,
-                normalize=self.embedder_normalize,
-            )
+            if model_type == "huggingface":
+                self.embedders[model_name] = HuggingFaceEmbedder(
+                    model_name=model_name,
+                    device=self.embedder_device,
+                    max_length=self.embedder_max_length,
+                    pooling_strategy=self.embedder_pooling,
+                    normalize=self.embedder_normalize,
+                )
+            elif model_type == "klusterai":
+                api_key = os.getenv("KLUSTER_AI_API_KEY")
+                if not api_key:
+                    raise ValueError(
+                        "KLUSTER_AI_API_KEY environment variable is required for KlusterAI embedder"
+                    )
+                self.embedders[model_name] = KlusterAIEmbedder(
+                    api_key=api_key,
+                    model_name=model_name,
+                    dimension=kwargs.get("dimension", 1024),
+                )
+            else:
+                raise ValueError(f"Unsupported model type: {model_type}")
         return self.embedders[model_name]
 
     def create_index(

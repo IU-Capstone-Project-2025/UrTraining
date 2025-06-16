@@ -16,9 +16,11 @@ services:
       - DEFAULT_NPROBE=10
 
       # Default Embedder Configuration
-      - DEFAULT_EMBEDDER_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - DEFAULT_EMBEDDER_MODEL=BAAI/bge-m3
+      - DEFAULT_EMBEDDER_TYPE=klusterai
       - EMBEDDER_DEVICE=cpu
       - EMBEDDER_MAX_LENGTH=512
       - EMBEDDER_POOLING_STRATEGY=mean
-      - EMBEDDER_NORMALIZE=true
+      - EMBEDDER_NORMALIZE=false
+      - KLUSTER_AI_API_KEY=885a33a9-169b-498f-942a-549f7a80dd02
     restart: unless-stopped
