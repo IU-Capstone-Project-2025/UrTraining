@@ -17,16 +17,16 @@ const Welcome = () => {
                     </h3>
                 </div>
                 <div className='welcome__info__buttons'>
-                    <button className='btn-basic-white'>
-                        <Link to={"/trainee-begin"}>
+                    <Link to={"/trainee-begin"}>
+                        <button className='btn-basic-white'>
                             I want to train
-                        </Link>
-                    </button>
-                    <button className='btn-basic-black'>
-                        <Link to={"/trainer-begin"}>
+                        </button>
+                    </Link>
+                    <Link to={"/trainer-begin"}>
+                        <button className='btn-basic-black'>
                             I am a Coach
-                        </Link>
-                    </button>
+                        </button>
+                    </Link>
                 </div>
             </div>
         </div>

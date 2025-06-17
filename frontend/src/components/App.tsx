@@ -9,6 +9,7 @@ import SignUpPage from '../pages/SignUpPage';
 import TraineeBeginPage from '../pages/TraineeBeginPage';
 import TrainerBeginPage from '../pages/TrainerBeginPage';
 import SurveyPage from '../pages/SurveyPage';
+import ExampleCoursePage from '../pages/ExampleCoursePage';
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="trainee-begin" element={<TraineeBeginPage />} />
           <Route path="trainer-begin" element={<TrainerBeginPage />} />
           <Route path="survey" element={<SurveyPage />} />
+          <Route path="course/example-course" element={<ExampleCoursePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
