@@ -17,6 +17,7 @@ from .models import (
     GetIndexDocsResponse,
     DocumentInfo,
     HealthResponse,
+    DeleteIndexResponse,
 )
 from .service import VectorDBService
 
@@ -180,16 +181,24 @@ async def health(service: VectorDBService = Depends(get_vector_service)):
     """Health check endpoint."""
     try:
         health_info = service.get_health_info()
-
-        return HealthResponse(
-            status=health_info["status"],
-            timestamp=health_info["timestamp"],
-            version=health_info["version"],
-            indices=health_info["indices"],
-        )
-
+        return HealthResponse(**health_info)
     except Exception as e:
-        logger.error(f"Error getting health info: {e}")
-        return HealthResponse(
-            status="unhealthy", timestamp="", version="1.0.0", indices={}
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/indices/{index_name}", response_model=DeleteIndexResponse)
+async def delete_index(
+    index_name: str, service: VectorDBService = Depends(get_vector_service)
+):
+    """Delete an index and all its data."""
+    try:
+        success = service.delete_index(index_name)
+        return DeleteIndexResponse(
+            success=success,
+            message=f"Index '{index_name}' deleted successfully",
+            deleted_index=index_name,
         )
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

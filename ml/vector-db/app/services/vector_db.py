@@ -111,26 +111,20 @@ class VectorDB:
         if query_vector.ndim == 1:
             query_vector = query_vector.reshape(1, -1)
 
-        # Set search parameters
         if hasattr(self.index, "nprobe"):
             nprobe = kwargs.get("nprobe", self.config.nprobe)
             self.index.nprobe = nprobe
 
-        # Normalize query vector
         normalized_query = self._normalize_vectors(query_vector)
-
-        # Search
         distances, indices = self.index.search(normalized_query, k)
 
-        # Get documents for returned indices
         documents = []
         for idx in indices[0]:
             if idx != -1 and idx in self.index_to_id:
                 doc_id = self.index_to_id[idx]
                 documents.append(self.documents[doc_id])
             else:
-                # Create empty document for missing results
-                documents.append(Document(id="", content="", metadata={}))
+                documents.append(Document(id=None, content="empty doc", metadata={}))
 
         return distances[0], documents
 
@@ -145,10 +139,8 @@ class VectorDB:
         Args:
             path (str): Path to save the database
         """
-        # Save FAISS index
         faiss.write_index(self.index, f"{path}.index")
 
-        # Save documents and mappings
         data = {
             "documents": self.documents,
             "id_to_index": self.id_to_index,
