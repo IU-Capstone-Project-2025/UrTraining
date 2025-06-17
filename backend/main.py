@@ -12,7 +12,14 @@ from app.routes.admin import router as admin_router
 from app.database import engine
 from app.models.database_models import Base
 
-app = FastAPI(title="UrTraining Backend API")
+app = FastAPI(
+    title="UrTraining Backend API",
+    description="A comprehensive training platform API for fitness courses and user management",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json"
+)
 
 # Create database tables on startup
 @app.on_event("startup")
@@ -41,11 +48,11 @@ app.add_middleware(
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-app.include_router(router)
-app.include_router(auth_router, prefix="/auth")
-app.include_router(courses_router, prefix="/api")
-app.include_router(users_router, prefix="/api")
-app.include_router(admin_router, prefix="/admin")
+app.include_router(router, tags=["Base"])
+app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
+app.include_router(courses_router, prefix="/api", tags=["Courses"])
+app.include_router(users_router, prefix="/api", tags=["Users"])
+app.include_router(admin_router, prefix="/admin", tags=["Admin"])
 
 @app.get("/")
 def read_root():

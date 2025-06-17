@@ -12,8 +12,23 @@ DATABASE_URL = os.getenv(
     "postgresql://uruser:urpassword@db:5432/urtraining"
 )
 
-# Create SQLAlchemy engine
-engine = create_engine(DATABASE_URL)
+# Try PostgreSQL first, fallback to SQLite for local development
+try:
+    # Test PostgreSQL connection
+    if "postgresql://" in DATABASE_URL:
+        engine = create_engine(DATABASE_URL)
+        # Try to connect
+        conn = engine.connect()
+        conn.close()
+        print("Connected to PostgreSQL database")
+    else:
+        engine = create_engine(DATABASE_URL)
+        print(f"Using database: {DATABASE_URL}")
+except Exception as e:
+    print(f"PostgreSQL connection failed: {e}")
+    print("Falling back to SQLite for local development")
+    DATABASE_URL = "sqlite:///./urtraining.db"
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
 # Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

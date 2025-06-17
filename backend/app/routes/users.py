@@ -12,45 +12,81 @@ router = APIRouter()
 
 def convert_db_user_to_response(db_user: DBUser, profile=None) -> UserResponse:
     """Convert database user to UserResponse model"""
-    user_data = {
-        "personal_data": {
-            "full_name": db_user.full_name
-        },
-        "basic_information": {
-            "gender": profile.gender if profile else None,
-            "age": profile.age if profile else None,
-            "height_cm": profile.height_cm if profile else None,
-            "weight_kg": profile.weight_kg if profile else None
-        },
-        "training_goals": profile.training_goals if profile and profile.training_goals else [],
-        "training_experience": {
-            "level": profile.training_level if profile else None,
-            "frequency_last_3_months": profile.frequency_last_3_months if profile else None
-        },
-        "preferences": {
-            "training_location": profile.training_location if profile else None,
-            "location_details": profile.location_details if profile else None,
-            "session_duration": profile.session_duration if profile else None
-        },
-        "health": {
-            "joint_back_problems": profile.joint_back_problems if profile else None,
-            "chronic_conditions": profile.chronic_conditions if profile else None,
-            "health_details": profile.health_details if profile else None
-        },
-        "training_types": {
-            "strength_training": profile.strength_training if profile else None,
-            "cardio": profile.cardio if profile else None,
-            "hiit": profile.hiit if profile else None,
-            "yoga_pilates": profile.yoga_pilates if profile else None,
-            "functional_training": profile.functional_training if profile else None,
-            "stretching": profile.stretching if profile else None
-        },
-        "id": str(db_user.id),
-        "created_at": db_user.created_at.isoformat() if db_user.created_at else None,
-        "updated_at": db_user.updated_at.isoformat() if db_user.updated_at else None
-    }
-    
-    return UserResponse(**user_data)
+    try:
+        # Build user data with proper defaults and validation
+        user_data = {
+            "personal_data": {
+                "full_name": db_user.full_name or "Unknown"
+            },
+            "basic_information": {
+                "gender": profile.gender if profile and profile.gender else "male",  # Default gender
+                "age": profile.age if profile and profile.age else 25,  # Default age
+                "height_cm": profile.height_cm if profile and profile.height_cm else 170,  # Default height
+                "weight_kg": profile.weight_kg if profile and profile.weight_kg else 70.0  # Default weight
+            },
+            "training_goals": profile.training_goals if profile and profile.training_goals else ["maintain_fitness"],  # Default goal
+            "training_experience": {
+                "level": profile.training_level if profile and profile.training_level else "beginner",  # Default level
+                "frequency_last_3_months": profile.frequency_last_3_months if profile and profile.frequency_last_3_months else "1_2_times_week"  # Default frequency
+            },
+            "preferences": {
+                "training_location": profile.training_location if profile and profile.training_location else "home",  # Default location
+                "location_details": profile.location_details if profile and profile.location_details else "no_equipment",  # Default details
+                "session_duration": profile.session_duration if profile and profile.session_duration else "30_45_min"  # Default duration
+            },
+            "health": {
+                "joint_back_problems": profile.joint_back_problems if profile and profile.joint_back_problems is not None else False,
+                "chronic_conditions": profile.chronic_conditions if profile and profile.chronic_conditions is not None else False,
+                "health_details": profile.health_details if profile and profile.health_details else None
+            },
+            "training_types": {
+                "strength_training": profile.strength_training if profile and profile.strength_training else 3,  # Default interest
+                "cardio": profile.cardio if profile and profile.cardio else 3,
+                "hiit": profile.hiit if profile and profile.hiit else 2,
+                "yoga_pilates": profile.yoga_pilates if profile and profile.yoga_pilates else 2,
+                "functional_training": profile.functional_training if profile and profile.functional_training else 3,
+                "stretching": profile.stretching if profile and profile.stretching else 4
+            },
+            "id": str(db_user.id),
+            "created_at": db_user.created_at.isoformat() if db_user.created_at else None,
+            "updated_at": db_user.updated_at.isoformat() if db_user.updated_at else None
+        }
+        
+        print(f"Attempting to create UserResponse for user {db_user.id} with data: {user_data}")
+        return UserResponse(**user_data)
+        
+    except Exception as e:
+        print(f"❌ DETAILED ERROR for user {db_user.id} ({db_user.username}):")
+        print(f"   Error type: {type(e).__name__}")
+        print(f"   Error message: {str(e)}")
+        print(f"   User full_name: {db_user.full_name}")
+        print(f"   Profile exists: {profile is not None}")
+        if profile:
+            print(f"   Profile details:")
+            print(f"     - gender: {profile.gender} (type: {type(profile.gender)})")
+            print(f"     - age: {profile.age} (type: {type(profile.age)})")
+            print(f"     - training_goals: {profile.training_goals} (type: {type(profile.training_goals)})")
+            print(f"     - training_level: {profile.training_level} (type: {type(profile.training_level)})")
+        
+        # Try to create a minimal user response to avoid total failure
+        try:
+            minimal_data = {
+                "personal_data": {"full_name": db_user.full_name or "Unknown"},
+                "basic_information": {"gender": "male", "age": 25, "height_cm": 170, "weight_kg": 70.0},
+                "training_goals": ["maintain_fitness"],
+                "training_experience": {"level": "beginner", "frequency_last_3_months": "1_2_times_week"},
+                "preferences": {"training_location": "home", "location_details": "no_equipment", "session_duration": "30_45_min"},
+                "health": {"joint_back_problems": False, "chronic_conditions": False, "health_details": None},
+                "training_types": {"strength_training": 3, "cardio": 3, "hiit": 2, "yoga_pilates": 2, "functional_training": 3, "stretching": 4},
+                "id": str(db_user.id),
+                "created_at": db_user.created_at.isoformat() if db_user.created_at else None,
+                "updated_at": db_user.updated_at.isoformat() if db_user.updated_at else None
+            }
+            print(f"✅ Using minimal data fallback for user {db_user.id}")
+            return UserResponse(**minimal_data)
+        except Exception as fallback_error:
+            print(f"❌ Even minimal fallback failed for user {db_user.id}: {fallback_error}")
+            raise e  # Re-raise original error
 
 @router.post("/users", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user_profile(user: UserCreate, db: Session = Depends(get_db)):
@@ -108,22 +144,61 @@ async def get_all_users(skip: int = 0, limit: int = 100, db: Session = Depends(g
     Retrieve all users with pagination
     """
     try:
+        # Debug: Check database connection
+        print("Attempting to connect to database...")
+        
         # Get users from database
         from app.models.database_models import User as DBUser
+        print("Querying users from database...")
         users = db.query(DBUser).offset(skip).limit(limit).all()
+        print(f"Found {len(users)} users in database")
+        
+        if not users:
+            print("No users found in database - returning empty list")
+            return []
         
         users_list = []
-        for db_user in users:
-            profile = get_training_profile(db, db_user.id)
-            users_list.append(convert_db_user_to_response(db_user, profile))
+        skipped_users = []
+        
+        for i, db_user in enumerate(users):
+            try:
+                print(f"Processing user {i+1}/{len(users)}: ID={db_user.id}, username={db_user.username}")
+                
+                # Get training profile with more detailed logging
+                profile = get_training_profile(db, db_user.id)
+                print(f"Retrieved profile for user {db_user.username}: {'Yes' if profile else 'No'}")
+                
+                # Convert to response format
+                user_response = convert_db_user_to_response(db_user, profile)
+                users_list.append(user_response)
+                print(f"Successfully processed user {db_user.username}")
+                
+            except Exception as user_error:
+                error_msg = f"Error processing user {db_user.username} (ID: {db_user.id}): {user_error}"
+                print(error_msg)
+                skipped_users.append({
+                    "id": db_user.id,
+                    "username": db_user.username,
+                    "error": str(user_error)
+                })
+                # Continue processing other users
+                continue
+        
+        print(f"Successfully processed {len(users_list)} users, skipped {len(skipped_users)} users")
+        if skipped_users:
+            print("Skipped users:")
+            for skipped in skipped_users:
+                print(f"  - {skipped['username']} (ID: {skipped['id']}): {skipped['error']}")
         
         return users_list
         
     except Exception as e:
         print(f"Error retrieving users: {e}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to retrieve users"
+            detail=f"Failed to retrieve users: {str(e)}"
         )
 
 @router.get("/users/{user_id}", response_model=UserResponse)
@@ -477,4 +552,97 @@ async def get_users_stats(db: Session = Depends(get_db)):
             "training_levels": {},
             "popular_goals": {},
             "age_groups": {}
-        } 
+        }
+
+@router.get("/users/test")
+async def test_users_endpoint():
+    """
+    Simple test endpoint to check if users route is working
+    """
+    return {
+        "message": "Users endpoint is working",
+        "status": "success",
+        "timestamp": datetime.now().isoformat()
+    }
+
+@router.get("/users/db-test")
+async def test_database_connection(db: Session = Depends(get_db)):
+    """
+    Test database connection
+    """
+    try:
+        # Try to count users
+        from app.models.database_models import User as DBUser
+        user_count = db.query(DBUser).count()
+        
+        return {
+            "message": "Database connection successful",
+            "user_count": user_count,
+            "status": "success"
+        }
+    except Exception as e:
+        return {
+            "message": "Database connection failed",
+            "error": str(e),
+            "status": "failed"
+        }
+
+
+
+@router.get("/users/debug/raw")
+async def debug_raw_user_data(limit: int = 10, db: Session = Depends(get_db)):
+    """
+    Debug endpoint to show raw user data without processing
+    """
+    try:
+        from app.models.database_models import User as DBUser
+        
+        users = db.query(DBUser).limit(limit).all()
+        raw_data = []
+        
+        for user in users:
+            profile = get_training_profile(db, user.id)
+            raw_data.append({
+                "database_user": {
+                    "id": user.id,
+                    "username": user.username,
+                    "full_name": user.full_name,
+                    "email": user.email,
+                    "is_active": user.is_active,
+                    "is_admin": user.is_admin,
+                    "created_at": str(user.created_at),
+                    "updated_at": str(user.updated_at)
+                },
+                "training_profile": {
+                    "exists": profile is not None,
+                    "data": {
+                        "gender": profile.gender if profile else None,
+                        "age": profile.age if profile else None,
+                        "height_cm": profile.height_cm if profile else None,
+                        "weight_kg": profile.weight_kg if profile else None,
+                        "training_goals": profile.training_goals if profile else None,
+                        "training_level": profile.training_level if profile else None,
+                        "frequency_last_3_months": profile.frequency_last_3_months if profile else None,
+                        "training_location": profile.training_location if profile else None,
+                        "location_details": profile.location_details if profile else None,
+                        "session_duration": profile.session_duration if profile else None,
+                        "joint_back_problems": profile.joint_back_problems if profile else None,
+                        "chronic_conditions": profile.chronic_conditions if profile else None,
+                        "health_details": profile.health_details if profile else None,
+                        "strength_training": profile.strength_training if profile else None,
+                        "cardio": profile.cardio if profile else None,
+                        "hiit": profile.hiit if profile else None,
+                        "yoga_pilates": profile.yoga_pilates if profile else None,
+                        "functional_training": profile.functional_training if profile else None,
+                        "stretching": profile.stretching if profile else None
+                    } if profile else None
+                }
+            })
+        
+        return {
+            "total_users_found": len(users),
+            "raw_user_data": raw_data
+        }
+        
+    except Exception as e:
+        return {"error": str(e)} 

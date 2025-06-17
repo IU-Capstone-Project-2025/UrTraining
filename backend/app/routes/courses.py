@@ -7,6 +7,8 @@ class Course(BaseModel):
     id: int
     name: str
     duration: int
+    level: str
+    goal: str
 
 fake_courses = [
     Course(id=1, name="Mobility Reset", duration=30, level="Beginner", goal="Flexibility"),
@@ -23,6 +25,17 @@ fake_courses = [
     Course(id=12, name="Low Impact Burn", duration=30, level="Beginner", goal="Weight Loss")
 ]
 
-@router.get("/courses")
+from typing import List
+
+@router.get("/courses", response_model=List[Course])
 def get_courses():
+    """
+    Get all available training courses
+    
+    Returns a list of all available courses with their details including:
+    - Course ID and name
+    - Duration in minutes
+    - Difficulty level
+    - Training goal/focus
+    """
     return fake_courses
