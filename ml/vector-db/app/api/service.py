@@ -1,6 +1,7 @@
 import os
 import time
 import shutil
+import logging
 from typing import Dict, List, Optional, Tuple, Any
 from datetime import datetime
 
@@ -12,6 +13,9 @@ from ..services.document import Document
 from ..services.embedder.huggingface import HuggingFaceEmbedder
 from ..services.embedder.api import KlusterAIEmbedder
 from ..services.embedder.base import BaseEmbedder
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class VectorDBService:
@@ -25,15 +29,15 @@ class VectorDBService:
     ):
         self.data_dir = data_dir or os.getenv("VECTOR_DB_DATA_DIR", "./data")
         self.default_embedder = default_embedder or os.getenv(
-            "DEFAULT_EMBEDDER_MODEL", "BAAI/bge-m3"
+            "EMBEDDER_MODEL", "BAAI/bge-m3"
         )
         self.default_embedder_type = default_embedder_type or os.getenv(
-            "DEFAULT_EMBEDDER_TYPE", "klusterai"
+            "EMBEDDER_TYPE", "klusterai"
         )
-        self.default_distance_metric = os.getenv("DEFAULT_DISTANCE_METRIC", "L2")
-        self.default_index_type = os.getenv("DEFAULT_INDEX_TYPE", "IVF_FLAT")
-        self.default_nlist = int(os.getenv("DEFAULT_NLIST", "100"))
-        self.default_nprobe = int(os.getenv("DEFAULT_NPROBE", "10"))
+        self.default_distance_metric = os.getenv("DISTANCE_METRIC", "L2")
+        self.default_index_type = os.getenv("INDEX_TYPE", "IVF_FLAT")
+        self.default_nlist = int(os.getenv("NLIST", "100"))
+        self.default_nprobe = int(os.getenv("NPROBE", "10"))
         self.embedder_device = os.getenv("EMBEDDER_DEVICE", "cpu")
         self.embedder_max_length = int(os.getenv("EMBEDDER_MAX_LENGTH", "512"))
         self.embedder_pooling = os.getenv("EMBEDDER_POOLING_STRATEGY", "mean")
@@ -45,7 +49,7 @@ class VectorDBService:
         self.embedders: Dict[str, BaseEmbedder] = {}
 
         os.makedirs(self.data_dir, exist_ok=True)
-        print(self.default_embedder, self.default_embedder_type)
+        logger.info(f"Creating {self.default_embedder, self.default_embedder_type}")
         self._get_embedder(self.default_embedder, self.default_embedder_type)
 
     def _get_embedder(
@@ -140,7 +144,7 @@ class VectorDBService:
 
             # Create document object
             doc = Document(
-                id=doc_data.get("id", ""),  # Will auto-generate if empty
+                id=doc_data.get("id", None),
                 content=content,
                 metadata=doc_data.get("metadata", {}),
             )

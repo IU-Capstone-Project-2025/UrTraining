@@ -7,10 +7,10 @@ FastAPI service for vector similarity search and text embeddings. Built with FAI
 ### With Docker Compose
 
 ```bash
-# Clone or navigate to the project directory
 cd ml/vector-db
 
 # Start the service
+docker-compose build
 docker-compose up -d
 
 # The API will be available at http://localhost:8000
@@ -110,14 +110,14 @@ curl -X DELETE "http://localhost:8000/indices/my_documents"
 
 ## Dependencies
 
-- Python 3.9+
+- Python 3.12.3
 - FastAPI
 - FAISS-CPU
-- Sentence Transformers
+- Transformers
 - NumPy
 - Uvicorn
 
 ## TODO
 
-- [ ] Add support for loading .bin files for embeddings
+- [ ] Add support for loading .bin files for finetuned retrievers
 

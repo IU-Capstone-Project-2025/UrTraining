@@ -9,18 +9,17 @@ services:
       # Vector DB Configuration
       - VECTOR_DB_DATA_DIR=/app/data
 
-      # Default Index Configuration
-      - DEFAULT_DISTANCE_METRIC=L2
-      - DEFAULT_INDEX_TYPE=IVF_FLAT
-      - DEFAULT_NLIST=100
-      - DEFAULT_NPROBE=10
+      # Index Configuration
+      - DISTANCE_METRIC=L2
+      - INDEX_TYPE=IVF_FLAT
+      - NLIST=100
+      - NPROBE=10
 
-      # Default Embedder Configuration
-      - DEFAULT_EMBEDDER_MODEL=BAAI/bge-m3
-      - DEFAULT_EMBEDDER_TYPE=klusterai
+      # Embedder Configuration
+      - EMBEDDER_MODEL=BAAI/bge-m3
+      - EMBEDDER_TYPE=klusterai
       - EMBEDDER_DEVICE=cpu
       - EMBEDDER_MAX_LENGTH=512
       - EMBEDDER_POOLING_STRATEGY=mean
       - EMBEDDER_NORMALIZE=false
-      - KLUSTER_AI_API_KEY=885a33a9-169b-498f-942a-549f7a80dd02
     restart: unless-stopped
