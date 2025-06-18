@@ -1,26 +1,32 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState, useEffect } from 'react';
 import type { SurveyProps, SurveyOption, SurveyStep, InputField } from "../components/interface/interfaces";
+import SurveyPageContext from './context/SurveyPageContext';
 import { InputTemplates } from './InputTemplates'
 import "../css/Survey.css"
 
-interface StepData { [key: string]: any; }
-
+interface StepData {
+    [key: string]: any;
+}
 
 const Survey = (props: SurveyProps) => {
     const [savedData, setSavedData] = useState<StepData>({});
 
+    const stepContext = useContext(SurveyPageContext)
+
     const first_step = props.steps_total[0].value
     const last_step = props.steps_total[props.steps_total.length - 1].value
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setSavedData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleContinue = () => {
         console.log(savedData);
+        stepContext.updateStep(stepContext.currentStep + 1)
     }
+
 
     return (
         <div className="survey basic-page">
