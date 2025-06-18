@@ -9,21 +9,46 @@ import SignUpPage from '../pages/SignUpPage';
 import TraineeBeginPage from '../pages/TraineeBeginPage';
 import TrainerBeginPage from '../pages/TrainerBeginPage';
 import SurveyPage from '../pages/SurveyPage';
+import ProtectedRoute from './ProtectedRoute';
+import { AuthProvider } from '../context/AuthContext';
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navbar />}>
-          <Route index element={<HomePage />} />
-          <Route path="signup" element={<SignUpPage />} />
-          <Route path="signin" element={<SignInPage />} />
-          <Route path="trainee-begin" element={<TraineeBeginPage />} />
-          <Route path="trainer-begin" element={<TrainerBeginPage />} />
-          <Route path="survey" element={<SurveyPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navbar />}>
+            <Route index element={<HomePage />} />
+            <Route path="signup" element={<SignUpPage />} />
+            <Route path="signin" element={<SignInPage />} />
+            <Route 
+              path="trainee-begin" 
+              element={
+                <ProtectedRoute>
+                  <TraineeBeginPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="trainer-begin" 
+              element={
+                <ProtectedRoute>
+                  <TrainerBeginPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="survey" 
+              element={
+                <ProtectedRoute>
+                  <SurveyPage />
+                </ProtectedRoute>
+              } 
+            />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 };
 

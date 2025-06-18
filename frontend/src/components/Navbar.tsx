@@ -1,8 +1,27 @@
-// import React from 'react'
+import React, { useState } from 'react'
 import '../css/Navbar.css'
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import { authAPI } from '../utils/auth';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated, userInfo, logout } = useAuth();
+
+  const handleLogout = async () => {
+    setLoading(true);
+    try {
+      await authAPI.logout();
+      logout(); // Update context state
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div className='navbar'>
@@ -31,16 +50,37 @@ const Header = () => {
           </Link>
         </div>
         <div className='navbar__auth'>
-          <button className='btn-basic-white'>
-            <Link to="/signin">
-              Sign In
-            </Link>
-          </button>
-          <button className='btn-basic-black'>
-            <Link to="/signup">
-              Sign Up
-            </Link>
-          </button>
+          {isAuthenticated && userInfo ? (
+            <>
+              <span style={{ 
+                marginRight: '15px', 
+                color: '#333',
+                fontSize: '14px'
+              }}>
+                Welcome, {userInfo.full_name || userInfo.username}!
+              </span>
+              <button 
+                className='btn-basic-white'
+                onClick={handleLogout}
+                disabled={loading}
+              >
+                {loading ? 'Logging out...' : 'Logout'}
+              </button>
+            </>
+          ) : (
+            <>
+              <button className='btn-basic-white'>
+                <Link to="/signin" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  Sign In
+                </Link>
+              </button>
+              <button className='btn-basic-black'>
+                <Link to="/signup" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  Sign Up
+                </Link>
+              </button>
+            </>
+          )}
         </div>
       </div>
       <Outlet />
