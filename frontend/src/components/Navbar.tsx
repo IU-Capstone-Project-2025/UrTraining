@@ -6,13 +6,13 @@ const Header = () => {
   return (
     <>
       <div className='navbar'>
-        <div className='navbar__logo'>
-          <Link to="/">
+        <Link to="/">
+          <div className='navbar__logo'>
             <h1>
               URTRAINING
             </h1>
-          </Link>
-        </div>
+          </div>
+        </Link>
         <div className='navbar__links'>
           <Link to="/">
             Profile
@@ -31,16 +31,16 @@ const Header = () => {
           </Link>
         </div>
         <div className='navbar__auth'>
-          <button className='btn-basic-white'>
-            <Link to="/signin">
+          <Link to="/signin">
+            <button className='btn-basic-white'>
               Sign In
-            </Link>
-          </button>
-          <button className='btn-basic-black'>
-            <Link to="/signup">
+            </button>
+          </Link>
+          <Link to="/signup">
+            <button className='btn-basic-black'>
               Sign Up
-            </Link>
-          </button>
+            </button>
+          </Link>
         </div>
       </div>
       <Outlet />

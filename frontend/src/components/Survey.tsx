@@ -1,70 +1,101 @@
-// import React from 'react'
-import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useContext } from 'react'
+import { useState, useEffect } from 'react';
+import type { SurveyProps, SurveyOption, SurveyStep, InputField } from "../components/interface/interfaces";
+import SurveyPageContext from './context/SurveyPageContext';
+import { InputTemplates } from './InputTemplates'
 import "../css/Survey.css"
-import Step1Survey from './survey/Step1Survey';
 
-const Survey = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
+interface StepData {
+    [key: string]: any;
+}
 
-    const step = parseInt(searchParams.get('step') || '') || 1;
+const Survey = (props: SurveyProps) => {
+    const [savedData, setSavedData] = useState<StepData>({});
 
-    useEffect(() => {
-        if (step < 1 || step > 4) {
-            goToStep(1);
-        }
-    }, [step]);
+    const stepContext = useContext(SurveyPageContext)
 
-    const goToStep = (newStep: Number) => {
-        setSearchParams({ step: newStep.toString() });
+    const first_step = props.steps_total[0].value
+    const last_step = props.steps_total[props.steps_total.length - 1].value
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setSavedData(prev => ({ ...prev, [name]: value }));
     };
+
+    const handleContinue = () => {
+        console.log(savedData);
+        stepContext.updateStep(stepContext.currentStep + 1)
+    }
+
 
     return (
         <div className="survey basic-page">
             <div className="survey__navbar">
-                {[1, 2, 3, 4].map((s) => <h3 className={step === s ? "survey__navbar__selected" : ""}>Step {s}</h3>)}
+                {props.steps_total.map((step: SurveyStep, value: number) => {
+                    return (
+                        <h3 key={value} className={step.value === props.step_current ? "survey__navbar__selected" : ""}>
+                            {step.placeholder}
+                        </h3>
+                    )
+                })}
             </div>
+
             <div className="survey__container">
                 <div className="survey__options">
-                    {step === 1 && <Step1Survey />}
+                    <div className="survey__title">
+                        {props.title}
+                    </div>
+                    {props.options.map((options_page: SurveyOption, value: number) => {
+                        return (
+                            <div key={value} className="survey__options__section">
+                                <p>
+                                    {options_page.subtitle}
+                                </p>
+                                <div className="survey__section__forms">
+                                    <form onChange={handleChange}>
+                                        {options_page.inputs.map((input_option: InputField, value: number) => {
+                                            return (
+                                                <InputTemplates key={value} {...input_option} />
+                                            )
+                                        })}
+                                    </form>
+                                </div>
+                            </div>
+                        )
+                    })}
                 </div>
+
                 <div className="survey__info">
                     <div className="survey__info__description">
-                        {step === 1 &&
-                            <>
-                                <div className="survey__title">
-                                    <h2>
-                                        Why we collect your data?
-                                    </h2>
-                                </div>
-                                <p>
-                                    Idk lol, why do you ask? Just agree with our TOS and let machine process your precious data.
-                                    You don't care anyways.
-                                </p>
-                            </>
-                        }
+                        <div className="survey__title">
+                            <h2>
+                                {props.information.title}
+                            </h2>
+                        </div>
+                        <p>
+                            {props.information.description}
+                        </p>
                     </div>
                     <div className="survey__info__button">
-                        {step !== 1 &&
-                            <>
-                                <button className="btn-basic-black" onClick={() => goToStep(step - 1)}>
+                        {
+                            props.step_current !== first_step ?
+                                <button className="btn-basic-black">
                                     Back
-                                </button>
-                            </>
+                                </button> : ""
                         }
-                        {step !== 4 &&
-                            <>
-                                <button className="btn-basic-black" onClick={() => goToStep(step + 1)}>
+
+                        {
+                            props.step_current !== last_step ?
+                                <button className="btn-basic-black" onClick={handleContinue}>
                                     Continue
-                                </button>
-                            </>
+                                </button> : ""
                         }
-                        {step === 4 &&
-                            <>
+
+                        {
+                            props.step_current === last_step ?
                                 <button className="btn-basic-black">
                                     Submit
-                                </button>
-                            </>
+                                </button> : ""
                         }
                     </div>
                 </div>
