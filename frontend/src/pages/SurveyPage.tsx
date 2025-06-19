@@ -13,7 +13,7 @@ const SurveyPage = () => {
   useEffect(() => {
     let newStep = parseInt(searchParams.get('step') || '') || 1;
 
-    if (newStep < 1 || newStep > 4) {
+    if (newStep < 1 || newStep > 6) {
       newStep = 1;
       setSearchParams({ step: newStep.toString() }, { replace: true });
     }

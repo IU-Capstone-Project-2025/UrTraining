@@ -1,8 +1,19 @@
 // import React from 'react'
 import '../css/Navbar.css'
 import { Outlet, Link } from "react-router-dom";
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
+  const { isAuthenticated, user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Ошибка при выходе:', error);
+    }
+  };
+
   return (
     <>
       <div className='navbar'>
@@ -14,7 +25,7 @@ const Header = () => {
           </div>
         </Link>
         <div className='navbar__links'>
-          <Link to="/">
+          <Link to="/profile">
             Profile
           </Link>
           <Link to="/">
@@ -31,16 +42,29 @@ const Header = () => {
           </Link>
         </div>
         <div className='navbar__auth'>
-          <Link to="/signin">
-            <button className='btn-basic-white'>
-              Sign In
-            </button>
-          </Link>
-          <Link to="/signup">
-            <button className='btn-basic-black'>
-              Sign Up
-            </button>
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <span style={{ marginRight: '10px', color: 'black' }}>
+                Привет, {user?.full_name || user?.username}!
+              </span>
+              <button className='btn-basic-white' onClick={handleLogout}>
+                Выйти
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/signin">
+                <button className='btn-basic-white'>
+                  Sign In
+                </button>
+              </Link>
+              <Link to="/signup">
+                <button className='btn-basic-black'>
+                  Sign Up
+                </button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
       <Outlet />
