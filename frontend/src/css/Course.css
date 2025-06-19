@@ -1,0 +1,151 @@
+.course__container {
+    width: 100%;
+    min-height: 540px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+
+    padding: 3rem 2rem;
+    border-radius: 2rem;
+    background-color: #a69393;
+}
+
+.course__tags {
+    display: flex;
+    justify-content: space-between;
+}
+
+.course__tags > * {
+    display: flex;
+    flex-direction: row;
+}
+
+.course__info {
+    display: flex;
+    align-items: center
+}
+
+.course__info__title, .course__info__description {
+    flex: 1 2;
+}
+
+.course__info__name {
+    font-family: "TT Travels Bold", sans-serif;
+    font-size: 2rem;
+}
+
+.course__info__author {
+    font-family: "TT Travels Regular", sans-serif;
+    font-size: 1.5rem;
+}
+
+.course__info__reviews {
+    font-family: "TT Travels Regular", sans-serif;
+    font-size: 1rem;
+}
+
+.course__structure {
+    display: flex;
+    flex-direction: column;
+}
+
+.course__structure__header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    font-family: "TT Travels Bold", sans-serif;
+    font-size: 1.5rem;
+}
+
+.course__structure__options {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.course__structure__container {
+    display: flex;
+    width: auto;
+    flex-direction: row;
+    gap: 2rem;
+
+    overflow-x: scroll;
+}
+
+.course__structure__session {
+    min-width: 880px;
+}
+
+.course__session__table {
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 2rem;
+    padding: 0 2rem;
+    background-color: #F3F3F3;
+}
+
+.course__session__title {
+    font-family: "TT Travels Bold", sans-serif;
+    padding-top: 2rem;
+}
+
+.course__table__header,
+.course__table__row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 3fr;
+    align-items: center;
+}
+
+.course__table__header, .course__table__body {
+    padding: 2rem 0;
+}
+
+.course__table__header {
+    font-family: "TT Travels Medium", sans-serif;
+    font-size: 1rem;
+
+    border-bottom: 1px solid black;
+    box-sizing: border-box;
+}
+
+.course__table__body {
+    font-family: "TT Travels Regular", sans-serif;
+    font-size: 1rem;
+
+    display: grid;
+    gap: 1rem;
+}
+
+.course__table__cell {
+    padding: 0 1rem;
+}
+
+.course__coach {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.course__coach__picture {
+    display: flex;
+    width: 8rem;
+    height: 8rem;
+
+    border-radius: 8rem;
+    overflow: hidden;
+    justify-content: center;
+}
+
+.course__coach__picture > * {
+    width: auto;
+    max-height: 8rem;
+}
+
+.course__coach__statistics, .course__coach__tags {
+    display: flex;
+    flex-direction: row;
+}

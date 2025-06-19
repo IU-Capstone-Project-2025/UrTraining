@@ -20,6 +20,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root::-webkit-scrollbar { 
+	display: none; 
+}
+
 @font-face {
   font-family: 'Deltha';
   src: local('Deltha'), url(./fonts/deltha-deltha-400.ttf) format('truetype');

@@ -1,10 +1,12 @@
 // import React from 'react'
-import SignUp from "../components/SignUp"
+import { example_signup_data } from "../components/data/example_json_data"
+import Sign from "../components/Sign"
 
 const SignUpPage = () => {
+  
   return (
     <>
-      <SignUp/>
+      <Sign {...example_signup_data} />
     </>
   )
 }
