@@ -114,9 +114,19 @@ class GetIndexDocsResponse(BaseModel):
 
 
 class HealthResponse(BaseModel):
-    """Response model for health check."""
+    """Health check response."""
 
     status: str
     timestamp: str
     version: str
-    indices: Dict[str, Dict[str, Any]]
+    indices: Dict[str, Dict]
+    loaded_embedders: List[str]
+    config: Dict
+
+
+class DeleteIndexResponse(BaseModel):
+    """Response for index deletion."""
+
+    success: bool
+    message: str
+    deleted_index: str

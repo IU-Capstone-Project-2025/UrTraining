@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   vector-db:
     build: .
@@ -8,4 +6,20 @@ services:
     volumes:
       - ./data:/app/data
     environment:
-      - PYTHONUNBUFFERED=1
+      # Vector DB Configuration
+      - VECTOR_DB_DATA_DIR=/app/data
+
+      # Index Configuration
+      - DISTANCE_METRIC=L2
+      - INDEX_TYPE=IVF_FLAT
+      - NLIST=100
+      - NPROBE=10
+
+      # Embedder Configuration
+      - EMBEDDER_MODEL=BAAI/bge-m3
+      - EMBEDDER_TYPE=klusterai
+      - EMBEDDER_DEVICE=cpu
+      - EMBEDDER_MAX_LENGTH=512
+      - EMBEDDER_POOLING_STRATEGY=mean
+      - EMBEDDER_NORMALIZE=false
+    restart: unless-stopped

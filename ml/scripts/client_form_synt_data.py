@@ -5,13 +5,13 @@ python client_form_synt_data.py -n 10 -m deepseek_r1 -t 0.8 -o deepseek_profiles
 python client_form_synt_data.py -n 10 -m llama3.1_8b -t 0.8 -o llama_profiles.json -b 5
 python client_form_synt_data.py -n 10 -m qwen235b -t 0.8 -o qwen_profiles.json -b 5
 """
+
 import os
 import json
 import argparse
 import random
 import time
 from tqdm import tqdm
-import pandas as pd
 from dotenv import load_dotenv
 from typing import Dict, Optional, List
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -80,7 +80,9 @@ def extract_regular_content(raw_answer: str) -> str:
     return regular_content
 
 
-def generate_single_profile(model_name: str, temperature: float, seed: int = 1337) -> str:
+def generate_single_profile(
+    model_name: str, temperature: float, seed: int = 1337
+) -> str:
     """
     Generate a single synthetic profile
     """
@@ -109,25 +111,25 @@ def get_prompt_with_seed(seed_number: int):
     random.seed(seed_number)
     gender_options = [
         {"gender": "male", "letters": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
-        {"gender": "female", "letters": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"}
+        {"gender": "female", "letters": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
     ]
-    
+
     # Select gender
     gender_option = random.choice(gender_options)
     chosen_gender = gender_option["gender"]
     first_letter = random.choice(gender_option["letters"])
-    
+
     age_ranges = [
         "in their early 20s",
-        "in their late 20s", 
+        "in their late 20s",
         "in their early 30s",
         "in their late 30s",
         "in their 40s",
         "in their 50s",
-        "in their 60s"
+        "in their 60s",
     ]
     chosen_age = random.choice(age_ranges)
-    
+
     characteristics = [
         "a busy professional",
         "a college student",
@@ -170,10 +172,10 @@ def get_prompt_with_seed(seed_number: int):
         "with a slim build",
         "with an athletic build",
         "with a muscular build",
-        "with a stocky build", 
+        "with a stocky build",
         "with a lean build",
         "with an average build",
-        ""
+        "",
     ]
     chosen_body = random.choice(body_types)
     characteristic = random.choice(characteristics)
@@ -190,7 +192,6 @@ def get_prompt_with_seed(seed_number: int):
     full_prompt = prefix + seed_text
 
     return full_prompt
-
 
 
 def generate_profiles(
@@ -221,7 +222,12 @@ def generate_profiles(
         seed_base: int = 42
         with ThreadPoolExecutor(max_workers=size) as executor:
             futures = {
-                executor.submit(generate_single_profile, model_name, temperature, seed_base + batch_idx * size + i): i
+                executor.submit(
+                    generate_single_profile,
+                    model_name,
+                    temperature,
+                    seed_base + batch_idx * size + i,
+                ): i
                 for i in range(size)
             }
 
