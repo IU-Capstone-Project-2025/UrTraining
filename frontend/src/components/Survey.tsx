@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { SurveyProps, SurveyOption, SurveyStep, InputField } from "../components/interface/interfaces";
 import SurveyPageContext from './context/SurveyPageContext';
 import { InputTemplates } from './InputTemplates'
@@ -17,8 +17,9 @@ const Survey = (props: SurveyProps) => {
     const first_step = props.steps_total[0].value
     const last_step = props.steps_total[props.steps_total.length - 1].value
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
+    const handleChange = (event: React.FormEvent<HTMLFormElement>) => {
+        const target = event.target as HTMLInputElement;
+        const { name, value } = target;
         setSavedData(prev => ({ ...prev, [name]: value }));
     };
 

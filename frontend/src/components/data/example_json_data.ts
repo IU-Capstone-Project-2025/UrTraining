@@ -1,23 +1,23 @@
-import type { SurveyProps } from "../interface/interfaces";
+import type { SurveyProps, SignProps } from "../interface/interfaces";
 
 export const example_survey_data: SurveyProps = {
     steps_total: [
-      {
-        value: "step-1",
-        placeholder: "Step 1"
-      },
-      {
-        value: "step-2",
-        placeholder: "Step 2"
-      },
-      {
-        value: "step-3",
-        placeholder: "Step 3"
-      },
-      {
-        value: "step-4",
-        placeholder: "Step 4"
-      },
+        {
+            value: "step-1",
+            placeholder: "Step 1",
+        },
+        {
+            value: "step-2",
+            placeholder: "Step 2",
+        },
+        {
+            value: "step-3",
+            placeholder: "Step 3",
+        },
+        {
+            value: "step-4",
+            placeholder: "Step 4",
+        },
     ],
     step_current: "step-1",
     title: "Let's know each other",
@@ -125,7 +125,79 @@ export const example_survey_data: SurveyProps = {
         },
     ],
     information: {
-      title: "Why we collect your data?",
-      description: "Idk lol, why do you ask? Just agree with our TOS and let machine process your precious data. You don't care anyways."
-    }
+        title: "Why we collect your data?",
+        description:
+            "Idk lol, why do you ask? Just agree with our TOS and let machine process your precious data. You don't care anyways.",
+    },
+};
+
+export const example_signin_data: SignProps = {
+    user_exists: true,
+    image_path: "images/signin_image.jpg",
+    page_title: "Welcome back!",
+    input_fields: [
+        {
+            name: "username",
+            id: "username",
+            input_type: "text",
+            placeholder: "Username",
+            options: "",
+        },
+        {
+            name: "password",
+            id: "password",
+            input_type: "password",
+            placeholder: "Password",
+            options: "",
+        },
+    ],
+    social_links: [
+        {
+            name: "google-socials",
+            placeholder: "Sign In with Google",
+        },
+        {
+            name: "telegram-socials",
+            placeholder: "Sign In with Telegram",
+        },
+    ],
+};
+
+export const example_signup_data: SignProps = {
+    user_exists: false,
+    image_path: "images/signup_image.jpg",
+    page_title: "Sign Up",
+    input_fields: [
+        {
+            name: "username",
+            id: "username",
+            input_type: "text",
+            placeholder: "Username",
+            options: "",
+        },
+        {
+            name: "email",
+            id: "email",
+            input_type: "email",
+            placeholder: "Email",
+            options: "",
+        },
+        {
+            name: "password",
+            id: "password",
+            input_type: "password",
+            placeholder: "Password",
+            options: "",
+        },
+    ],
+    social_links: [
+        {
+            name: "google-socials",
+            placeholder: "Sign Up with Google",
+        },
+        {
+            name: "telegram-socials",
+            placeholder: "Sign Up with Telegram",
+        },
+    ],
 };
