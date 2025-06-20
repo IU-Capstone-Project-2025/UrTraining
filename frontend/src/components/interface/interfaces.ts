@@ -1,5 +1,5 @@
 // Type for defining type of input provided
-export type InputType = "text" | "number" | "email" | "password" | "select" | "radio";
+export type InputType = "text" | "number" | "email" | "password" | "select" | "radio" | "scale";
 
 // "Templates" of how data should be received from API
 export interface SignProps {
