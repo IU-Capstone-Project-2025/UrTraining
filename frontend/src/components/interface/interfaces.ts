@@ -1,9 +1,5 @@
 // Type for defining type of input provided
-<<<<<<< HEAD
-export type InputType = "text" | "number" | "email" | "password" | "select" | "radio" | "checkbox" | "rating" | "textarea";
-=======
-export type InputType = "text" | "number" | "email" | "password" | "select" | "radio" | "scale";
->>>>>>> 3d1ddfca2fd1740408c2b69c66f7147958f4de1f
+export type InputType = "text" | "number" | "email" | "password" | "select" | "radio";
 
 // "Templates" of how data should be received from API
 export interface SignProps {
@@ -29,16 +25,7 @@ export interface InputField {
     id: string;
     input_type: InputType;
     placeholder: string;
-    label?: string;
     options: SelectOption[] | "";
-    value?: string;
-    onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
-    validation?: {
-        min?: number;
-        max?: number;
-        required?: boolean;
-        errorMessage?: string;
-    };
 }
 
 // Other interfaces

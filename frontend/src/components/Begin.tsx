@@ -1,6 +1,5 @@
-import React from 'react';
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from '../context/AuthContext';
+// import React from 'react'
+import { Link } from "react-router-dom";
 
 interface BeginProps {
     css_style: string;
@@ -14,39 +13,6 @@ interface BeginProps {
 }
 
 const Begin = ({ css_style, text }: BeginProps) => {
-    const { isAuthenticated, user } = useAuth();
-    const navigate = useNavigate();
-
-    const handleFirstButton = () => {
-        // Если пользователь уже заполнял профиль, перенаправляем на главную
-        if (isAuthenticated && user?.training_profile) {
-            navigate('/');
-        } else if (isAuthenticated) {
-            // Если авторизован, но профиль не заполнен - на опрос
-            navigate('/survey');
-        } else {
-            // Если не авторизован - на регистрацию
-            navigate('/signup');
-        }
-    };
-
-    const handleSecondButton = () => {
-        // Показываем курсы
-        if (isAuthenticated) {
-            navigate('/');
-        } else {
-            navigate('/signin');
-        }
-    };
-
-    const handleThirdButton = () => {
-        // Начинаем тренировку
-        if (isAuthenticated) {
-            navigate('/course/example-course');
-        } else {
-            navigate('/signin');
-        }
-    };
 
     return (
         <div className={"begin basic-page " + css_style}>
@@ -62,13 +28,15 @@ const Begin = ({ css_style, text }: BeginProps) => {
                     </p>
                 </div>
                 <div className={"begin__buttons" + css_style}>
-                    <button className="btn-basic-black" onClick={handleFirstButton}>
+                    <Link to="/signup">
+                        <button className="btn-basic-black">
                             {text.button_1}
                         </button>
-                    <button className="btn-basic-white" onClick={handleSecondButton}>
+                    </Link>
+                    <button className="btn-basic-white">
                         {text.button_2}
                     </button>
-                    <button className="btn-basic-white" onClick={handleThirdButton}>
+                    <button className="btn-basic-white">
                         {text.button_3}
                     </button>
                 </div>
