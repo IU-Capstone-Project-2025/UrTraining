@@ -11,10 +11,15 @@ export const InputTemplates = (props: InputField) => {
         return <SelectInputTemplate {...props} />
     if (props.input_type === "radio")
         return <RadioInputTemplate {...props} />
+<<<<<<< HEAD
     if (props.input_type === "checkbox")
         return <CheckboxInputTemplate {...props} />
     if (props.input_type === "rating")
         return <RatingInputTemplate {...props} />
+=======
+    if (props.input_type === "scale")
+    return <ScaleInputTemplate {...props} />    
+>>>>>>> 3d1ddfca2fd1740408c2b69c66f7147958f4de1f
 
     return (
         <div>
@@ -97,6 +102,7 @@ export const TextInputTemplate = (props: InputField) => {
 
 export const SelectInputTemplate = (props: InputField) => {
     return (
+<<<<<<< HEAD
         <div>
             {props.label && (
                 <label htmlFor={props.id} style={{
@@ -120,6 +126,19 @@ export const SelectInputTemplate = (props: InputField) => {
                 {!(props.options !== "" && props.options.some((option: any) => option.value === "")) && (
                     <option disabled value="">
                         {props.placeholder}
+=======
+        <select
+            id={props.id}
+            name={props.name}
+            className="form-basic-white"
+            defaultValue={"select"}
+        >
+            <option disabled value={"select"}>Select... </option>
+            {props.options === "" ? [] : props.options.map((option: SelectOption, value: number) => {
+                return (
+                    <option key={value} value={option.value}>
+                        {option.placeholder}
+>>>>>>> 3d1ddfca2fd1740408c2b69c66f7147958f4de1f
                     </option>
                 )}
                 {props.options === "" ? [] : props.options.map((option: SelectOption, index: number) => {
@@ -326,5 +345,26 @@ export const RatingInputTemplate = (props: InputField) => {
         </div>
     )
 }
+
+export const ScaleInputTemplate = (props: InputField) => {
+    return (
+        <div className="scale-input-row">
+            <label className="scale-label">{props.placeholder}</label>
+            <div className="scale-options">
+                {[1, 2, 3, 4, 5].map((num) => (
+                    <label key={num} className="scale-option">
+                        <input
+                            type="radio"
+                            name={props.name}
+                            value={num}
+                        />
+                        <span>{num}</span>
+                    </label>
+                ))}
+            </div>
+        </div>
+    )
+}
+
 
 export default InputTemplates

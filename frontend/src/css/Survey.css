@@ -99,6 +99,7 @@
     font-size: 1.5rem;
 }
 
+<<<<<<< HEAD
 /* Стили для полей с ошибками валидации */
 .form-basic-white.error {
     border: 2px solid #ff4444 !important;
@@ -327,3 +328,27 @@
         width: 100%;
     }
 }
+=======
+.scale-input-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+.scale-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.scale-options {
+    display: flex;
+    gap: 1rem;
+}
+
+.scale-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9rem;
+}
+>>>>>>> 3d1ddfca2fd1740408c2b69c66f7147958f4de1f

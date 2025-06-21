@@ -521,7 +521,7 @@ export const example_survey_data: SurveyProps = {
     information: {
         title: "Why we collect your data?",
         description:
-            "Idk lol, why do you ask? Just agree with our TOS and let machine process your precious data. You don't care anyways.",
+            "Before we dive into training, we’d love to get to know you better. Your name and a few basic details help us personalize your journey — like a good coach who remembers your story from day one.",
     },
 };
 
