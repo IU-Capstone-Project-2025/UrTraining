@@ -25,7 +25,7 @@ export interface InputField {
     id: string;
     input_type: InputType;
     placeholder: string;
-    options: SelectOption[] | "";
+    options: SelectOption[];
 }
 
 // Other interfaces

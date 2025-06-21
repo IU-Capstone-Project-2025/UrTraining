@@ -29,14 +29,14 @@
                         "id": "name",
                         "input_type": "text",
                         "placeholder": "Name",
-                        "options": ""
+                        "options": []
                     },
                     {
                         "name": "surname",
                         "id": "surname",
                         "input_type": "text",
                         "placeholder": "Surname",
-                        "options": ""
+                        "options": []
                     }
                 ]
             },
@@ -74,7 +74,7 @@
                         "id": "city",
                         "input_type": "text",
                         "placeholder": "City",
-                        "options": ""
+                        "options": []
                     }
                 ]
             },
@@ -111,21 +111,21 @@
                         "id": "age",
                         "input_type": "number",
                         "placeholder": "Age",
-                        "options": ""
+                        "options": []
                     },
                     {
                         "name": "height_cm",
                         "id": "height_cm",
                         "input_type": "number",
                         "placeholder": "Height",
-                        "options": ""
+                        "options": []
                     },
                     {
                         "name": "weight_kg",
                         "id": "weight_kg",
                         "input_type": "number",
                         "placeholder": "Weight",
-                        "options": ""
+                        "options": []
                     }
                 ]
             }
@@ -454,6 +454,37 @@
                 ]
             },
             {
+                "subtitle": "Describe how much variety of equipment you can use:",
+                "inputs": [
+                    {
+                        "name": "location_details",
+                        "id": "location_details",
+                        "input_type": "select",
+                        "placeholder": "Select..",
+                        "options": [
+                            {
+                                "id": "full_fitness_center",
+                                "name": "full_fitness_center",
+                                "value": "full_fitness_center",
+                                "placeholder": "Full sport center/pool: can use multiple equipments and machines"
+                            },
+                            {
+                                "id": "small_gym_basic_equipment",
+                                "name": "small_gym_basic_equipment",
+                                "value": "small_gym_basic_equipment",
+                                "placeholder": "Small gym or training ground: some equipment and machines are avalible"
+                            },
+                            {
+                                "id": "no_equipment",
+                                "name": "no_equipment",
+                                "value": "no_equipment",
+                                "placeholder": "Have no equipment at all"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 "subtitle": "Evaluate your interest in each type of workout from 1 to 5",
                 "inputs": [
                     {
@@ -461,21 +492,21 @@
                         "name": "strength_training",
                         "id": "strength_training",
                         "placeholder": "Strength training:",
-                        "options": ""
+                        "options": []
                     },
                     {
                         "input_type": "scale",
                         "name": "cardio",
                         "id": "cardio",
                         "placeholder": "Cardio training:",
-                        "options": ""
+                        "options": []
                     },
                     {
                         "input_type": "scale",
                         "name": "hiit",
                         "id": "hiit",
                         "placeholder": "HIIT (high-intensity interval training):",
-                        "options": ""
+                        "options": []
                     }
                 ]
             },
@@ -556,6 +587,18 @@
                                 "placeholder": "No"
                             }
                         ]
+                    }
+                ]
+            },
+            {
+                "subtitle": "Please, describe, if any:",
+                "inputs": [
+                    {
+                        "name": "health_details",
+                        "id": "health_details",
+                        "input_type": "text",
+                        "placeholder": "Health details...",
+                        "options": []
                     }
                 ]
             },

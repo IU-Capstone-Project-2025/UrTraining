@@ -5,6 +5,8 @@ import type { SurveyProps, SurveyOption, SurveyStep, InputField } from "../compo
 import SurveyPageContext from './context/SurveyPageContext';
 import { InputTemplates } from './InputTemplates'
 import "../css/Survey.css"
+import { transformToApiPayload } from "../utils/transformSurveyData";
+import axios from 'axios';
 
 interface StepData {
     [key: string]: any;
@@ -30,6 +32,16 @@ const Survey = (props: SurveyProps) => {
         stepContext.updateStep(stepContext.currentStep + 1)
     }
 
+    const handleBack = () => {
+        console.log(savedData);
+        stepContext.updateStep(stepContext.currentStep - 1)
+    }
+
+    const sendData = () => {
+        const payload = transformToApiPayload(savedData);
+        console.log(payload);
+        axios.post(`${import.meta.env.VITE_API_URL}/user-data`, payload);
+    }
 
     return (
         <div className="survey basic-page">
@@ -82,7 +94,7 @@ const Survey = (props: SurveyProps) => {
                     <div className="survey__info__button">
                         {
                             props.step_current !== first_step ?
-                                <button className="btn-basic-black">
+                                <button className="btn-basic-black" onClick={handleBack}>
                                     Back
                                 </button> : ""
                         }
@@ -96,7 +108,7 @@ const Survey = (props: SurveyProps) => {
 
                         {
                             props.step_current === last_step ?
-                                <button className="btn-basic-black">
+                                <button className="btn-basic-black" onClick={sendData}>
                                     Submit
                                 </button> : ""
                         }
