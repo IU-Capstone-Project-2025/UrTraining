@@ -1,0 +1,335 @@
+{
+  "user_data": {
+    "description": "Main user account data",
+    "fields": {
+      "full_name": {
+        "type": "string",
+        "validation": {
+          "min_length": 2,
+          "max_length": 100,
+          "required": true
+        },
+        "description": "User's full name"
+      },
+      "email": {
+        "type": "string",
+        "validation": {
+          "format": "email",
+          "unique": true,
+          "required": true
+        },
+        "description": "User's email address"
+      },
+      "username": {
+        "type": "string",
+        "validation": {
+          "min_length": 3,
+          "max_length": 50,
+          "unique": true,
+          "required": true
+        },
+        "description": "User's unique username"
+      }
+    }
+  },
+  "training_profile": {
+    "description": "User's training profile data",
+    "fields": {
+      "basic_information": {
+        "description": "Basic physical information",
+        "fields": {
+          "gender": {
+            "type": "string",
+            "possible_values": [
+              "male",
+              "female"
+            ],
+            "description": "User's gender"
+          },
+          "age": {
+            "type": "integer",
+            "validation": {
+              "min": 13,
+              "max": 100
+            },
+            "description": "User's age in years"
+          },
+          "height_cm": {
+            "type": "integer",
+            "validation": {
+              "min": 100,
+              "max": 250
+            },
+            "description": "User's height in centimeters"
+          },
+          "weight_kg": {
+            "type": "float",
+            "validation": {
+              "min": 30.0,
+              "max": 300.0
+            },
+            "description": "User's weight in kilograms"
+          }
+        }
+      },
+      "training_goals": {
+        "type": "array",
+        "possible_values": [
+          "muscle_gain",
+          "maintain_fitness",
+          "weight_loss",
+          "improve_endurance",
+          "improve_flexibility",
+          "stress_reduction",
+          "competitions_preparation",
+          "none"
+        ],
+        "validation": {
+          "max_items": 2
+        },
+        "description": "User's training goals (up to 2 goals)"
+      },
+      "training_experience": {
+        "description": "User's training experience and frequency",
+        "fields": {
+          "level": {
+            "type": "string",
+            "possible_values": [
+              "beginner",
+              "intermediate",
+              "advanced"
+            ],
+            "descriptions": {
+              "beginner": "I'm just getting started",
+              "intermediate": "I train from time to time",
+              "advanced": "I've been training regularly for over a year"
+            },
+            "description": "User's training experience level"
+          },
+          "frequency_last_3_months": {
+            "type": "string",
+            "possible_values": [
+              "1_2_times_week",
+              "3_4_times_week",
+              "5+_times_week",
+              "not_trained"
+            ],
+            "descriptions": {
+              "1_2_times_week": "I train 1-2 times per week",
+              "3_4_times_week": "I train 3-4 times per week",
+              "5+_times_week": "I train more than 4 times per week",
+              "not_trained": "Haven't trained these months"
+            },
+            "description": "Training frequency in the last 3 months"
+          }
+        }
+      },
+      "preferences": {
+        "description": "User's training preferences",
+        "fields": {
+          "training_location": {
+            "type": "string",
+            "possible_values": [
+              "gym",
+              "outdoors",
+              "pool",
+              "home"
+            ],
+            "descriptions": {
+              "gym": "In the gym",
+              "outdoors": "Outdoors",
+              "pool": "In the pool",
+              "home": "Training at home"
+            },
+            "description": "Preferred training location"
+          },
+          "location_details": {
+            "type": "string",
+            "possible_values": [
+              "full_equipment",
+              "basic_equipment",
+              "no_equipment",
+              "outdoor_park",
+              "running_track",
+              "swimming_pool",
+              "home_gym",
+              "bodyweight_only"
+            ],
+            "descriptions": {
+              "full_equipment": "Full gym equipment available",
+              "basic_equipment": "Basic equipment (dumbbells, resistance bands)",
+              "no_equipment": "No equipment available",
+              "outdoor_park": "Outdoor park or field",
+              "running_track": "Running track or path",
+              "swimming_pool": "Swimming pool access",
+              "home_gym": "Home gym setup",
+              "bodyweight_only": "Bodyweight exercises only"
+            },
+            "description": "Details about training location and available equipment"
+          },
+          "session_duration": {
+            "type": "string",
+            "possible_values": [
+              "under_30_min",
+              "30_45_min",
+              "45_60_min",
+              "over_60_min"
+            ],
+            "descriptions": {
+              "under_30_min": "Under 30 minutes",
+              "30_45_min": "30-45 minutes",
+              "45_60_min": "45-60 minutes",
+              "over_60_min": "Over 60 minutes"
+            },
+            "description": "Preferred training session duration"
+          }
+        }
+      },
+      "health": {
+        "description": "User's health information",
+        "fields": {
+          "joint_back_problems": {
+            "type": "boolean",
+            "possible_values": [true, false],
+            "description": "Whether user has joint or back problems"
+          },
+          "chronic_conditions": {
+            "type": "boolean",
+            "possible_values": [true, false],
+            "description": "Whether user has chronic health conditions that affect exercise"
+          },
+          "health_details": {
+            "type": "string",
+            "validation": {
+              "max_length": 1000,
+              "nullable": true
+            },
+            "description": "Additional health details or restrictions (optional text field)"
+          }
+        }
+      },
+      "training_types": {
+        "description": "User's interest level in different training types (1-5 scale)",
+        "fields": {
+          "strength_training": {
+            "type": "integer",
+            "validation": {
+              "min": 1,
+              "max": 5
+            },
+            "description": "Interest level in strength training (1=low, 5=high)"
+          },
+          "cardio": {
+            "type": "integer",
+            "validation": {
+              "min": 1,
+              "max": 5
+            },
+            "description": "Interest level in cardio training (1=low, 5=high)"
+          },
+          "hiit": {
+            "type": "integer",
+            "validation": {
+              "min": 1,
+              "max": 5
+            },
+            "description": "Interest level in HIIT - High-Intensity Interval Training (1=low, 5=high)"
+          },
+          "yoga_pilates": {
+            "type": "integer",
+            "validation": {
+              "min": 1,
+              "max": 5
+            },
+            "description": "Interest level in yoga/pilates (1=low, 5=high)"
+          },
+          "functional_training": {
+            "type": "integer",
+            "validation": {
+              "min": 1,
+              "max": 5
+            },
+            "description": "Interest level in functional training (1=low, 5=high)"
+          },
+          "stretching": {
+            "type": "integer",
+            "validation": {
+              "min": 1,
+              "max": 5
+            },
+            "description": "Interest level in stretching (1=low, 5=high)"
+          }
+        }
+      }
+    }
+  },
+  "countries": {
+    "description": "Available countries (from survey data)",
+    "possible_values": [
+      {
+        "code": "kz",
+        "name": "kazakhstan",
+        "display_name": "Kazakhstan"
+      },
+      {
+        "code": "ru",
+        "name": "russia",
+        "display_name": "Russia"
+      },
+      {
+        "code": "us",
+        "name": "usa",
+        "display_name": "United States"
+      }
+    ]
+  },
+  "validation_rules": {
+    "description": "General validation rules across the system",
+    "rules": {
+      "required_fields": [
+        "user_data.full_name",
+        "user_data.email",
+        "user_data.username"
+      ],
+      "unique_fields": [
+        "user_data.email",
+        "user_data.username"
+      ],
+      "numeric_ranges": {
+        "age": { "min": 13, "max": 100 },
+        "height_cm": { "min": 100, "max": 250 },
+        "weight_kg": { "min": 30.0, "max": 300.0 },
+        "training_interest_scale": { "min": 1, "max": 5 }
+      },
+      "string_lengths": {
+        "username": { "min": 3, "max": 50 },
+        "full_name": { "min": 2, "max": 100 },
+        "health_details": { "max": 1000 }
+      }
+    }
+  },
+  "default_values": {
+    "description": "Default values for optional fields",
+    "defaults": {
+      "training_profile.basic_information.gender": "male",
+      "training_profile.basic_information.age": 25,
+      "training_profile.basic_information.height_cm": 170,
+      "training_profile.basic_information.weight_kg": 70.0,
+      "training_profile.training_goals": ["maintain_fitness"],
+      "training_profile.training_experience.level": "beginner",
+      "training_profile.training_experience.frequency_last_3_months": "1_2_times_week",
+      "training_profile.preferences.training_location": "home",
+      "training_profile.preferences.location_details": "no_equipment",
+      "training_profile.preferences.session_duration": "30_45_min",
+      "training_profile.health.joint_back_problems": false,
+      "training_profile.health.chronic_conditions": false,
+      "training_profile.health.health_details": null,
+      "training_profile.training_types.strength_training": 3,
+      "training_profile.training_types.cardio": 3,
+      "training_profile.training_types.hiit": 2,
+      "training_profile.training_types.yoga_pilates": 2,
+      "training_profile.training_types.functional_training": 3,
+      "training_profile.training_types.stretching": 4
+    }
+  }
+} 

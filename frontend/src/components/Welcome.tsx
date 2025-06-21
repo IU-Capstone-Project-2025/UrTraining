@@ -1,8 +1,11 @@
-// import React from 'react'
+import React from 'react';
 import { Link } from "react-router-dom";
+import { useAuth } from '../context/AuthContext';
 import '../css/Welcome.css'
 
 const Welcome = () => {
+    const { isAuthenticated } = useAuth();
+
     return (
         <div className="welcome basic-page">
             <div className='welcome__info'>
