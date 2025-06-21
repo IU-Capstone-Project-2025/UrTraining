@@ -11,6 +11,7 @@ export const InputTemplates = (props: InputField) => {
         return <RadioInputTemplate {...props} />
     if (props.input_type === "scale")
     return <ScaleInputTemplate {...props} />    
+
     return (
         <div>
             No suitable template
@@ -38,7 +39,7 @@ export const SelectInputTemplate = (props: InputField) => {
             className="form-basic-white"
             defaultValue={"select"}
         >
-            <option disabled value={"select"}>Country... </option>
+            <option disabled value={"select"}>Select... </option>
             {props.options === "" ? [] : props.options.map((option: SelectOption, value: number) => {
                 return (
                     <option key={value} value={option.value}>
@@ -89,5 +90,6 @@ export const ScaleInputTemplate = (props: InputField) => {
         </div>
     )
 }
+
 
 export default InputTemplates
