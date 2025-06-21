@@ -1,11 +1,13 @@
 // import React from 'react'
 import axios, { AxiosError } from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Sign from "../components/Sign"
 import { example_signup_data } from "../components/data/example_json_data"
 import type { CredentialsData, SignUpFailed, SignUpSuccess } from "../components/interface/interfaces";
 import SignPageContext, { emptyCredentials, type SignContextType } from "../components/context/SignPageContext";
 import { useMutation } from "@tanstack/react-query";
+import AuthContext from "../components/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const endpoint = 'http://localhost:8000'
 
@@ -28,6 +30,8 @@ async function signUpRequest(
 
 const SignUpPage = () => {
   const [credentials, setCredentials] = useState<CredentialsData>(emptyCredentials)
+  const authData = useContext(AuthContext)
+  const navigate = useNavigate();
 
   const contextValue: SignContextType = {
     credentials: credentials,
@@ -37,7 +41,8 @@ const SignUpPage = () => {
   const signUpMutation = useMutation<SignUpSuccess, AxiosError<SignUpFailed>, CredentialsData>({
       mutationFn: signUpRequest,
       onSuccess: (data) => {
-        console.log('Register success:', data.message);
+        console.log('Register success!');
+        navigate("/signin")
       },
       onError: (error) => {
         console.error('Register failed:', error);

@@ -33,6 +33,10 @@ export interface SignInSuccess {
     };
 }
 
+export interface UserProps {
+    
+}
+
 export interface SignInFailed {
     detail: [
         {
