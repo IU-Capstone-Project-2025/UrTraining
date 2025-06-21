@@ -9,7 +9,8 @@ export const InputTemplates = (props: InputField) => {
         return <SelectInputTemplate {...props} />
     if (props.input_type === "radio")
         return <RadioInputTemplate {...props} />
-
+    if (props.input_type === "scale")
+    return <ScaleInputTemplate {...props} />    
     return (
         <div>
             No suitable template
@@ -66,6 +67,26 @@ export const RadioInputTemplate = (props: InputField) => {
                 )
             })}
         </>
+    )
+}
+
+export const ScaleInputTemplate = (props: InputField) => {
+    return (
+        <div className="scale-input-row">
+            <label className="scale-label">{props.placeholder}</label>
+            <div className="scale-options">
+                {[1, 2, 3, 4, 5].map((num) => (
+                    <label key={num} className="scale-option">
+                        <input
+                            type="radio"
+                            name={props.name}
+                            value={num}
+                        />
+                        <span>{num}</span>
+                    </label>
+                ))}
+            </div>
+        </div>
     )
 }
 

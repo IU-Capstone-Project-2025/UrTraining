@@ -98,3 +98,26 @@
     font-family: "TT Travels Bold", sans-serif;
     font-size: 1.5rem;
 }
+
+.scale-input-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+.scale-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.scale-options {
+    display: flex;
+    gap: 1rem;
+}
+
+.scale-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9rem;
+}
