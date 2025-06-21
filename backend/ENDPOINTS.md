@@ -76,14 +76,7 @@ Accept: application/json
 | **500** | `Invalid JSON format in survey data file` | File exists but contains invalid JSON |
 | **500** | `Failed to load survey data` | Any other error while reading/processing the survey file |
 
-**Example 404 Error Response:**
-```json
-{
-  "error": "Not Found",
-  "message": "Survey data file not found",
-  "status_code": 404
-}
-```
+
 
 
 # GET /user-data - Get Authenticated User Data
@@ -178,4 +171,81 @@ Accept-Language: en-US
 | `404`       | Not Found            | User not found                   | Verify user exists              |
 | `429`       | Too Many Requests    | Rate limit exceeded              | Implement backoff strategy      |
 | `500`       | Server Error         | Internal server error            | Contact support                 |
+
+# POST /user-data - Update User Data
+
+## 🎯 Purpose
+The endpoint `POST /user-data` allows authenticated users to **update their complete profile information**, including:
+
+1. **Personal details**:
+   - Name, email
+   - Account preferences
+
+2. **Training profile**:
+   - Fitness goals and preferences
+   - Health information
+   - Training preferences
+
+3. **Account settings**:
+   - Notification preferences
+   - Privacy settings
+
+## 🌐 HTTP Method and URL
+**Method:** `POST`  
+**Endpoint:** `/user-data`  
+**Base URL:** `https://api.example.com/api/v1`  
+**Full Path:** `https://api.example.com/api/v1/user-data`
+
+## 🔐 Authentication Requirements
+- **Access:** Private (requires authentication)  
+- **Authorization:** Bearer token required  
+- **Security Level:** High (contains sensitive operations)  
+- **Permissions:** Only owner can update their data 
+
+## 📝 Parameters
+None required
+
+## 📤 Example Request
+```POST /api/v1/user-data HTTP/1.1
+Host: api.example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "user_profile": {
+    "full_name": "Alex Johnson Updated"
+  },
+  "training_profile": {
+    "goals": ["weight_loss", "flexibility"],
+    "level": "intermediate"
+  }
+}
+```
+
+
+## ✅ Successful Response(200 OK)
+```{
+  "message": "User data updated successfully",
+  "updated_fields": {
+    "user_profile": true,
+    "training_profile": true
+  },
+  "user_data": {
+    "id": "usr_12345",
+    "full_name": "Alex Johnson Updated",
+    "email": "alex.johnson@example.com"
+  }
+}
+```
+
+## ⚠️ Error Responses
+
+| Status Code | Error Type           | Description                      | Resolution                      |
+|-------------|----------------------|----------------------------------|---------------------------------|
+| `401`       | Unauthorized         | Missing or invalid token         | Provide valid Bearer token      |
+| `403`       | Forbidden            | Insufficient permissions         | Check user privileges           |
+| `404`       | Not Found            | User not found                   | Verify user exists              |
+| `429`       | Too Many Requests    | Rate limit exceeded              | Implement backoff strategy      |
+| `500`       | Server Error         | Internal server error            | Contact support                 |
+
 
