@@ -19,8 +19,7 @@ The endpoint `GET /survey-data` returns **general settings and reference data** 
 ###  🌐 HTTP Method and URL
 **Method:** `GET`  
 **Endpoint:** `/survey-data`  
-**Base URL:** `https://api.example.com`  
-**Full Path:** `https://api.example.com/survey-data`
+
 
 
 ###  🔐 Authentication Requirements
@@ -99,8 +98,7 @@ The endpoint `GET /user-data` returns **complete profile information** for authe
 ###  🌐 HTTP Method and URL
 **Method:** `GET`  
 **Endpoint:** `/user-data`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/user-data`
+
 
 
 ###  🔐 Authentication Requirements
@@ -189,8 +187,7 @@ The endpoint `POST /user-data` allows authenticated users to **update their comp
 ###  🌐 HTTP Method and URL
 **Method:** `POST`  
 **Endpoint:** `/user-data`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/user-data`
+
 
 ###  🔐 Authentication Requirements
 - **Access:** Private (requires authentication)  
@@ -258,7 +255,7 @@ The endpoint `POST /register` allows new users to **create an account** in the s
 ###  🌐 HTTP Method and URL
 **Method:** `POST`  
 **Endpoint:** `/register`   
-**Full Path:** `https://api.example.com/register`
+
 
 ###  🔐 Authentication Requirements
 - **Access:** Public (no authentication required)  
@@ -318,8 +315,7 @@ Authenticates users and returns a JWT token for accessing protected resources.
 ### 🌐 HTTP Method and URL
 **Method:** `POST`  
 **Endpoint:** `/login`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/login`
+
 
 ### 🔐 Authentication Requirements
 - **Access:** Public  
@@ -374,9 +370,8 @@ Terminates the current authenticated session by invalidating the JWT access toke
 
 ### 🌐 HTTP Method and URL
 **Method:** `POST`  
-**Endpoint:** `/logout`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/logout`
+**Endpoint:** `/logout`    
+
 
 ### 🔐 Authentication Requirements
 - **Access:** Private (requires valid JWT)  
@@ -419,9 +414,8 @@ Verifies the validity and authentication status of the current JWT access token.
 
 ### 🌐 HTTP Method and URL
 **Method:** `GET`  
-**Endpoint:** `/verify-token`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/verify-token`
+**Endpoint:** `/verify-token`   
+
 
 ### 🔐 Authentication Requirements
 - **Access:** Private (requires valid JWT)  
@@ -472,8 +466,7 @@ Retrieves the complete profile information of the currently authenticated user.
 ### 🌐 HTTP Method and URL
 **Method:** `GET`  
 **Endpoint:** `/me`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/me`
+
 
 ### 🔐 Authentication Requirements
 - **Access:** Private (requires valid JWT)  
@@ -549,8 +542,7 @@ Updates the authenticated user's profile information including personal details 
 ### 🌐 HTTP Method and URL
 **Method:** `PUT`  
 **Endpoint:** `/profile`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/profile`
+
 
 ### 🔐 Authentication Requirements
 - **Access:** Private (requires valid JWT)  
@@ -605,8 +597,7 @@ Allows an authenticated user to change their current password to a new one.
 ### 🌐 HTTP Method and URL
 **Method:** `PUT`  
 **Endpoint:** `/change-password`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/change-password`
+
 
 ### 🔐 Authentication Requirements
 - **Access:** Private (requires valid JWT)  
@@ -652,8 +643,7 @@ Checks whether a given email address is available for registration or already ta
 ### 🌐 HTTP Method and URL  
 **Method:** `GET`  
 **Endpoint:** `/check-email-availability`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path Example:** `https://api.example.com/api/v1/check-email-availability?email=user@example.com`
+
 
 ### 📝 Request Parameters  
 | Parameter | Type   | Required | Description                      |
@@ -695,8 +685,7 @@ Allows an authenticated user to update their detailed training profile, includin
 ### 🌐 HTTP Method and URL  
 **Method:** `PUT`  
 **Endpoint:** `/training-profile`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/training-profile`
+
 
 ### 🔐 Authentication Requirements  
 - **Access:** Private (requires valid JWT)  
@@ -771,8 +760,7 @@ Retrieves the complete training profile information for the authenticated user, 
 ### 🌐 HTTP Method and URL
 **Method:** `GET`  
 **Endpoint:** `/training-profile`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/training-profile`
+
 
 ### 🔐 Authentication Requirements
 - **Access:** Private (requires valid JWT)  
@@ -847,8 +835,7 @@ Fetches a list of all active sessions for the currently authenticated user. This
 ### 🌐 HTTP Method and URL  
 **Method:** `GET`  
 **Endpoint:** `/active-sessions`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/active-sessions`
+
 
 ### 🔐 Authentication Requirements  
 - **Access:** Private (requires valid JWT)  
@@ -907,8 +894,7 @@ Checks whether a given username is available for registration or already taken b
 ### 🌐 HTTP Method and URL  
 **Method:** `GET`  
 **Endpoint:** `/check-availability`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path Example:** `https://api.example.com/api/v1/check-availability?username=fit_user123`
+
 
 ### 📝 Request Parameters  
 | Parameter  | Type   | Required | Description                      |
