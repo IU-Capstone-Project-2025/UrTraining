@@ -8,6 +8,8 @@ import type { UserProp } from './interface/userInterface';
 const Navbar = (data: UserProp) => {
   const authData = useContext(AuthContext)
 
+  console.log(data);
+
   return (
     <>
       <div className='navbar'>

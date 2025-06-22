@@ -19,7 +19,7 @@ const SignInPage = () => {
     credentials: credentials,
     sendCredentials: setCredentials
   };
-  
+
   // If user is already authenticated, 
   // Return to main page
   useEffect(() => {
@@ -30,9 +30,10 @@ const SignInPage = () => {
   // After credentials updated inside <Sign />,
   // call POST Mutation function
   useEffect(() => {
-    if (credentials !== emptyCredentials)
+    if (credentials !== emptyCredentials) {
       signInMutation.mutate(credentials);
       navigate("/signin")
+    }
   }, [credentials]);
 
   return (
