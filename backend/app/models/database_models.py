@@ -17,6 +17,9 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
+    # Trainer profile (JSON field for trainer information)
+    trainer_profile = Column(JSON, nullable=True)
+    
     # Relationship to training profile
     training_profile = relationship("TrainingProfile", back_populates="user", uselist=False)
     active_sessions = relationship("ActiveSession", back_populates="user")
@@ -124,15 +127,12 @@ class Training(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     
     # Основные поля согласно требуемой JSON структуре
-    metainfo = Column(Text, nullable=False)
+    training_metadata = Column(JSON, nullable=False)  # JSON структура с метаданными тренировки
     training_data = Column(JSON, nullable=False)  # JSON структура с данными тренировки по дням
     
     # Дополнительные поля для расширенной функциональности
     title = Column(String(255))
     description = Column(Text)
-    duration_weeks = Column(Integer)
-    difficulty_level = Column(String(20))
-    created_by = Column(String(100))
     is_active = Column(Boolean, default=True)
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())

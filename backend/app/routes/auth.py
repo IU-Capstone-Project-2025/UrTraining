@@ -11,8 +11,9 @@ from app.database import get_db
 from app.crud import (
     authenticate_user, get_user_by_username, get_user_by_email, create_user,
     create_active_session, get_active_session, revoke_session,
-    cleanup_expired_sessions, get_user_by_id
+    cleanup_expired_sessions, get_user_by_id, update_user_trainer_profile
 )
+from app.models.training import TrainerProfile
 
 router = APIRouter()
 
@@ -47,6 +48,13 @@ class RegisterRequest(BaseModel):
 class RegisterResponse(BaseModel):
     message: str
     user_info: dict
+
+class UpdateTrainerProfileRequest(BaseModel):
+    trainer_profile: TrainerProfile
+
+class TrainerProfileResponse(BaseModel):
+    message: str
+    trainer_profile: Optional[TrainerProfile] = None
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
@@ -180,3 +188,97 @@ async def logout(credentials: HTTPAuthorizationCredentials = Depends(security), 
     except Exception as e:
         print(f"Logout error: {e}")
         return {"message": "Logout completed"}
+
+@router.get("/trainer-profile", response_model=TrainerProfileResponse)
+async def get_trainer_profile(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Получить профиль тренера текущего пользователя"""
+    try:
+        user = get_user_by_id(db, current_user["id"])
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+        
+        return TrainerProfileResponse(
+            message="Trainer profile retrieved successfully",
+            trainer_profile=user.trainer_profile
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error getting trainer profile: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to get trainer profile"
+        )
+
+
+@router.put("/trainer-profile", response_model=TrainerProfileResponse)
+async def update_trainer_profile(
+    data: UpdateTrainerProfileRequest,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Обновить профиль тренера текущего пользователя"""
+    try:
+        # Преобразуем TrainerProfile в словарь
+        trainer_profile_dict = data.trainer_profile.model_dump()
+        
+        # Обновляем профиль тренера
+        updated_user = update_user_trainer_profile(db, current_user["id"], trainer_profile_dict)
+        
+        if not updated_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+        
+        return TrainerProfileResponse(
+            message="Trainer profile updated successfully",
+            trainer_profile=updated_user.trainer_profile
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error updating trainer profile: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to update trainer profile"
+        )
+
+
+@router.delete("/trainer-profile", response_model=TrainerProfileResponse)
+async def delete_trainer_profile(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Удалить профиль тренера текущего пользователя"""
+    try:
+        # Удаляем профиль тренера (устанавливаем в None)
+        updated_user = update_user_trainer_profile(db, current_user["id"], None)
+        
+        if not updated_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+        
+        return TrainerProfileResponse(
+            message="Trainer profile deleted successfully",
+            trainer_profile=None
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error deleting trainer profile: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to delete trainer profile"
+        )

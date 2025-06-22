@@ -49,19 +49,80 @@ class TrainingData(BaseModel):
         use_enum_values = True
 
 
+class TrainerCertification(BaseModel):
+    """Модель для сертификации тренера"""
+    type: str = Field(..., description="Тип сертификации (ISSA, ACE, NASM и т.д.)")
+    level: str = Field(..., description="Уровень сертификации (Basic, Advanced, Master)")
+    specialization: str = Field(..., description="Специализация")
+    
+    class Config:
+        use_enum_values = True
+
+
+class TrainerExperience(BaseModel):
+    """Модель для опыта тренера"""
+    years: int = Field(..., description="Количество лет опыта")
+    specialization: str = Field(..., description="Специализация")
+    courses: int = Field(..., description="Количество созданных курсов")
+    rating: float = Field(..., description="Рейтинг тренера")
+    
+    class Config:
+        use_enum_values = True
+
+
+class TrainerProfile(BaseModel):
+    """Модель профиля тренера"""
+    name: str = Field(..., description="Имя тренера")
+    certification: TrainerCertification = Field(..., description="Сертификация тренера")
+    experience: TrainerExperience = Field(..., description="Опыт тренера")
+    
+    class Config:
+        use_enum_values = True
+
+
+class TrainingMetadata(BaseModel):
+    """Модель для метаданных тренировки"""
+    # Основные характеристики тренировки
+    activity_type: str = Field(default="General Training", description="Тип активности")
+    program_goal: List[str] = Field(default=["Maintain Fitness"], description="Цели программы")
+    training_environment: List[str] = Field(default=["Universal"], description="Среда тренировок")
+    difficulty_level: str = Field(default="Beginner", description="Уровень сложности")
+    course_duration_weeks: int = Field(default=1, description="Продолжительность курса в неделях")
+    weekly_training_frequency: str = Field(default="3-4 times", description="Частота тренировок в неделю")
+    average_workout_duration: str = Field(default="30-45 minutes", description="Средняя продолжительность тренировки")
+    age_group: List[str] = Field(default=["All Ages"], description="Возрастная группа")
+    gender_orientation: str = Field(default="Unisex", description="Гендерная ориентация")
+    physical_limitations: List[str] = Field(default=[], description="Физические ограничения")
+    required_equipment: List[str] = Field(default=["No Equipment"], description="Необходимое оборудование")
+    course_language: str = Field(default="English", description="Язык курса")
+    visual_content: List[str] = Field(default=["Minimal Visual Content"], description="Визуальный контент")
+    trainer_feedback_options: List[str] = Field(default=[], description="Опции обратной связи с тренером")
+    tags: List[str] = Field(default=[], description="Теги")
+    
+    # Статистика курса
+    average_course_rating: float = Field(default=0.0, description="Средний рейтинг курса")
+    active_participants: int = Field(default=0, description="Активные участники")
+    number_of_reviews: int = Field(default=0, description="Количество отзывов")
+    
+    # Информация о тренере (может быть заполнена из trainer_profile пользователя)
+    trainer_name: Optional[str] = Field(default=None, description="Имя тренера")
+    certification: Optional[TrainerCertification] = Field(default=None, description="Сертификация тренера")
+    experience: Optional[TrainerExperience] = Field(default=None, description="Опыт тренера")
+    
+    class Config:
+        use_enum_values = True
+
+
 class Training(BaseModel):
     """
     Основная модель тренировки, представляющая полную программу тренировок
     """
-    metainfo: str = Field(..., description="Метаинформация о тренировке")
+    metadata: TrainingMetadata = Field(..., description="Метаданные о тренировке")
     training_data: TrainingData = Field(..., description="Данные тренировки по дням недели")
     
     # Дополнительные поля для расширенной функциональности
     title: Optional[str] = Field(None, description="Название программы тренировок")
     description: Optional[str] = Field(None, description="Описание программы")
-    duration_weeks: Optional[int] = Field(None, description="Продолжительность программы в неделях")
-    difficulty_level: Optional[str] = Field(None, description="Уровень сложности")
-    created_by: Optional[str] = Field(None, description="Создатель программы")
     
     class Config:
         use_enum_values = True
@@ -69,12 +130,10 @@ class Training(BaseModel):
 
 class TrainingCreate(BaseModel):
     """Модель для создания новой тренировки"""
-    metainfo: str = Field(..., description="Метаинформация о тренировке")
+    metadata: TrainingMetadata = Field(..., description="Метаданные о тренировке")
     training_data: TrainingData = Field(..., description="Данные тренировки по дням недели")
     title: Optional[str] = Field(None, description="Название программы тренировок")
     description: Optional[str] = Field(None, description="Описание программы")
-    duration_weeks: Optional[int] = Field(None, description="Продолжительность программы в неделях")
-    difficulty_level: Optional[str] = Field(None, description="Уровень сложности")
     
     class Config:
         use_enum_values = True
@@ -82,12 +141,10 @@ class TrainingCreate(BaseModel):
 
 class TrainingUpdate(BaseModel):
     """Модель для обновления тренировки - все поля опциональны"""
-    metainfo: Optional[str] = Field(None, description="Метаинформация о тренировке")
+    metadata: Optional[TrainingMetadata] = Field(None, description="Метаданные о тренировке")
     training_data: Optional[TrainingData] = Field(None, description="Данные тренировки по дням недели")
     title: Optional[str] = Field(None, description="Название программы тренировок")
     description: Optional[str] = Field(None, description="Описание программы")
-    duration_weeks: Optional[int] = Field(None, description="Продолжительность программы в неделях")
-    difficulty_level: Optional[str] = Field(None, description="Уровень сложности")
     
     class Config:
         use_enum_values = True

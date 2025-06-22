@@ -124,10 +124,6 @@ async def startup_event():
         Base.metadata.create_all(bind=engine)
         print("Database tables created successfully!")
         
-        # Initialize sample data
-        from app.init_sample_data import init_sample_data
-        init_sample_data()
-        
     except Exception as e:
         print(f"Error creating database tables: {e}")
 

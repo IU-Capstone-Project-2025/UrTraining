@@ -22,14 +22,15 @@ def get_user_by_id(db: Session, user_id: int) -> Optional[User]:
     return db.query(User).filter(User.id == user_id).first()
 
 
-def create_user(db: Session, username: str, email: str, password: str, full_name: str, is_admin: bool = False) -> User:
+def create_user(db: Session, username: str, email: str, password: str, full_name: str, is_admin: bool = False, trainer_profile: Dict[str, Any] = None) -> User:
     hashed_password = pwd_context.hash(password)
     db_user = User(
         username=username,
         email=email,
         hashed_password=hashed_password,
         full_name=full_name,
-        is_admin=is_admin
+        is_admin=is_admin,
+        trainer_profile=trainer_profile
     )
     db.add(db_user)
     db.commit()
@@ -79,6 +80,19 @@ def change_user_password(db: Session, user_id: int, new_password: str) -> bool:
     user.updated_at = datetime.utcnow()
     db.commit()
     return True
+
+
+def update_user_trainer_profile(db: Session, user_id: int, trainer_profile: Dict[str, Any]) -> Optional[User]:
+    """Обновить профиль тренера пользователя"""
+    user = get_user_by_id(db, user_id)
+    if not user:
+        return None
+    
+    user.trainer_profile = trainer_profile
+    user.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(user)
+    return user
 
 
 # Training Profile CRUD operations
@@ -246,15 +260,22 @@ def get_trainings_by_user(db: Session, user_id: int, skip: int = 0, limit: int =
 
 def create_training(db: Session, training_data: Dict[str, Any], user_id: int = None) -> Training:
     """Создать новую тренировку"""
+    # Если пользователь является тренером, заполняем информацию о тренере в metadata
+    metadata = training_data.get("metadata", {})
+    if user_id:
+        user = get_user_by_id(db, user_id)
+        if user and user.trainer_profile:
+            trainer_profile = user.trainer_profile
+            metadata["trainer_name"] = trainer_profile.get("name")
+            metadata["certification"] = trainer_profile.get("certification")
+            metadata["experience"] = trainer_profile.get("experience")
+    
     db_training = Training(
         user_id=user_id,
-        metainfo=training_data.get("metainfo"),
+        training_metadata=metadata,
         training_data=training_data.get("training_data"),
         title=training_data.get("title"),
-        description=training_data.get("description"),
-        duration_weeks=training_data.get("duration_weeks"),
-        difficulty_level=training_data.get("difficulty_level"),
-        created_by=training_data.get("created_by")
+        description=training_data.get("description")
     )
     db.add(db_training)
     db.commit()
@@ -270,8 +291,22 @@ def update_training(db: Session, training_id: int, training_data: Dict[str, Any]
     
     # Обновляем поля
     for field, value in training_data.items():
-        if hasattr(training, field) and value is not None:
+        if field == "metadata":
+            # Специальная обработка для metadata - сохраняем в training_metadata
+            training.training_metadata = value
+        elif hasattr(training, field) and value is not None:
             setattr(training, field, value)
+    
+    # Если обновляется metadata и пользователь является тренером, обновляем информацию о тренере
+    if "metadata" in training_data and training.user_id:
+        user = get_user_by_id(db, training.user_id)
+        if user and user.trainer_profile:
+            trainer_profile = user.trainer_profile
+            metadata = training_data["metadata"]
+            metadata["trainer_name"] = trainer_profile.get("name")
+            metadata["certification"] = trainer_profile.get("certification")
+            metadata["experience"] = trainer_profile.get("experience")
+            training.training_metadata = metadata
     
     training.updated_at = datetime.utcnow()
     db.commit()
@@ -299,4 +334,44 @@ def search_trainings(db: Session, query: str, skip: int = 0, limit: int = 100) -
             Training.is_active == True,
             (Training.title.ilike(search_filter) | Training.description.ilike(search_filter))
         )
-    ).offset(skip).limit(limit).all() 
+    ).offset(skip).limit(limit).all()
+
+
+def get_training_with_trainer_info(db: Session, training_id: int) -> Optional[Training]:
+    """Получить тренировку с заполненной информацией о тренере"""
+    training = get_training_by_id(db, training_id)
+    if not training:
+        return None
+    
+    # Если у тренировки есть пользователь и у пользователя есть trainer_profile
+    if training.user_id:
+        user = get_user_by_id(db, training.user_id)
+        if user and user.trainer_profile:
+            # Создаем копию metadata для модификации
+            metadata = training.training_metadata.copy() if training.training_metadata else {}
+            trainer_profile = user.trainer_profile
+            
+            # Заполняем данные тренера
+            metadata["trainer_name"] = trainer_profile.get("name", "")
+            metadata["certification"] = trainer_profile.get("certification", {})
+            metadata["experience"] = trainer_profile.get("experience", {})
+            
+            # Обновляем metadata в объекте тренировки
+            training.training_metadata = metadata
+    
+    return training
+
+
+def merge_trainer_info_to_metadata(metadata: Dict[str, Any], trainer_profile: Dict[str, Any]) -> Dict[str, Any]:
+    """Объединить metadata тренировки с данными trainer_profile"""
+    if not trainer_profile:
+        return metadata
+    
+    updated_metadata = metadata.copy()
+    
+    # Заполняем поля тренера
+    updated_metadata["trainer_name"] = trainer_profile.get("name", "")
+    updated_metadata["certification"] = trainer_profile.get("certification", {})
+    updated_metadata["experience"] = trainer_profile.get("experience", {})
+    
+    return updated_metadata 

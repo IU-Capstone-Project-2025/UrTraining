@@ -1,0 +1,14 @@
+{
+  "name": "Ivan Orlov",
+  "certification": {
+    "type": "ACE",
+    "level": "Advanced",
+    "specialization": "Strength Training"
+  },
+  "experience": {
+    "years": 10,
+    "specialization": "Strength Training",
+    "courses": 15,
+    "rating": 4.8
+  }
+} 
