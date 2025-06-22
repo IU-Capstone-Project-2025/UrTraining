@@ -22,6 +22,7 @@ const SignUpPage = () => {
 
   // If user is already authenticated, 
   // Return to main page
+
   useEffect(() => {
     if (authData.access_token !== "")
       navigate("/")
@@ -30,9 +31,10 @@ const SignUpPage = () => {
   // After credentials updated inside <Sign />,
   // call POST Mutation function
   useEffect(() => {
-    if (credentials !== emptyCredentials)
+    if (credentials !== emptyCredentials){
       signUpMutation.mutate(credentials)
       navigate("/")
+    }
   }, [credentials]);
 
   return (
