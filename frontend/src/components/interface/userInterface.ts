@@ -1,8 +1,4 @@
 export interface UserProp {
-  user_info: UserInfo
-}
-
-export interface UserInfo {
   id: number
   username: string
   email: string
@@ -20,6 +16,8 @@ export interface TrainingProfile {
   preferences: Preferences
   health: Health
   training_types: TrainingTypes
+  created_at: string
+  updated_at: string
 }
 
 export interface BasicInformation {
