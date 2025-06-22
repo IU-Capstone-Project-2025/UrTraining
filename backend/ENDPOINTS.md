@@ -257,9 +257,8 @@ The endpoint `POST /register` allows new users to **create an account** in the s
 
 ###  🌐 HTTP Method and URL
 **Method:** `POST`  
-**Endpoint:** `/register`  
-**Base URL:** `https://api.example.com/api/v1`  
-**Full Path:** `https://api.example.com/api/v1/register`
+**Endpoint:** `/register`   
+**Full Path:** `https://api.example.com/register`
 
 ###  🔐 Authentication Requirements
 - **Access:** Public (no authentication required)  
