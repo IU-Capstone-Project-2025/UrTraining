@@ -1,0 +1,123 @@
+{
+  "id": 1,
+  "user_id": 3,
+  "metadata": {
+    "activity_type": "Strength Training",
+    "program_goal": ["Muscle Gain", "Strength Building"],
+    "training_environment": ["Gym"],
+    "difficulty_level": "Intermediate",
+    "course_duration_weeks": 5,
+    "weekly_training_frequency": "3-4 times",
+    "average_workout_duration": "45-60 minutes",
+    "age_group": ["Young Adults (18-30)", "Adults (31-50)"],
+    "gender_orientation": "Unisex",
+    "physical_limitations": [],
+    "required_equipment": ["Barbell and Plates", "Dumbbells", "Gym Machines"],
+    "course_language": "English",
+    "visual_content": ["Exercise Photos", "Video Demonstrations"],
+    "trainer_feedback_options": ["Lesson Comments", "Personal Consultations"],
+    "tags": ["Muscle Gain", "Strength", "Arms", "Legs", "Back", "For Experienced"],
+    "average_course_rating": 4.8,
+    "active_participants": 245,
+    "number_of_reviews": 89,
+    "trainer_name": "Ivan Orlov",
+    "certification": {
+      "type": "ACE",
+      "level": "Advanced",
+      "specialization": "Strength Training"
+    },
+    "experience": {
+      "years": 10,
+      "specialization": "Strength Training",
+      "courses": 15,
+      "rating": 4.8
+    }
+  },
+  "training_data": {
+    "monday": [
+      {
+        "exercise_name": "Приседания со штангой",
+        "sets": "4",
+        "repetitions": "8-10",
+        "weight": "80-100 кг",
+        "rest_time": "2-3 минуты",
+        "notes": "Следите за техникой выполнения"
+      },
+      {
+        "exercise_name": "Жим лежа",
+        "sets": "4",
+        "repetitions": "8-10",
+        "weight": "60-80 кг",
+        "rest_time": "2-3 минуты",
+        "notes": "Контролируйте опускание штанги"
+      },
+      {
+        "exercise_name": "Тяга штанги в наклоне",
+        "sets": "3",
+        "repetitions": "10-12",
+        "weight": "50-70 кг",
+        "rest_time": "2 минуты",
+        "notes": "Держите спину прямо"
+      }
+    ],
+    "tuesday": [],
+    "wednesday": [
+      {
+        "exercise_name": "Становая тяга",
+        "sets": "4",
+        "repetitions": "6-8",
+        "weight": "100-120 кг",
+        "rest_time": "3-4 минуты",
+        "notes": "Разминайтесь перед выполнением"
+      },
+      {
+        "exercise_name": "Жим гантелей сидя",
+        "sets": "3",
+        "repetitions": "10-12",
+        "weight": "15-20 кг каждая",
+        "rest_time": "2 минуты",
+        "notes": "Следите за положением локтей"
+      },
+      {
+        "exercise_name": "Подтягивания",
+        "sets": "3",
+        "repetitions": "8-12",
+        "weight": "собственный вес",
+        "rest_time": "2-3 минуты",
+        "notes": "Используйте помощь при необходимости"
+      }
+    ],
+    "thursday": [],
+    "friday": [
+      {
+        "exercise_name": "Жим ногами",
+        "sets": "4",
+        "repetitions": "12-15",
+        "weight": "120-150 кг",
+        "rest_time": "2 минуты",
+        "notes": "Полная амплитуда движения"
+      },
+      {
+        "exercise_name": "Жим гантелей лежа",
+        "sets": "3",
+        "repetitions": "10-12",
+        "weight": "25-30 кг каждая",
+        "rest_time": "2 минуты",
+        "notes": "Сводите лопатки"
+      },
+      {
+        "exercise_name": "Планка",
+        "sets": "3",
+        "duration": "30-60 секунд",
+        "rest_time": "1 минута",
+        "notes": "Держите тело прямо"
+      }
+    ],
+    "saturday": [],
+    "sunday": []
+  },
+  "title": "5-недельная программа набора мышечной массы",
+  "description": "Комплексная программа тренировок для увеличения мышечной массы и силы. Программа рассчитана на тренирующихся среднего уровня подготовки. Включает базовые упражнения со свободными весами и работу на тренажерах.",
+  "created_at": "2024-01-15T10:30:00.000Z",
+  "updated_at": "2024-01-20T14:15:30.500Z"
+} 
