@@ -1,0 +1,299 @@
+[
+    {
+        "steps_total": [
+            {
+                "value": "step-1",
+                "placeholder": "Step 1"
+            },
+            {
+                "value": "step-2",
+                "placeholder": "Step 2"
+            },
+            {
+                "value": "step-3",
+                "placeholder": "Step 3"
+            }
+        ],
+        "step_current": "step-1",
+        "title": "Let's know each other!",
+        "options": [
+            {
+                "subtitle": "How can we call you?",
+                "inputs": [
+                    {
+                        "name": "name",
+                        "id": "name",
+                        "input_type": "text",
+                        "placeholder": "Name",
+                        "options": ""
+                    },
+                    {
+                        "name": "surname",
+                        "id": "surname",
+                        "input_type": "text",
+                        "placeholder": "Surname",
+                        "options": ""
+                    }
+                ]
+            },
+            {
+                "subtitle": "Where are you from?",
+                "inputs": [
+                    {
+                        "name": "country",
+                        "id": "country",
+                        "input_type": "select",
+                        "placeholder": "Country",
+                        "options": [
+                            {
+                                "id": "kz",
+                                "name": "kazakhstan",
+                                "value": "kz",
+                                "placeholder": "Kazakhstan"
+                            },
+                            {
+                                "id": "ru",
+                                "name": "russia",
+                                "value": "ru",
+                                "placeholder": "Russia"
+                            },
+                            {
+                                "id": "us",
+                                "name": "usa",
+                                "value": "us",
+                                "placeholder": "United States"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "city",
+                        "id": "city",
+                        "input_type": "text",
+                        "placeholder": "City (can skip)",
+                        "options": ""
+                    }
+                ]
+            },
+            {
+                "subtitle": "What is your gender?",
+                "inputs": [
+                    {
+                        "name": "gender",
+                        "id": "gender",
+                        "input_type": "radio",
+                        "placeholder": "Gender",
+                        "options": [
+                            {
+                                "id": "male",
+                                "name": "gender",
+                                "value": "male",
+                                "placeholder": "Male"
+                            },
+                            {
+                                "id": "female",
+                                "name": "gender",
+                                "value": "female",
+                                "placeholder": "Female"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "information": {
+            "title": "Why we collect your data?",
+            "description": "To correctly identify your target audience and recommend your plans to the right people. It only takes 2-3 minutes."
+        }
+    },
+
+    {
+        "steps_total": [
+            {
+                "value": "step-1",
+                "placeholder": "Step 1"
+            },
+            {
+                "value": "step-2",
+                "placeholder": "Step 2"
+            },
+            {
+                "value": "step-3",
+                "placeholder": "Step 3"
+            }
+        ],
+        "step_current": "step-2",
+        "title": "Let’s talk about your target!",
+        "options": [
+            {
+                "subtitle": "What kind of sports do you specialize in?",
+                "inputs": [
+                    {
+                        "name": "specialization",
+                        "id": "specialization",
+                        "input_type": "select",
+                        "placeholder": "Select prior activity",
+                        "options": [
+                            {
+                                "id": "bodybuilding",
+                                "name": "bodybuilding",
+                                "value": "bodybuilding",
+                                "placeholder": "Bodybuilding"
+                            },
+                            {
+                                "id": "strength",
+                                "name": "strength",
+                                "value": "strength",
+                                "placeholder": "Strength training"
+                            },
+                            {
+                                "id": "mobility",
+                                "name": "mobility",
+                                "value": "mobility",
+                                "placeholder": "Mobility training"
+                            },
+                            {
+                                "id": "stretching",
+                                "name": "stretching",
+                                "value": "stretching",
+                                "placeholder": "Stretching"
+                            },
+                            {
+                                "id": "functional",
+                                "name": "functional",
+                                "value": "functional",
+                                "placeholder": "Functional training"
+                            },
+                            {
+                                "id": "swimming",
+                                "name": "swimming",
+                                "value": "swimming",
+                                "placeholder": "Swimming"
+                            },
+                            {
+                                "id": "yoga/pilates",
+                                "name": "yoga/pilates",
+                                "value": "yoga/pilates",
+                                "placeholder": "Yoga / Pilates"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subtitle": "How do you prefer to train?",
+                "inputs": [
+                    {
+                        "name": "training_location",
+                        "id": "training_location",
+                        "input_type": "select",
+                        "placeholder": "Select specialization",
+                        "options": [
+                            {
+                                "id": "gym",
+                                "name": "gym",
+                                "value": "gym",
+                                "placeholder": ""
+                            },
+                            {
+                                "id": "outdoors",
+                                "name": "outdoors",
+                                "value": "outdoors",
+                                "placeholder": "Outdoors"
+                            },
+                            {
+                                "id": "pool",
+                                "name": "pool",
+                                "value": "pool",
+                                "placeholder": "In the pool"
+                            },
+                            {
+                                "id": "home",
+                                "name": "home",
+                                "value": "home",
+                                "placeholder": "Home trainings"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subtitle": "Do you train athletes for competitions?",
+                "inputs": [
+                    {
+                        "name": "competitions",
+                        "id": "competitions",
+                        "input_type": "radio",
+                        "placeholder": "",
+                        "options": [
+                            {
+                                "id": "true",
+                                "name": "competitions",
+                                "value": "true",
+                                "placeholder": "Yes"
+                            },
+                            {
+                                "id": "false",
+                                "name": "competitions",
+                                "value": "false",
+                                "placeholder": "No"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "information": {
+            "title": "Why we collect your data?",
+            "description": "To correctly identify your target audience and recommend your plans to the right people. It only takes 2-3 minutes."
+        }
+    },
+
+    {
+        "steps_total": [
+            {
+                "value": "step-1",
+                "placeholder": "Step 1"
+            },
+            {
+                "value": "step-2",
+                "placeholder": "Step 2"
+            },
+            {
+                "value": "step-3",
+                "placeholder": "Step 3"
+            }
+        ],
+        "step_current": "step-3",
+        "title": "Let’s talk about your experience!",
+        "options": [
+            {
+                "subtitle": "How long have you been involved in coaching, in your opinion?",
+                "inputs": [
+                    {
+                        "name": "experience",
+                        "id": "experience",
+                        "input_type": "number",
+                        "placeholder": "Write in years..",
+                        "options": ""
+                    }
+                ]
+            },
+            {
+                "subtitle": "Do you have any proof of your education/certification? Write name of certificate, if any:",
+                "inputs": [
+                    {
+                        "name": "education",
+                        "id": "education",
+                        "input_type": "text",
+                        "placeholder": "Certificate name..",
+                        "options": ""
+                    }
+                ]
+            }
+        ],
+        "information": {
+            "title": "Why we collect your data?",
+            "description": "To correctly identify your target audience and recommend your plans to the right people. It only takes 2-3 minutes."
+        }
+    }
+]

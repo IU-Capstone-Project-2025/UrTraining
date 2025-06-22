@@ -1,0 +1,661 @@
+[
+    {
+        "steps_total": [
+            {
+                "value": "step-1",
+                "placeholder": "Step 1"
+            },
+            {
+                "value": "step-2",
+                "placeholder": "Step 2"
+            },
+            {
+                "value": "step-3",
+                "placeholder": "Step 3"
+            },
+            {
+                "value": "step-4",
+                "placeholder": "Step 4"
+            }
+        ],
+        "step_current": "step-1",
+        "title": "Let's know each other",
+        "options": [
+            {
+                "subtitle": "How can we call you?",
+                "inputs": [
+                    {
+                        "name": "name",
+                        "id": "name",
+                        "input_type": "text",
+                        "placeholder": "Name",
+                        "options": []
+                    },
+                    {
+                        "name": "surname",
+                        "id": "surname",
+                        "input_type": "text",
+                        "placeholder": "Surname",
+                        "options": []
+                    }
+                ]
+            },
+            {
+                "subtitle": "Where are you from?",
+                "inputs": [
+                    {
+                        "name": "country",
+                        "id": "country",
+                        "input_type": "select",
+                        "placeholder": "Country",
+                        "options": [
+                            {
+                                "id": "kz",
+                                "name": "kazakhstan",
+                                "value": "kz",
+                                "placeholder": "Kazakhstan"
+                            },
+                            {
+                                "id": "ru",
+                                "name": "russia",
+                                "value": "ru",
+                                "placeholder": "Russia"
+                            },
+                            {
+                                "id": "us",
+                                "name": "usa",
+                                "value": "us",
+                                "placeholder": "United States"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "city",
+                        "id": "city",
+                        "input_type": "text",
+                        "placeholder": "City",
+                        "options": []
+                    }
+                ]
+            },
+            {
+                "subtitle": "What is your gender?",
+                "inputs": [
+                    {
+                        "name": "gender",
+                        "id": "gender",
+                        "input_type": "radio",
+                        "placeholder": "Gender",
+                        "options": [
+                            {
+                                "id": "male",
+                                "name": "gender",
+                                "value": "male",
+                                "placeholder": "Male"
+                            },
+                            {
+                                "id": "female",
+                                "name": "gender",
+                                "value": "female",
+                                "placeholder": "Female"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subtitle": "More data",
+                "inputs": [
+                    {
+                        "name": "age",
+                        "id": "age",
+                        "input_type": "number",
+                        "placeholder": "Age",
+                        "options": []
+                    },
+                    {
+                        "name": "height_cm",
+                        "id": "height_cm",
+                        "input_type": "number",
+                        "placeholder": "Height",
+                        "options": []
+                    },
+                    {
+                        "name": "weight_kg",
+                        "id": "weight_kg",
+                        "input_type": "number",
+                        "placeholder": "Weight",
+                        "options": []
+                    }
+                ]
+            }
+        ],
+        "information": {
+            "title": "Why we collect your data?",
+            "description": "Before we dive into training, we’d love to get to know you better. Your name and a few basic details help us personalize your journey — like a good coach who remembers your story from day one."
+        }
+    },
+
+    {
+        "steps_total": [
+            {
+                "value": "step-1",
+                "placeholder": "Step 1"
+            },
+            {
+                "value": "step-2",
+                "placeholder": "Step 2"
+            },
+            {
+                "value": "step-3",
+                "placeholder": "Step 3"
+            },
+            {
+                "value": "step-4",
+                "placeholder": "Step 4"
+            }
+        ],
+        "step_current": "step-2",
+        "title": "Let's talk about your goals and experience",
+        "options": [
+            {
+                "subtitle": "What goals do you want to achieve? Choose up to 2 options:",
+                "inputs": [
+                    {
+                        "name": "training_goals_1",
+                        "id": "training_goals_1",
+                        "input_type": "select",
+                        "placeholder": "Goal",
+                        "options": [
+                            {
+                                "id": "muscle_gain",
+                                "name": "muscle_gain",
+                                "value": "muscle_gain",
+                                "placeholder": "Muscle gain"
+                            },
+                            {
+                                "id": "maintain_fitness",
+                                "name": "maintain_fitness",
+                                "value": "maintain_fitness",
+                                "placeholder": "Maintain fitness"
+                            },
+                            {
+                                "id": "weight_loss",
+                                "name": "weight_loss",
+                                "value": "weight_loss",
+                                "placeholder": "Weight loss"
+                            },
+                            {
+                                "id": "improve_endurance",
+                                "name": "improve_endurance",
+                                "value": "improve_endurance",
+                                "placeholder": "Improve endurance"
+                            },
+                            {
+                                "id": "improve_flexibility",
+                                "name": "improve_flexibility",
+                                "value": "improve_flexibility",
+                                "placeholder": "Improve flexibility"
+                            },
+                            {
+                                "id": "stress_reduction",
+                                "name": "stress_reduction",
+                                "value": "stress_reduction",
+                                "placeholder": "Stress reduction"
+                            },
+                            {
+                                "id": "competitions_preparation",
+                                "name": "competitions_preparation",
+                                "value": "competitions_preparation",
+                                "placeholder": "Competitions preparation"
+                            },
+                            {
+                                "id": "weight_loss",
+                                "name": "weight_loss",
+                                "value": "weight_loss",
+                                "placeholder": "Weight loss"
+                            },
+                            {
+                                "id": "none",
+                                "name": "none",
+                                "value": "none",
+                                "placeholder": "None"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "training_goals_2",
+                        "id": "training_goals_2",
+                        "input_type": "select",
+                        "placeholder": "Goal",
+                        "options": [
+                            {
+                                "id": "muscle_gain",
+                                "name": "muscle_gain",
+                                "value": "muscle_gain",
+                                "placeholder": "Muscle gain"
+                            },
+                            {
+                                "id": "maintain_fitness",
+                                "name": "maintain_fitness",
+                                "value": "maintain_fitness",
+                                "placeholder": "Maintain fitness"
+                            },
+                            {
+                                "id": "weight_loss",
+                                "name": "weight_loss",
+                                "value": "weight_loss",
+                                "placeholder": "Weight loss"
+                            },
+                            {
+                                "id": "improve_endurance",
+                                "name": "improve_endurance",
+                                "value": "improve_endurance",
+                                "placeholder": "Improve endurance"
+                            },
+                            {
+                                "id": "improve_flexibility",
+                                "name": "improve_flexibility",
+                                "value": "improve_flexibility",
+                                "placeholder": "Improve flexibility"
+                            },
+                            {
+                                "id": "stress_reduction",
+                                "name": "stress_reduction",
+                                "value": "stress_reduction",
+                                "placeholder": "Stress reduction"
+                            },
+                            {
+                                "id": "competitions_preparation",
+                                "name": "competitions_preparation",
+                                "value": "competitions_preparation",
+                                "placeholder": "Competitions preparation"
+                            },
+                            {
+                                "id": "weight_loss",
+                                "name": "weight_loss",
+                                "value": "weight_loss",
+                                "placeholder": "Weight loss"
+                            },
+                            {
+                                "id": "none",
+                                "name": "none",
+                                "value": "none",
+                                "placeholder": "None"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subtitle": "What is your training experience?",
+                "inputs": [
+                    {
+                        "name": "level",
+                        "id": "level",
+                        "input_type": "select",
+                        "placeholder": "Experience",
+                        "options": [
+                            {
+                                "id": "beginner",
+                                "name": "beginner",
+                                "value": "beginner",
+                                "placeholder": "I'm just getting started"
+                            },
+                            {
+                                "id": "intermediate",
+                                "name": "intermediate",
+                                "value": "intermediate",
+                                "placeholder": "I train from time to timeale"
+                            },
+                            {
+                                "id": "advanced",
+                                "name": "advanced",
+                                "value": "advanced",
+                                "placeholder": "I've been training regularly for over a year"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subtitle": "How often have you been training in the last 3 months?",
+                "inputs": [
+                    {
+                        "name": "frequency_last_3_months",
+                        "id": "frequency_last_3_months",
+                        "input_type": "select",
+                        "placeholder": "Frequency",
+                        "options": [
+                            {
+                                "id": "3_4_times_week",
+                                "name": "3_4_times_week",
+                                "value": "3_4_times_week",
+                                "placeholder": "I train 1-2 times per week"
+                            },
+                            {
+                                "id": "3_4_times_week",
+                                "name": "3_4_times_week",
+                                "value": "3_4_times_week",
+                                "placeholder": "I train 3-4 times per week"
+                            },
+                            {
+                                "id": "5+_times_week",
+                                "name": "5+_times_week",
+                                "value": "5+_times_week",
+                                "placeholder": "I train more than 4 times per week, siuuuuuuuu"
+                            },
+                            {
+                                "id": "not_trained",
+                                "name": "not_trained",
+                                "value": "not_trained",
+                                "placeholder": "Haven't trained these months"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "information": {
+            "title": "Why we collect your data?",
+            "description": "Your goals and fitness background help us design the right training journey — whether you're a beginner or an experienced athlete, we want to move at your pace."
+        }
+    },
+
+    {
+        "steps_total": [
+            {
+                "value": "step-1",
+                "placeholder": "Step 1"
+            },
+            {
+                "value": "step-2",
+                "placeholder": "Step 2"
+            },
+            {
+                "value": "step-3",
+                "placeholder": "Step 3"
+            },
+            {
+                "value": "step-4",
+                "placeholder": "Step 4"
+            }
+        ],
+        "step_current": "step-3",
+        "title": "Dive into your preferences..",
+        "options": [
+            {
+                "subtitle": "How do you prefer to train and how much time do you spend on one workout?",
+                "inputs": [
+                    {
+                        "name": "training_location",
+                        "id": "training_location",
+                        "input_type": "select",
+                        "placeholder": "Select training location",
+                        "options": [
+                            {
+                                "id": "gym",
+                                "name": "gym",
+                                "value": "gym",
+                                "placeholder": "In the gym"
+                            },
+                            {
+                                "id": "outdoors",
+                                "name": "outdoors",
+                                "value": "outdoors",
+                                "placeholder": "Outdoors"
+                            },
+                            {
+                                "id": "pool",
+                                "name": "pool",
+                                "value": "pool",
+                                "placeholder": "In the pool"
+                            },
+                            {
+                                "id": "home",
+                                "name": "home",
+                                "value": "home",
+                                "placeholder": "Training at home"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "session_duration",
+                        "id": "session_duration",
+                        "input_type": "select",
+                        "placeholder": "Session duration",
+                        "options": [
+                            {
+                                "id": "under_30_min",
+                                "name": "under_30_min",
+                                "value": "under_30_min",
+                                "placeholder": "Under 30 minutes"
+                            },
+                            {
+                                "id": "30_45_min",
+                                "name": "30_45_min",
+                                "value": "30_45_min",
+                                "placeholder": "30-45 minutes"
+                            },
+                            {
+                                "id": "45_60_min",
+                                "name": "45_60_min",
+                                "value": "45_60_min",
+                                "placeholder": "45-60 minutes"
+                            },
+                            {
+                                "id": "over_60_min",
+                                "name": "over_60_min",
+                                "value": "over_60_min",
+                                "placeholder": "Over 60 minutes"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subtitle": "Describe how much variety of equipment you can use:",
+                "inputs": [
+                    {
+                        "name": "location_details",
+                        "id": "location_details",
+                        "input_type": "select",
+                        "placeholder": "Select..",
+                        "options": [
+                            {
+                                "id": "full_fitness_center",
+                                "name": "full_fitness_center",
+                                "value": "full_fitness_center",
+                                "placeholder": "Full sport center/pool: can use multiple equipments and machines"
+                            },
+                            {
+                                "id": "small_gym_basic_equipment",
+                                "name": "small_gym_basic_equipment",
+                                "value": "small_gym_basic_equipment",
+                                "placeholder": "Small gym or training ground: some equipment and machines are avalible"
+                            },
+                            {
+                                "id": "no_equipment",
+                                "name": "no_equipment",
+                                "value": "no_equipment",
+                                "placeholder": "Have no equipment at all"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subtitle": "Evaluate your interest in each type of workout from 1 to 5",
+                "inputs": [
+                    {
+                        "input_type": "scale",
+                        "name": "strength_training",
+                        "id": "strength_training",
+                        "placeholder": "Strength training:",
+                        "options": []
+                    },
+                    {
+                        "input_type": "scale",
+                        "name": "cardio",
+                        "id": "cardio",
+                        "placeholder": "Cardio training:",
+                        "options": []
+                    },
+                    {
+                        "input_type": "scale",
+                        "name": "hiit",
+                        "id": "hiit",
+                        "placeholder": "HIIT (high-intensity interval training):",
+                        "options": []
+                    }
+                ]
+            },
+            {
+                "subtitle": "",
+                "inputs": [
+                    {
+                        "input_type": "scale",
+                        "name": "yoga_pilates",
+                        "id": "yoga_pilates",
+                        "placeholder": "Yoga/pilates:",
+                        "options": ""
+                    },
+                    {
+                        "input_type": "scale",
+                        "name": "functional_training",
+                        "id": "functional_training",
+                        "placeholder": "Functional training:",
+                        "options": ""
+                    },
+                    {
+                        "input_type": "scale",
+                        "name": "stretching",
+                        "id": "stretching",
+                        "placeholder": "Stretching:",
+                        "options": ""
+                    }
+                ]
+            }
+        ],
+        "information": {
+            "title": "Why we collect your data?",
+            "description": "Everyone trains differently. Your preferences help us match you with the types of workouts you enjoy most, making your routine both fun and effective."
+        }
+    },
+
+    {
+        "steps_total": [
+            {
+                "value": "step-1",
+                "placeholder": "Step 1"
+            },
+            {
+                "value": "step-2",
+                "placeholder": "Step 2"
+            },
+            {
+                "value": "step-3",
+                "placeholder": "Step 3"
+            },
+            {
+                "value": "step-4",
+                "placeholder": "Step 4"
+            }
+        ],
+        "step_current": "step-4",
+        "title": "Your medical indications and wishes",
+        "options": [
+            {
+                "subtitle": "Do you have any health restrictions?",
+                "inputs": [
+                    {
+                        "name": "resctriction",
+                        "id": "restriction",
+                        "input_type": "radio",
+                        "placeholder": "",
+                        "options": [
+                            {
+                                "id": "true",
+                                "name": "restriction",
+                                "value": "true",
+                                "placeholder": "Yes"
+                            },
+                            {
+                                "id": "true",
+                                "name": "restriction",
+                                "value": "false",
+                                "placeholder": "No"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subtitle": "Please, describe, if any:",
+                "inputs": [
+                    {
+                        "name": "health_details",
+                        "id": "health_details",
+                        "input_type": "text",
+                        "placeholder": "Health details...",
+                        "options": []
+                    }
+                ]
+            },
+            {
+                "subtitle": "Do you have any problems with your joints or back?",
+                "inputs": [
+                    {
+                        "name": "joint_back_problems",
+                        "id": "joint_back_problems",
+                        "input_type": "radio",
+                        "placeholder": "",
+                        "options": [
+                            {
+                                "id": "true",
+                                "name": "joint_back_problems",
+                                "value": "true",
+                                "placeholder": "Yes"
+                            },
+                            {
+                                "id": "false",
+                                "name": "joint_back_problems",
+                                "value": "false",
+                                "placeholder": "No"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "subtitle": "Are there any chronic diseases that affect exercise?",
+                "inputs": [
+                    {
+                        "name": "chronic_conditions",
+                        "id": "chronic_conditions",
+                        "input_type": "radio",
+                        "placeholder": "",
+                        "options": [
+                            {
+                                "id": "true",
+                                "name": "chronic_conditions",
+                                "value": "true",
+                                "placeholder": "Yes"
+                            },
+                            {
+                                "id": "false",
+                                "name": "chronic_conditions",
+                                "value": "false",
+                                "placeholder": "No"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "information": {
+            "title": "Why we collect your data?",
+            "description": "Your health and safety come first. Knowing about any injuries or limitations allows us to adjust your plan and ensure you train without risk."
+        }
+    }
+]

@@ -1,11 +1,5 @@
 // Type for defining type of input provided
-export type InputType =
-    | "text"
-    | "number"
-    | "email"
-    | "password"
-    | "select"
-    | "radio";
+export type InputType = "text" | "number" | "email" | "password" | "select" | "radio" | "scale";
 
 // "Templates" of how data should be received from API
 export interface SignProps {
@@ -71,7 +65,7 @@ export interface InputField {
     id: string;
     input_type: InputType;
     placeholder: string;
-    options: SelectOption[] | "";
+    options: SelectOption[];
 }
 
 // Other interfaces
