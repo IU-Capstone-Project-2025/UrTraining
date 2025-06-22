@@ -1,8 +1,25 @@
 // import React from 'react'
-import type { SignProps, InputField, SocialLink } from "./interface/interfaces";
+import { useContext, useState } from "react";
+import type { SignProps, InputField, SocialLink, CredentialsData } from "./interface/interfaces";
 import '../css/Sing.css'
+import SignInPageContext from "./context/SignPageContext";
+import { emptyCredentials } from "./context/SignPageContext";
 
 const Sign = (props: SignProps) => {
+    const [savedData, setSavedData] = useState<CredentialsData>(emptyCredentials);
+
+    const credentialsContext = useContext(SignInPageContext)
+
+    const handleChange = (event: React.FormEvent<HTMLFormElement>) => {
+        const target = event.target as HTMLInputElement;
+        const { name, value } = target;
+        setSavedData(prev => ({ ...prev, [name]: value }));
+    }
+
+    const handleSubmit = () => {
+        credentialsContext.sendCredentials(savedData)
+    }
+
     return (
         <div className="signup basic-page">
             <div className='signup__container'>
@@ -13,7 +30,7 @@ const Sign = (props: SignProps) => {
                     <h2 className='signup__form-area__title'>
                         {props.page_title}
                     </h2>
-                    <form className='signup__form-area__options'>
+                    <form className='signup__form-area__options' onChange={handleChange} onSubmit={(e) => e.preventDefault()}>
                         {props.input_fields.map((input: InputField, value: number) => {
                             return (
                                 <input
@@ -43,11 +60,10 @@ const Sign = (props: SignProps) => {
                             </label> :
                             <></>
                         }
-                        <input
-                            type="submit"
-                            value="Let's start!"
+                        <button
                             className='btn-basic-black'
-                        ></input>
+                            onClick={handleSubmit}
+                        >Let's start!</button>
                     </form>
                     <div className='signup__form-area__divider'></div>
                     <div className='signup__form-area__social'>

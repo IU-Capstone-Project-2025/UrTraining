@@ -1,8 +1,15 @@
 // import React from 'react'
+import { useContext } from 'react';
 import '../css/Navbar.css'
 import { Outlet, Link } from "react-router-dom";
+import AuthContext from './context/AuthContext';
+import type { UserProp } from './interface/userInterface';
 
-const Header = () => {
+const Navbar = (data: any) => {
+  const authData = useContext(AuthContext)
+
+  const userData = data as UserProp
+
   return (
     <>
       <div className='navbar'>
@@ -30,17 +37,22 @@ const Header = () => {
             About Us
           </Link>
         </div>
-        <div className='navbar__auth'>
-          <Link to="/signin">
-            <button className='btn-basic-white'>
-              Sign In
-            </button>
-          </Link>
-          <Link to="/signup">
-            <button className='btn-basic-black'>
-              Sign Up
-            </button>
-          </Link>
+        <div className='navbar__user'>
+          <div className='navbar__auth' style={authData.access_token !== "" ? { display: "none" } : {}}>
+            <Link to="/signin">
+              <button className='btn-basic-white'>
+                Sign In
+              </button>
+            </Link>
+            <Link to="/signup">
+              <button className='btn-basic-black'>
+                Sign Up
+              </button>
+            </Link>
+          </div>
+          <div className='navbar__user__data' style={authData.access_token === "" ? { display: "none" } : {}}>
+            <h2>Hello, {userData?.user_info?.username ?? "none"}</h2>
+          </div>
         </div>
       </div>
       <Outlet />
@@ -48,4 +60,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default Navbar

@@ -3,16 +3,15 @@ import { Link } from "react-router-dom";
 
 interface BeginProps {
     css_style: string;
+    button_link: string;
     text: {
         title: string;
         description: string;
-        button_1: string;
-        button_2: string;
-        button_3: string;
+        button_text: string;
     };
 }
 
-const Begin = ({ css_style, text }: BeginProps) => {
+const Begin = ({ css_style, button_link, text }: BeginProps) => {
 
     return (
         <div className={"begin basic-page " + css_style}>
@@ -27,18 +26,12 @@ const Begin = ({ css_style, text }: BeginProps) => {
                         {text.description}
                     </p>
                 </div>
-                <div className={"begin__buttons" + css_style}>
-                    <Link to="/signup">
+                <div className={"begin__buttons " + css_style}>
+                    <Link to={button_link}>
                         <button className="btn-basic-black">
-                            {text.button_1}
+                            {text.button_text}
                         </button>
                     </Link>
-                    <button className="btn-basic-white">
-                        {text.button_2}
-                    </button>
-                    <button className="btn-basic-white">
-                        {text.button_3}
-                    </button>
                 </div>
             </div>
         </div>
