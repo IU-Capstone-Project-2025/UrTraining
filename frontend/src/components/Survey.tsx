@@ -7,6 +7,7 @@ import { InputTemplates } from './InputTemplates'
 import "../css/Survey.css"
 import { transformToApiPayload } from "../utils/transformSurveyData";
 import axios from 'axios';
+import AuthContext from './context/AuthContext';
 
 interface StepData {
     [key: string]: any;
@@ -14,6 +15,7 @@ interface StepData {
 
 const Survey = (props: SurveyProps) => {
     const [savedData, setSavedData] = useState<StepData>({});
+    const authData = useContext(AuthContext)
 
     const stepContext = useContext(SurveyPageContext)
 
@@ -40,7 +42,12 @@ const Survey = (props: SurveyProps) => {
     const sendData = () => {
         const payload = transformToApiPayload(savedData);
         console.log(payload);
-        axios.post(`${import.meta.env.VITE_API_URL}/user-data`, payload);
+        axios.post(`${import.meta.env.VITE_API_URL}/user-data`, payload,
+            {
+                headers: {
+                    Authorization: `Bearer ${authData.access_token}`
+                }
+            });
     }
 
     return (

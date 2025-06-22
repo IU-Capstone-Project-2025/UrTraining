@@ -5,10 +5,8 @@ import { Outlet, Link } from "react-router-dom";
 import AuthContext from './context/AuthContext';
 import type { UserProp } from './interface/userInterface';
 
-const Navbar = (data: any) => {
+const Navbar = (data: UserProp) => {
   const authData = useContext(AuthContext)
-
-  const userData = data as UserProp
 
   return (
     <>
@@ -51,7 +49,7 @@ const Navbar = (data: any) => {
             </Link>
           </div>
           <div className='navbar__user__data' style={authData.access_token === "" ? { display: "none" } : {}}>
-            <h2>Hello, {userData?.user_info?.username ?? "none"}</h2>
+            <h2>Hello, {data?.full_name ?? "none"}</h2>
           </div>
         </div>
       </div>

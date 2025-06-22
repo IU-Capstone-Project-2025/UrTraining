@@ -8,7 +8,7 @@ export async function userInfoRequest(
 ): Promise<String> {
   try {
     const resp = await axios.get<String>(
-      `${endpoint}/auth/me`,
+      `${endpoint}/user-data`,
       {
         headers: {
           Authorization: `Bearer ${token}`
