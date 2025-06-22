@@ -1,20 +1,249 @@
-# GET /survey-data
-## Описание
-Возвращает полную схему данных опроса в формате JSON, включая структуру пользовательских данных, параметры тренировочного профиля, доступные страны, правила валидации и значения по умолчанию.
+# API Documentation: 
 
-## Аутентификация
-Не требуется (открытый эндпоинт)
+# GET /survey-data - Get survey configuration data
 
-## Запрос
-### Метод
-`GET`
+## 🎯 Purpose
+The endpoint `GET /survey-data` returns **general settings and reference data** required for:
 
-### URL
-`/survey-data`
+1. **Initialization of forms** on the frontend:
+ - Lists of countries to select from
+ - Valid values for fields (age, training goals, etc.)
 
-### Параметры
-Отсутствуют
+2. **Data validation** before sending to the server:
+ - Rules for validating input values
+ - Required/unique fields
 
-### Заголовки
-```http
+3. **Auto-fill** optional fields with default values
+
+
+## 🌐 HTTP Method and URL
+**Method:** `GET`  
+**Endpoint:** `/survey-data`  
+**Base URL:** `https://api.example.com`  
+**Full Path:** `https://api.example.com/survey-data`
+
+
+## 🔐 Authentication Requirements
+- **Access:** Public  
+- **Authorization:** Not required  
+- **Security:** No sensitive data exposed  
+- **Bearer token**: Not needed for this endpoint  
+*(Note: For personal data, use `/user-data` which requires authentication)*
+
+## 🚫  What does NOT return
+- User personal data (name, email, etc.)
+- Session-specific data
+
+
+## 📝 Parameters
+None
+
+## 📤 Example Successful Request
+````http
+GET /survey-data HTTP/1.1
+Host: api.example.com
 Accept: application/json
+````
+
+
+## ✅ Successful Response(200 OK)
+```json
+{
+  "countries": [
+    {
+      "code": "kz",
+      "name": "kazakhstan",
+      "display_name": "Kazakhstan"
+    }
+  ],
+  "validation_rules": {
+    "required_fields": ["user_data.full_name"],
+    "string_lengths": {
+      "username": {"min": 3, "max": 50}
+    }
+  },
+  "default_values": {
+    "training_level": "beginner"
+  }
+}
+```
+
+## ⚠️ Possible Errors
+
+| Code | Description | When It Occurs |
+|------|-------------|----------------|
+| **404** | `Survey data file not found` | The `data/survey_data.json` file is missing on the server |
+| **500** | `Invalid JSON format in survey data file` | File exists but contains invalid JSON |
+| **500** | `Failed to load survey data` | Any other error while reading/processing the survey file |
+
+
+
+
+# GET /user-data - Get Authenticated User Data
+
+## 🎯 Purpose
+The endpoint `GET /user-data` returns **complete profile information** for authenticated users including:
+
+1. **Personal details**:
+   - Name, email, account information
+   - Subscription status
+
+2. **Training profile**:
+   - Fitness goals and preferences
+   - Workout history and statistics
+
+3. **Account settings**:
+   - Notification preferences
+   - Privacy settings
+
+## 🌐 HTTP Method and URL
+**Method:** `GET`  
+**Endpoint:** `/user-data`  
+**Base URL:** `https://api.example.com/api/v1`  
+**Full Path:** `https://api.example.com/api/v1/user-data`
+
+
+## 🔐 Authentication Requirements
+- **Access:** Private (requires authentication)  
+- **Authorization:** Bearer token required  
+- **Security Level:** High (contains sensitive data)  
+
+## 📝 Parameters
+None required
+
+## 📤 Example Request
+```http
+GET /api/v1/user-data HTTP/1.1
+Host: api.example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Accept: application/json
+Accept-Language: en-US
+````
+
+
+## ✅ Successful Response(200 OK)
+```json
+
+{
+  "user_profile": {
+    "id": "usr_12345",
+    "full_name": "Alex Johnson",
+    "email": "alex.johnson@example.com",
+    "username": "alexfit",
+    "account_status": "active",
+    "created_at": "2023-01-15T10:30:00Z",
+    "last_login": "2023-11-20T14:25:00Z"
+  },
+  "training_profile": {
+    "goals": ["strength_gain", "endurance"],
+    "level": "intermediate",
+    "preferences": {
+      "workout_duration": "45-60_min",
+      "equipment": ["dumbbells", "resistance_bands"]
+    },
+    "achievements": {
+      "workouts_completed": 42,
+      "streak_days": 7
+    }
+  },
+  "settings": {
+    "notifications": {
+      "email": true,
+      "push": false
+    },
+    "privacy": {
+      "profile_visibility": "friends_only"
+    }
+  },
+  "metadata": {
+    "version": "1.2.0",
+    "last_updated": "2023-11-20T08:00:00Z"
+  }
+}
+```
+
+## ⚠️ Error Responses
+
+| Status Code | Error Type           | Description                      | Resolution                      |
+|-------------|----------------------|----------------------------------|---------------------------------|
+| `401`       | Unauthorized         | Missing or invalid token         | Provide valid Bearer token      |
+| `403`       | Forbidden            | Insufficient permissions         | Check user privileges           |
+| `404`       | Not Found            | User not found                   | Verify user exists              |
+| `429`       | Too Many Requests    | Rate limit exceeded              | Implement backoff strategy      |
+| `500`       | Server Error         | Internal server error            | Contact support                 |
+
+# POST /user-data - Update User Data
+
+## 🎯 Purpose
+The endpoint `POST /user-data` allows authenticated users to **update their complete profile information**, including:
+
+1. **Personal details**:
+   - Name, email
+   - Account preferences
+
+2. **Training profile**:
+   - Fitness goals and preferences
+   - Health information
+   - Training preferences
+
+3. **Account settings**:
+   - Notification preferences
+   - Privacy settings
+
+## 🌐 HTTP Method and URL
+**Method:** `POST`  
+**Endpoint:** `/user-data`  
+**Base URL:** `https://api.example.com/api/v1`  
+**Full Path:** `https://api.example.com/api/v1/user-data`
+
+## 🔐 Authentication Requirements
+- **Access:** Private (requires authentication)  
+- **Authorization:** Bearer token required  
+- **Security Level:** High (contains sensitive operations)  
+- **Permissions:** Only owner can update their data 
+
+## 📝 Parameters
+None required
+
+## 📤 Example Request
+```POST /api/v1/user-data HTTP/1.1
+Host: api.example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "user_profile": {
+    "full_name": "Alex Johnson Updated"
+  },
+  "training_profile": {
+    "goals": ["weight_loss", "flexibility"],
+    "level": "intermediate"
+  }
+}
+```
+
+
+## ✅ Successful Response(200 OK)
+```{
+  "message": "User data updated successfully",
+  "updated_fields": {
+    "user_profile": true,
+    "training_profile": true
+  },
+  "user_data": {
+    "id": "usr_12345",
+    "full_name": "Alex Johnson Updated",
+    "email": "alex.johnson@example.com"
+  }
+}
+```
+
+## ⚠️ Error Responses
+
+| Status Code | Error Type           | Description                      | Resolution                      |
+|-------------|----------------------|----------------------------------|---------------------------------|
+| `401`       | Unauthorized         | Missing or invalid token         | Provide valid Bearer token      |
+| `403`       | Forbidden            | Insufficient permissions         | Check user privileges           |
+| `404`       | Not Found            | User not found                   | Verify user exists              |
+| `429`       | Too Many Requests    | Rate limit exceeded              | Implement backoff strategy      |
+| `500`       | Server Error         | Internal server error            | Contact support                 |
