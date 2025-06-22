@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
-from app.models.database_models import User, TrainingProfile, ActiveSession, Course, UserCourseProgress
+from app.models.database_models import User, TrainingProfile, ActiveSession, Course, UserCourseProgress, Training
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any
@@ -218,4 +218,85 @@ def update_course_progress(db: Session, user_id: int, course_id: int, progress_p
     
     db.commit()
     db.refresh(progress)
-    return progress 
+    return progress
+
+
+# Training CRUD operations
+def get_training_by_id(db: Session, training_id: int) -> Optional[Training]:
+    """Получить тренировку по ID"""
+    return db.query(Training).filter(Training.id == training_id).first()
+
+
+def get_trainings_summary(db: Session, skip: int = 0, limit: int = 100) -> List[Training]:
+    """Получить список всех активных тренировок с краткой информацией"""
+    return db.query(Training).filter(
+        Training.is_active == True
+    ).offset(skip).limit(limit).all()
+
+
+def get_trainings_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[Training]:
+    """Получить тренировки конкретного пользователя"""
+    return db.query(Training).filter(
+        and_(
+            Training.user_id == user_id,
+            Training.is_active == True
+        )
+    ).offset(skip).limit(limit).all()
+
+
+def create_training(db: Session, training_data: Dict[str, Any], user_id: int = None) -> Training:
+    """Создать новую тренировку"""
+    db_training = Training(
+        user_id=user_id,
+        metainfo=training_data.get("metainfo"),
+        training_data=training_data.get("training_data"),
+        title=training_data.get("title"),
+        description=training_data.get("description"),
+        duration_weeks=training_data.get("duration_weeks"),
+        difficulty_level=training_data.get("difficulty_level"),
+        created_by=training_data.get("created_by")
+    )
+    db.add(db_training)
+    db.commit()
+    db.refresh(db_training)
+    return db_training
+
+
+def update_training(db: Session, training_id: int, training_data: Dict[str, Any]) -> Optional[Training]:
+    """Обновить существующую тренировку"""
+    training = get_training_by_id(db, training_id)
+    if not training:
+        return None
+    
+    # Обновляем поля
+    for field, value in training_data.items():
+        if hasattr(training, field) and value is not None:
+            setattr(training, field, value)
+    
+    training.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(training)
+    return training
+
+
+def delete_training(db: Session, training_id: int) -> bool:
+    """Мягкое удаление тренировки (деактивация)"""
+    training = get_training_by_id(db, training_id)
+    if not training:
+        return False
+    
+    training.is_active = False
+    training.updated_at = datetime.utcnow()
+    db.commit()
+    return True
+
+
+def search_trainings(db: Session, query: str, skip: int = 0, limit: int = 100) -> List[Training]:
+    """Поиск тренировок по названию или описанию"""
+    search_filter = f"%{query}%"
+    return db.query(Training).filter(
+        and_(
+            Training.is_active == True,
+            (Training.title.ilike(search_filter) | Training.description.ilike(search_filter))
+        )
+    ).offset(skip).limit(limit).all() 

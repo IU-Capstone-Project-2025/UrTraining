@@ -3,6 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.auth import router as auth_router, get_current_user
+from app.routes.trainings import router as trainings_router
 from app.database import get_db
 from app.crud import get_training_profile, update_user_profile, update_training_profile
 from sqlalchemy.orm import Session
@@ -143,6 +144,7 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
+app.include_router(trainings_router, prefix="/trainings", tags=["Trainings"])
 
 
 

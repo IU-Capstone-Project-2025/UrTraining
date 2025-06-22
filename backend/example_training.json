@@ -1,0 +1,83 @@
+{
+  "metainfo": "Программа тренировок для начинающих на неделю - силовая тренировка с акцентом на основные группы мышц",
+  "training_data": {
+    "monday": [
+      {
+        "exercise_name": "Pull ups",
+        "repetitions": "10",
+        "sets": "3",
+        "rest_time": "60 секунд",
+        "notes": "Если сложно - используйте резинку или гравитрон"
+      },
+      {
+        "exercise_name": "Push ups",
+        "repetitions": "15",
+        "sets": "3",
+        "rest_time": "45 секунд"
+      },
+      {
+        "exercise_name": "Squats",
+        "repetitions": "20",
+        "sets": "3",
+        "rest_time": "60 секунд"
+      }
+    ],
+    "tuesday": [
+      {
+        "exercise_name": "Plank",
+        "duration": "1:00",
+        "sets": "3",
+        "rest_time": "30 секунд"
+      },
+      {
+        "exercise_name": "Crunches",
+        "repetitions": "34",
+        "sets": "3",
+        "rest_time": "30 секунд"
+      }
+    ],
+    "wednesday": null,
+    "thursday": [
+      {
+        "exercise_name": "Deadlift",
+        "repetitions": "8",
+        "sets": "4",
+        "weight": "60",
+        "rest_time": "2 минуты",
+        "notes": "Следите за техникой выполнения"
+      },
+      {
+        "exercise_name": "Bench Press",
+        "repetitions": "10",
+        "sets": "3",
+        "weight": "40",
+        "rest_time": "90 секунд"
+      }
+    ],
+    "friday": [
+      {
+        "exercise_name": "Running",
+        "duration": "30:00",
+        "notes": "Легкий темп, кардио"
+      },
+      {
+        "exercise_name": "Burpees",
+        "repetitions": "10",
+        "sets": "3",
+        "rest_time": "60 секунд"
+      }
+    ],
+    "saturday": null,
+    "sunday": [
+      {
+        "exercise_name": "Yoga Flow",
+        "duration": "45:00",
+        "notes": "Растяжка и восстановление"
+      }
+    ]
+  },
+  "title": "Программа для начинающих",
+  "description": "Комплексная программа тренировок на неделю для людей с начальным уровнем подготовки",
+  "duration_weeks": 4,
+  "difficulty_level": "beginner"
+} 

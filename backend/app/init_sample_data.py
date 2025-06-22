@@ -3,7 +3,7 @@ Module to initialize sample data in the database
 """
 
 from app.database import SessionLocal
-from app.crud import get_user_by_username, create_user, update_training_profile
+from app.crud import get_user_by_username, create_user, update_training_profile, create_training
 import logging
 
 logger = logging.getLogger(__name__)
@@ -88,6 +88,192 @@ def init_sample_data():
             "stretching": 5
         }
         update_training_profile(db, regular_user.id, user_profile_data)
+        
+        # Create sample training programs
+        sample_trainings = [
+            {
+                "metainfo": "Программа тренировок для начинающих - силовая тренировка с акцентом на основные группы мышц",
+                "training_data": {
+                    "monday": [
+                        {
+                            "exercise_name": "Pull ups",
+                            "repetitions": "10",
+                            "sets": "3",
+                            "rest_time": "60 секунд",
+                            "notes": "Если сложно - используйте резинку или гравитрон"
+                        },
+                        {
+                            "exercise_name": "Push ups",
+                            "repetitions": "15",
+                            "sets": "3",
+                            "rest_time": "45 секунд"
+                        },
+                        {
+                            "exercise_name": "Squats",
+                            "repetitions": "20",
+                            "sets": "3",
+                            "rest_time": "60 секунд"
+                        }
+                    ],
+                    "wednesday": [
+                        {
+                            "exercise_name": "Plank",
+                            "duration": "1:00",
+                            "sets": "3",
+                            "rest_time": "30 секунд"
+                        },
+                        {
+                            "exercise_name": "Crunches",
+                            "repetitions": "34",
+                            "sets": "3",
+                            "rest_time": "30 секунд"
+                        }
+                    ],
+                    "friday": [
+                        {
+                            "exercise_name": "Deadlift",
+                            "repetitions": "8",
+                            "sets": "4",
+                            "weight": "60",
+                            "rest_time": "2 минуты",
+                            "notes": "Следите за техникой выполнения"
+                        },
+                        {
+                            "exercise_name": "Bench Press",
+                            "repetitions": "10",
+                            "sets": "3",
+                            "weight": "40",
+                            "rest_time": "90 секунд"
+                        }
+                    ]
+                },
+                "title": "Программа для начинающих",
+                "description": "Комплексная программа тренировок на неделю для людей с начальным уровнем подготовки",
+                "duration_weeks": 4,
+                "difficulty_level": "beginner",
+                "created_by": "admin"
+            },
+            {
+                "metainfo": "Интенсивная кардио программа для сжигания жира и улучшения выносливости",
+                "training_data": {
+                    "monday": [
+                        {
+                            "exercise_name": "Running",
+                            "duration": "30:00",
+                            "notes": "Средний темп, контролируйте пульс"
+                        },
+                        {
+                            "exercise_name": "Burpees",
+                            "repetitions": "15",
+                            "sets": "4",
+                            "rest_time": "45 секунд"
+                        }
+                    ],
+                    "tuesday": [
+                        {
+                            "exercise_name": "Jumping Jacks",
+                            "duration": "2:00",
+                            "sets": "5",
+                            "rest_time": "30 секунд"
+                        },
+                        {
+                            "exercise_name": "Mountain Climbers",
+                            "duration": "1:30",
+                            "sets": "4",
+                            "rest_time": "45 секунд"
+                        }
+                    ],
+                    "thursday": [
+                        {
+                            "exercise_name": "Cycling",
+                            "duration": "45:00",
+                            "notes": "Интервальная тренировка - 2 мин быстро, 1 мин медленно"
+                        }
+                    ],
+                    "saturday": [
+                        {
+                            "exercise_name": "HIIT Circuit",
+                            "duration": "25:00",
+                            "notes": "Круговая тренировка: берпи, приседания, отжимания, планка"
+                        }
+                    ]
+                },
+                "title": "Кардио жиросжигание",
+                "description": "Интенсивная программа для быстрого сжигания жира и развития выносливости",
+                "duration_weeks": 6,
+                "difficulty_level": "intermediate",
+                "created_by": "admin"
+            },
+            {
+                "metainfo": "Домашняя тренировка без оборудования для поддержания формы",
+                "training_data": {
+                    "monday": [
+                        {
+                            "exercise_name": "Push ups",
+                            "repetitions": "12",
+                            "sets": "3",
+                            "rest_time": "45 секунд"
+                        },
+                        {
+                            "exercise_name": "Squats",
+                            "repetitions": "20",
+                            "sets": "3",
+                            "rest_time": "45 секунд"
+                        },
+                        {
+                            "exercise_name": "Plank",
+                            "duration": "45 секунд",
+                            "sets": "3",
+                            "rest_time": "30 секунд"
+                        }
+                    ],
+                    "wednesday": [
+                        {
+                            "exercise_name": "Lunges",
+                            "repetitions": "12 на каждую ногу",
+                            "sets": "3",
+                            "rest_time": "45 секунд"
+                        },
+                        {
+                            "exercise_name": "Pike Push ups",
+                            "repetitions": "8",
+                            "sets": "3",
+                            "rest_time": "60 секунд"
+                        }
+                    ],
+                    "friday": [
+                        {
+                            "exercise_name": "Glute Bridges",
+                            "repetitions": "15",
+                            "sets": "3",
+                            "rest_time": "30 секунд"
+                        },
+                        {
+                            "exercise_name": "Wall Sit",
+                            "duration": "30 секунд",
+                            "sets": "3",
+                            "rest_time": "60 секунд"
+                        }
+                    ],
+                    "sunday": [
+                        {
+                            "exercise_name": "Yoga Flow",
+                            "duration": "20:00",
+                            "notes": "Легкая растяжка и релаксация"
+                        }
+                    ]
+                },
+                "title": "Домашняя тренировка",
+                "description": "Эффективная программа для тренировок дома без специального оборудования",
+                "duration_weeks": 8,
+                "difficulty_level": "beginner",
+                "created_by": "user"
+            }
+        ]
+        
+        # Create training programs
+        for training_data in sample_trainings:
+            create_training(db, training_data, admin_user.id)
         
         logger.info("Sample data initialized successfully!")
         

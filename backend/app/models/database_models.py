@@ -20,6 +20,8 @@ class User(Base):
     # Relationship to training profile
     training_profile = relationship("TrainingProfile", back_populates="user", uselist=False)
     active_sessions = relationship("ActiveSession", back_populates="user")
+    # Relationship to trainings
+    trainings = relationship("Training", back_populates="user")
 
 
 class TrainingProfile(Base):
@@ -109,4 +111,32 @@ class UserCourseProgress(Base):
     
     # Relationships
     user = relationship("User")
-    course = relationship("Course") 
+    course = relationship("Course")
+
+
+class Training(Base):
+    """
+    SQLAlchemy модель для тренировки в базе данных
+    """
+    __tablename__ = "trainings"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    
+    # Основные поля согласно требуемой JSON структуре
+    metainfo = Column(Text, nullable=False)
+    training_data = Column(JSON, nullable=False)  # JSON структура с данными тренировки по дням
+    
+    # Дополнительные поля для расширенной функциональности
+    title = Column(String(255))
+    description = Column(Text)
+    duration_weeks = Column(Integer)
+    difficulty_level = Column(String(20))
+    created_by = Column(String(100))
+    is_active = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    
+    # Relationship to user
+    user = relationship("User", back_populates="trainings") 
