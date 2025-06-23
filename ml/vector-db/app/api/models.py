@@ -30,7 +30,7 @@ class AddDocumentsRequest(BaseModel):
     """Request model for adding documents."""
 
     index_name: str = Field(..., description="Index name")
-    documents: List[Dict[str, Any]] = Field(..., description="Documents to add")
+    documents: List[Any]
 
 
 class AddDocumentsResponse(BaseModel):
@@ -40,6 +40,20 @@ class AddDocumentsResponse(BaseModel):
     message: str
     added_count: int
     document_ids: List[str]
+
+
+class GetDocumentRequest(BaseModel):
+    """Request model for getting a document."""
+
+    index_name: str = Field(..., description="Index name")
+    document_id: str = Field(..., description="Document ID")
+
+
+class GetDocumentResponse(BaseModel):
+    """Response model for getting a document."""
+
+    success: bool
+    document: Dict[str, Any]
 
 
 class SearchRequest(BaseModel):
