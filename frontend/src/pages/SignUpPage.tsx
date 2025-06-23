@@ -17,7 +17,7 @@ const SignUpPage = () => {
 
   const contextValue: SignContextType = {
     credentials: credentials,
-    sendCredentials: setCredentials
+    submitCredentials: setCredentials
   };
 
   // If user is already authenticated, 
@@ -33,7 +33,9 @@ const SignUpPage = () => {
   useEffect(() => {
     if (credentials !== emptyCredentials){
       signUpMutation.mutate(credentials)
-      navigate("/")
+      console.log(credentials);
+      
+      // navigate("/")
     }
   }, [credentials]);
 

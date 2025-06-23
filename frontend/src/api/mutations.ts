@@ -48,9 +48,9 @@ export const useSignIn = (authData: AuthCredentialsTokens) => {
     });
 };
 
-export const useSubmitSurvey = () => {
+export const useSubmitSurvey = (token: String) => {
   return useMutation({
-    mutationFn: submitSurveyRequest,
+    mutationFn: (data: any) => submitSurveyRequest(token, data),
     onSuccess: () => {
       console.log("Survey submitted successfully!");
     },

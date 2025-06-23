@@ -14,9 +14,9 @@ import { transformToApiPayload } from "../utils/transformSurveyData";
 const SurveyPage = () => {
   const [searchParams, setSearchParams] = useSearchParams(); // Hook to store search bar argument (step)
   const [surveyStep, setSurveyStep] = useState<number>(1); // Hook to store current step
-  const submitSurveyMutation = useSubmitSurvey()
-
+  
   const authData = useContext(AuthContext)
+  const submitSurveyMutation = useSubmitSurvey(authData.access_token)
 
   // Cached function to get current step
   const parseStep = useCallback((): number => {
@@ -45,6 +45,7 @@ const SurveyPage = () => {
   function submitSurveyHandler(data: any){
     const formattedData = transformToApiPayload(data)
     console.log(formattedData);
+    submitSurveyMutation.mutate(formattedData)
   }
 
   // Receive an array of survey pages from API

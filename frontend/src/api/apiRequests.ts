@@ -78,9 +78,12 @@ export async function signInRequest(
 
 export async function submitSurveyRequest(token: String, data: any) {
     try {
+        console.log(data);
+        
         const resp = await axios.post(`${endpoint}/user-data`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
+                "Content-Type": 'application/json'
             },
         });
         return resp.data;
