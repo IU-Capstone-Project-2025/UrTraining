@@ -463,15 +463,15 @@
                         "placeholder": "Select..",
                         "options": [
                             {
-                                "id": "full_fitness_center",
-                                "name": "full_fitness_center",
-                                "value": "full_fitness_center",
+                                "id": "full_equipment",
+                                "name": "full_equipment",
+                                "value": "full_equipment",
                                 "placeholder": "Full sport center/pool: can use multiple equipments and machines"
                             },
                             {
-                                "id": "small_gym_basic_equipment",
-                                "name": "small_gym_basic_equipment",
-                                "value": "small_gym_basic_equipment",
+                                "id": "basic_equipment",
+                                "name": "basic_equipment",
+                                "value": "basic_equipment",
                                 "placeholder": "Small gym or training ground: some equipment and machines are avalible"
                             },
                             {
