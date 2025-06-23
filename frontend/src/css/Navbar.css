@@ -10,6 +10,8 @@
 
     padding: 2rem 6rem;
     box-sizing: border-box;
+    backdrop-filter: blur(5px);
+    
 }
 
 .navbar > * {

@@ -1,69 +1,70 @@
 // import React from 'react'
 import '../css/Course.css'
-import kanye from '../assets/kanye.jpg'
+import star from '../assets/star.svg'
+import { useEffect, useRef } from 'react';
 
-const Course = () => {
+const Course = (data: any) => {
+    const scrollRef = useRef<HTMLDivElement>(null);
 
-    const day_1_data = [
-        ["Cat-Cow Stretch", "10-12", "2", "", "30 sec", "Description"],
-        ["Shoulder Rolls + Arm Swings", "20/2", "2", "", "20 sec", "Description"],
-        ["Hip Circles", "10/2", "2", "", "20 sec", "Description"],
-        ["Deep Squat Hold + Spinal Twist", "", "2", "30 sec", "30 sec", "Description"],
-        ["Standing Hamstring Reach + Back Stretch", "", "2", "30 sec", "30 sec", "Description"],
-        ["Dynamic Lunge with Reach", "10/2", "2", "", "30 sec", "Description"],
-        ["Neck Mobility (Tilt, Turn, Nod)", "10", "1", "", "", "Description"],
-    ];
+    // Function for horizontal scroll
+    useEffect(() => {
+        const scrollElement = scrollRef.current;
+        if (!scrollElement) return;
+
+        const onWheel = (e: WheelEvent) => {
+            e.preventDefault();              // Prevent vertical page scroll
+            scrollElement.scrollLeft += e.deltaY * 4;      // Scroll horizontally instead
+        };
+
+        scrollElement.addEventListener('wheel', onWheel, { passive: false });
+        return () => scrollElement.removeEventListener('wheel', onWheel);
+    }, []);
 
     return (
         <div className="course basic-page">
             <div className="course__container">
                 <div className='course__tags'>
-                    <div className='course__tags__type'>
-                        <div className='course__tag tag-basic-gray'>
-                            <p>Mobility</p>
+                    {Object.entries(data.header_badges).map(([sectionKey, badges]: any) => (
+                        <div
+                            key={sectionKey}
+                            className={`course__tags__type`}
+                        >
+                            {badges.map((badge: any, idx: any) => (
+                                <div
+                                    key={idx}
+                                    className="course__tag tag-basic-gray"
+                                    style={{ boxShadow: `inset 0px 0px 0px 1.5px ${badge.badge_color}`, color: badge.badge_color }}
+                                >
+                                    <p>{badge.badge_text}</p>
+                                </div>
+                            ))}
                         </div>
-                    </div>
-                    <div className='course__tags__intensity'>
-                        <div className='course__tag tag-basic-gray'>
-                            <p>for all levels</p>
-                        </div>
-                        <div className='course__tag tag-basic-gray'>
-                            <p>30 min/training</p>
-                        </div>
-                        <div className='course__tag tag-basic-gray'>
-                            <p>3-4 trainings/week</p>
-                        </div>
-                        <div className='course__tag tag-basic-gray'>
-                            <p>2 weeks</p>
-                        </div>
-                    </div>
-                    <div className='course__tags__requirement'>
-                        <div className='course__tag tag-basic-gray'>
-                            <p>No equipment</p>
-                        </div>
-                    </div>
+                    ))}
                 </div>
 
                 <div className='course__info'>
                     <div className='course__info__title'>
-                        <div className='course__info__name'>
-                            <h2>Mobility reset</h2>
-                        </div>
-                        <div className='course__info__author'>
-                            <h3>by trainerOne</h3>
+                        <div className='course__info__text'>
+                            <div className='course__info__name'>
+                                <h2>{data.course_info.title}</h2>
+                            </div>
+                            <div className='course__info__author'>
+                                <h3>by {data.course_info.author}</h3>
+                            </div>
                         </div>
                         <div className='course__info__reviews'>
+                            <img src={star} alt="" />
                             <p>
-                                4/5
+                                {data.course_info.rating}/5
+                            </p>
+                            <p>
+                                {data.course_info.reviews} reviews
                             </p>
                         </div>
                     </div>
                     <div className='course__info__description'>
-                        <p>A short but effective mobility reboot.
-                            This program is designed to help you restore natural joint range of motion,
-                            improve flexibility, and reduce daily discomfort from sitting or inactivity.
-                            No matter your fitness background, this program is a perfect reset button for your body.
-                            view detailed info</p>
+                        <p>{data.course_info.description}</p>
+                        <h4>view detailed info</h4>
                     </div>
                 </div>
 
@@ -76,48 +77,36 @@ const Course = () => {
                         </div>
                     </div>
 
-                    <div className='course__structure__container'>
-                        <div className='course__structure__session'>
-                            <div className='course__session__table'>
-                                <div className='course__session__title'>
-                                    <h2>
-                                        Monday session
-                                    </h2>
-                                </div>
-                                <div className='course__table__header'>
-                                    {["Exercise", "Reps", "Sets", "Duration", "Rest", "Description"]
-                                        .map(h => <div key={h} className="course__table__cell">{h}</div>)}
-                                </div>
-                                <div className='course__table__body'>
-                                    {day_1_data.map((row, i) => (
-                                        <div key={i} className="course__table__row">
-                                            {row.map((c, j) => <div key={j} className="course__table__cell">{c || "-"}</div>)}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className='course__structure__session'>
-                            <div className='course__session__table'>
-                                <div className='course__session__title'>
-                                    <h2>
-                                        Monday session
-                                    </h2>
-                                </div>
-                                <div className='course__table__header'>
-                                    {["Exercise", "Reps", "Sets", "Duration", "Rest", "Description"]
-                                        .map(h => <div key={h} className="course__table__cell">{h}</div>)}
-                                </div>
-                                <div className='course__table__body'>
-                                    {day_1_data.map((row, i) => (
-                                        <div key={i} className="course__table__row">
-                                            {row.map((c, j) => <div key={j} className="course__table__cell">{c || "-"}</div>)}
-                                        </div>
-                                    ))}
+                    <div className='course__structure__container' ref={scrollRef}>
+                        {data.training_plan.map((training: any, index: number) => (
+                            <div key={index} className="course__structure__session">
+                                <div className="course__session__table">
+                                    <div className="course__session__title">
+                                        <h2>{training.title}</h2>
+                                    </div>
+                                    <div className="course__table__header">
+                                        {["Exercise", "Reps", "Sets", "Duration", "Rest", "Description"]
+                                            .map(h => (
+                                                <div key={h} className="course__table__cell">
+                                                    {h}
+                                                </div>
+                                            ))}
+                                    </div>
+                                    <div className="course__table__body">
+                                        {training.exercises.map((exercise: any, value: number) => (
+                                            <div key={index} className="course__table__row">
+                                                {Object.entries(exercise).map(([key, value]: any) => (
+                                                    <div key={key} className="course__table__cell">
+                                                        {value}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        ))
+                        }
                     </div>
                 </div>
 
@@ -126,11 +115,16 @@ const Course = () => {
                         <h2>About coach:</h2>
                     </div>
                     <div className='course__coach__picture'>
-                        <img src={kanye} alt="pfp" />
+                        <img src={data.coach_data.profile_picture} alt="pfp" />
                     </div>
                     <div className='course__coach__info'>
                         <div className='course__coach__name'>
-                            <h2>trainerOne</h2>
+                            <h2>{data.coach_data.username}</h2>
+                        </div>
+                        <div className='course__coach__rating'>
+                            <img src={star} alt="" />
+                            <p>{data.coach_data.rating}/5</p>
+                            <p>{data.coach_data.reviews} reviews</p>
                         </div>
                         <div className='course__coach__statistics'>
                             <p>12 active training courses</p>
