@@ -10,14 +10,6 @@ export interface SignProps {
     social_links: SocialLink[];
 }
 
-export interface SurveyProps {
-    steps_total: SurveyStep[];
-    step_current: string;
-    title: string;
-    options: SurveyOption[];
-    information: SurveyInformation;
-}
-
 export interface SignInSuccess {
     access_token: string;
     token_type: string;
@@ -25,10 +17,6 @@ export interface SignInSuccess {
     user_info: {
         additionalProp1: {};
     };
-}
-
-export interface UserProps {
-    
 }
 
 export interface SignInFailed {
@@ -82,21 +70,6 @@ export interface SelectOption {
     name: string;
     value: string;
     placeholder: string;
-}
-
-export interface SurveyStep {
-    value: string;
-    placeholder: string;
-}
-
-export interface SurveyOption {
-    subtitle: string;
-    inputs: InputField[];
-}
-
-export interface SurveyInformation {
-    title: string;
-    description: string;
 }
 
 export interface SocialLink {

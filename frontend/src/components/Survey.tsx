@@ -1,27 +1,22 @@
-import React, { useContext } from 'react'
-
-import { useState } from 'react';
-import type { SurveyProps, SurveyOption, SurveyStep, InputField } from "../components/interface/interfaces";
+import React, { useContext, useState } from 'react'
+import type { StepsTotal, SurveyOption, SurveyStep } from './interface/surveyInterface';
 import SurveyPageContext from './context/SurveyPageContext';
 import { InputTemplates } from './InputTemplates'
 import "../css/Survey.css"
-import { transformToApiPayload } from "../utils/transformSurveyData";
-import axios from 'axios';
+import type { InputField } from './interface/interfaces';
 import AuthContext from './context/AuthContext';
 
 interface StepData {
     [key: string]: any;
 }
 
-const Survey = (props: SurveyProps) => {
-    const [savedData, setSavedData] = useState<StepData>({});
-    const authData = useContext(AuthContext)
-
+const Survey = (props: SurveyStep) => {
+    const [savedData, setSavedData] = useState<StepData>({})
     const stepContext = useContext(SurveyPageContext)
 
+    // Get first and last step
     const first_step = props.steps_total[0].value
     const last_step = props.steps_total[props.steps_total.length - 1].value
-
 
     const handleChange = (event: React.FormEvent<HTMLFormElement>) => {
         const target = event.target as HTMLInputElement;
@@ -30,30 +25,23 @@ const Survey = (props: SurveyProps) => {
     };
 
     const handleContinue = () => {
-        console.log(savedData);
         stepContext.updateStep(stepContext.currentStep + 1)
     }
 
     const handleBack = () => {
-        console.log(savedData);
         stepContext.updateStep(stepContext.currentStep - 1)
     }
-
-    const sendData = () => {
-        const payload = transformToApiPayload(savedData);
-        console.log(payload);
-        axios.post(`${import.meta.env.VITE_API_URL}/user-data`, payload,
-            {
-                headers: {
-                    Authorization: `Bearer ${authData.access_token}`
-                }
-            });
+    
+    const handleSubmit = () => {
+        console.log(savedData);
+        console.log("Handle submit call");
+        stepContext.submitSurvey(savedData)
     }
 
     return (
         <div className="survey basic-page">
             <div className="survey__navbar">
-                {props.steps_total.map((step: SurveyStep, value: number) => {
+                {props.steps_total.map((step: StepsTotal, value: number) => {
                     return (
                         <h3 key={value} className={step.value === props.step_current ? "survey__navbar__selected" : ""}>
                             {step.placeholder}
@@ -115,7 +103,7 @@ const Survey = (props: SurveyProps) => {
 
                         {
                             props.step_current === last_step ?
-                                <button className="btn-basic-black" onClick={sendData}>
+                                <button className="btn-basic-black" onClick={handleSubmit}>
                                     Submit
                                 </button> : ""
                         }

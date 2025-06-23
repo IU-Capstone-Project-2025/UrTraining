@@ -17,7 +17,7 @@ const Sign = (props: SignProps) => {
     }
 
     const handleSubmit = () => {
-        credentialsContext.sendCredentials(savedData)
+        credentialsContext.submitCredentials(savedData)
     }
 
     return (

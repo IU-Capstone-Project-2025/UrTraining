@@ -14,7 +14,6 @@ import SurveyPage from '../pages/SurveyPage';
 import ExampleCoursePage from '../pages/ExampleCoursePage';
 import { useEffect, useState } from 'react';
 import { AuthContext, type AuthCredentialsTokens } from './context/AuthContext';
-import axios from 'axios';
 
 const queryClient = new QueryClient()
 

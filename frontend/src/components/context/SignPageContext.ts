@@ -5,12 +5,12 @@ export const emptyCredentials = { username: "", email: "", password: "", full_na
 
 export interface SignContextType {
     credentials: CredentialsData;
-    sendCredentials: (credentials: CredentialsData) => void;
+    submitCredentials: (credentials: CredentialsData) => void;
 }
 
 export const SignPageContext = createContext<SignContextType>({
     credentials: emptyCredentials,
-    sendCredentials: () => {}
+    submitCredentials: () => {}
 });
 
 export default SignPageContext;

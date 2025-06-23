@@ -1,74 +1,73 @@
 // import React from 'react'
 import Survey from "../components/Survey"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { example_survey_data } from "../components/data/example_json_data"
 import SurveyPageContext from "../components/context/SurveyPageContext";
 import type { SurveyContextType } from "../components/context/SurveyPageContext";
-import { sanitizeSurveyData } from "../utils/sanitizeSurveyData";
-import type { SurveyProps} from "../components/interface/interfaces";
-import axios from 'axios';
+import AuthContext from "../components/context/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { surveyDataRequest } from "../api/apiRequests";
+import type { SurveyProp, SurveyStep } from "../components/interface/surveyInterface";
+import { useSubmitSurvey } from "../api/mutations";
+import { transformToApiPayload } from "../utils/transformSurveyData";
 
 const SurveyPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [surveyStep, setSurveyStep] = useState(1);
-  const [fullSurveyData, setFullSurveyData] = useState<SurveyProps[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams(); // Hook to store search bar argument (step)
+  const [surveyStep, setSurveyStep] = useState<number>(1); // Hook to store current step
+  const submitSurveyMutation = useSubmitSurvey()
 
-  useEffect(() => {
-    console.log("mgeeeeeeeeeee");
+  const authData = useContext(AuthContext)
 
-    let newStep = parseInt(searchParams.get('step') || '') || 1;
-
-    if (newStep < 1 || newStep > 4) {
-      newStep = 1;
-      setSearchParams({ step: newStep.toString() }, { replace: true });
-    }    
-
-    console.log(newStep);
-    
-
-    setSurveyStep(newStep);
+  // Cached function to get current step
+  const parseStep = useCallback((): number => {
+    const stepParam = parseInt(searchParams.get('step') ?? '', 10);
+    return stepParam >= 1 && stepParam <= 4 ? stepParam : 1;
   }, [searchParams]);
 
+  // UseEffect to handle survey steps
   useEffect(() => {
-    const fetchAllSurveyData = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/survey-data`);
-        console.log("Survey data received:", res.data);
-        setFullSurveyData(res.data);
-      } catch (error) {
-        console.error("Error fetching survey data:", error);
-      }
-    };
+    // Parse step from search bar
+    const parsed = parseStep();
+    setSurveyStep(parsed);
 
-    fetchAllSurveyData();
-  }, []);
-
-  const updateStep = (newStep: number) => {
-    setSearchParams({ step: newStep.toString() });
-  };
+    // If out of bounds or missing, overwrite URL
+    if (parsed.toString() !== searchParams.get('step')) {
+      setSearchParams({ step: parsed.toString() }, { replace: true });
+    }
+  }, [searchParams, parseStep, setSearchParams]);
 
   const contextValue: SurveyContextType = {
     currentStep: surveyStep,
-    updateStep,
+    updateStep: (newStep) => setSearchParams({ step: newStep.toString() }),
+    submitSurvey: (data) => submitSurveyHandler(data)
   };
 
-  if (fullSurveyData.length == 0) {
-    return <div>Loading step data...</div>;
+  function submitSurveyHandler(data: any){
+    const formattedData = transformToApiPayload(data)
+    console.log(formattedData);
   }
-  else {
-    const currentStepData = fullSurveyData.find(
-      (item) => item.step_current === `step-${surveyStep}`
-    );
 
-    const cleanedData = sanitizeSurveyData(currentStepData);
+  // Receive an array of survey pages from API
+  const { data: pagesData = [], isLoading, status } = useQuery<SurveyProp, Error>({
+    queryKey: ['formPages'],
+    queryFn: () => surveyDataRequest(authData.access_token)
+  })
 
-    return (
-    <SurveyPageContext value={contextValue}>
-      <Survey {...cleanedData} />
-    </SurveyPageContext>
-    )
-  }
+  // Grab correct page from array of received data
+  const currentStepData = pagesData.find(
+    (item) => item.step_current === `step-${surveyStep}`
+  );
+
+  // Convert found page to SurveyStep
+  const stepData = currentStepData as SurveyStep
+
+  return (
+    isLoading ?
+      <div>...Loading</div> :
+      <SurveyPageContext value={contextValue}>
+        <Survey {...stepData} />
+      </SurveyPageContext>
+  )
 }
 
 export default SurveyPage
