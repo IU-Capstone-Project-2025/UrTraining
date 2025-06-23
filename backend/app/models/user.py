@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional, Literal
 from enum import Enum
+from .training import TrainerProfile
 
 class Gender(str, Enum):
     MALE = "male"
@@ -91,6 +92,7 @@ class User(BaseModel):
     preferences: Preferences = Field(..., description="User's training preferences")
     health: Health = Field(..., description="User's health status and restrictions")
     training_types: TrainingTypes = Field(..., description="User's interest levels in different training types")
+    trainer_profile: Optional[TrainerProfile] = Field(None, description="Trainer profile if user is a trainer")
 
     class Config:
         use_enum_values = True
@@ -112,6 +114,7 @@ class UserUpdate(BaseModel):
     preferences: Optional[Preferences] = None
     health: Optional[Health] = None
     training_types: Optional[TrainingTypes] = None
+    trainer_profile: Optional[TrainerProfile] = None
 
 class UserResponse(User):
     """Model for user response with additional fields if needed"""

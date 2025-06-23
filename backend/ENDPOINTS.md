@@ -330,6 +330,8 @@ Authenticates users and returns a JWT token for accessing protected resources.
 }
 ```
 
+
+
 ###  📤 Example Request
 ```POST /api/v1/login HTTP/1.1
 Host: api.example.com
@@ -377,6 +379,21 @@ Terminates the current authenticated session by invalidating the JWT access toke
 - **Access:** Private (requires valid JWT)  
 - **Authorization:** Bearer token in header  
 - **Security Level:** High (session management)  
+
+### 📝 Request Body Schema
+```json
+{
+  "session_terminated": boolean,
+  "remaining_sessions": integer
+}
+```
+### 📊 remaining_sessions Value Mapping
+
+| Value | Meaning                      | System Behavior                              |
+|-------|------------------------------|---------------------------------------------|
+| `0`   | No active sessions remaining | Automatically triggers session cleanup      |
+| `1-9` | Active session count         | Enforces per-user concurrent session limit  |
+| `-1`  | Unlimited sessions allowed   | Bypasses session limits (enterprise plans)  |
 
 ### 📝 Request Headers
 ```http
@@ -822,6 +839,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 | Status Code | Error Type   | Description                      | Typical Resolution                |
 |-------------|--------------|----------------------------------|---------------------------------|
 | `500`       | Server Error | Data retrieval failed            | Retry later or contact support   |
+
 
 
 
