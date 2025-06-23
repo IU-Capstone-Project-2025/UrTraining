@@ -22,5 +22,4 @@ services:
       - EMBEDDER_MAX_LENGTH=512
       - EMBEDDER_POOLING_STRATEGY=mean
       - EMBEDDER_NORMALIZE=false
-      - KLUSTER_AI_API_KEY=885a33a9-169b-498f-942a-549f7a80dd02
     restart: unless-stopped
