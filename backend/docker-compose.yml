@@ -10,8 +10,12 @@ services:
       - .:/app
     env_file:
       - .env
+    # environment:
+    #   - DATABASE_URL=postgresql://uruser:urpassword@db:5432/urtraining
+    #   - SECRET_KEY=your-super-secret-key-change-in-production-please
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   db:
     image: postgres:15
@@ -24,7 +28,12 @@ services:
       POSTGRES_PASSWORD: urpassword
       POSTGRES_DB: urtraining
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - backend_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U uruser -d urtraining"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
-  postgres_data:
+  backend_postgres_data:
