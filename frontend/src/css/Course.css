@@ -8,7 +8,7 @@
 
     padding: 3rem 2rem;
     border-radius: 2rem;
-    background-color: #a69393;
+    background-color: rgba(166, 147, 147, 0.1);
 }
 
 .course__tags {
@@ -30,17 +30,29 @@
     flex: 1 2;
 }
 
+.course__info__title {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
 .course__info__name {
     font-family: "TT Travels Bold", sans-serif;
+    line-height: 3rem;
     font-size: 2rem;
 }
 
 .course__info__author {
     font-family: "TT Travels Regular", sans-serif;
+    line-height: 2rem;
     font-size: 1.5rem;
 }
 
 .course__info__reviews {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+
     font-family: "TT Travels Regular", sans-serif;
     font-size: 1rem;
 }
@@ -70,8 +82,13 @@
     width: auto;
     flex-direction: row;
     gap: 2rem;
-
+    overflow-x: auto;
     overflow-x: scroll;
+    scroll-behavior: smooth;
+}
+
+.course__structure__container::-webkit-scrollbar { 
+	display: none; 
 }
 
 .course__structure__session {
@@ -148,4 +165,10 @@
 .course__coach__statistics, .course__coach__tags {
     display: flex;
     flex-direction: row;
+}
+
+.course__coach__rating {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
 }

@@ -17,7 +17,7 @@ const SignInPage = () => {
 
   const contextValue: SignContextType = {
     credentials: credentials,
-    sendCredentials: setCredentials
+    submitCredentials: setCredentials
   };
 
   // If user is already authenticated, 
