@@ -18,6 +18,8 @@ from .models import (
     DocumentInfo,
     HealthResponse,
     DeleteIndexResponse,
+    GetDocumentRequest,
+    GetDocumentResponse,
 )
 from .service import VectorDBService
 
@@ -89,6 +91,17 @@ async def add_documents(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
+@app.post("/get_document", response_model=GetDocumentResponse)
+async def get_document(
+    request: GetDocumentRequest, service: VectorDBService = Depends(get_vector_service)
+):
+    """Get a document from an index."""
+    return GetDocumentResponse(
+        success=True,
+        document=service.get_document(request.index_name, request.document_id),
+    )
+
+
 @app.post("/search_index", response_model=SearchResponse)
 async def search_index(
     request: SearchRequest, service: VectorDBService = Depends(get_vector_service)
@@ -109,7 +122,7 @@ async def search_index(
                 results.append(
                     SearchResult(
                         id=doc.id,
-                        content=doc.content,
+                        content=f"{doc.content[:10]}...",
                         metadata=doc.metadata or {},
                         distance=distance,
                     )
