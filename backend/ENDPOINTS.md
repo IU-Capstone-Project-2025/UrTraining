@@ -237,7 +237,7 @@ Content-Type: application/json
 |-------------|----------------------|----------------------------------|---------------------------------|
 | `500`       | Server Error         | Internal server error            | Contact support                 |
 
-# Authentication and endpoint sessions
+# Authentication 
 
 # POST	register
 
@@ -424,277 +424,207 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 
 
-# GET /verify-token - Token Validation Endpoint
-
-### 🎯 Purpose
-Verifies the validity and authentication status of the current JWT access token.
-
-### 🌐 HTTP Method and URL
-**Method:** `GET`  
-**Endpoint:** `/verify-token`   
-
-
-### 🔐 Authentication Requirements
-- **Access:** Private (requires valid JWT)  
-- **Authorization:** Bearer token in header  
-- **Security Level:** Medium (token verification)  
-
-### 📝 Request Headers
-```http
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-### 📤 Example Request
-```GET /api/v1/verify-token HTTP/1.1
-Host: api.example.com
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-
-### ✅ Successful Response(200 OK)
-```{
-  "token_status": "valid",
-  "expires_in": 897,
-  "user_info": {
-    "username": "fit_user123",
-    "user_id": "usr_12345",
-    "is_admin": false
-  },
-  "token_metadata": {
-    "issued_at": "2023-11-21T10:15:30Z",
-    "expires_at": "2023-11-21T10:30:30Z"
-  }
-}
-```
-## ⚠️ Error Responses
-
-| Status Code | Error Type         | Description                      | Typical Resolution               |
-|-------------|--------------------|----------------------------------|----------------------------------|
-| `401`       | Unauthorized       | Invalid/expired token            | 	Re-authenticate via /login      |
-| `500`       | Server Error       | Verification failed              | Contact support                  |
 
 
 
-# Profile Management
-
-# GET /me - Current User Profile Endpoint
-
-### 🎯 Purpose
-Retrieves the complete profile information of the currently authenticated user.
-
-### 🌐 HTTP Method and URL
-**Method:** `GET`  
-**Endpoint:** `/me`  
 
 
-### 🔐 Authentication Requirements
-- **Access:** Private (requires valid JWT)  
-- **Authorization:** Bearer token in header  
-- **Security Level:** High (returns sensitive data)  
-
-
-### 📝 Request Body Schema
-```json
-{
-  "username": "string (3-50 characters)",
-  "password": "string (min 6 characters)"
-}
-```
-
-
-### 📤 Example Request
-```GET /api/v1/me HTTP/1.1
-Host: api.example.com
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-## ✅ Successful Response(200 OK)
-```{
-  "user_profile": {
-    "id": "usr_12345",
-    "username": "fit_user123",
-    "email": "user@example.com",
-    "full_name": "Alex Johnson",
-    "account_status": "active",
-    "created_at": "2023-01-15T10:30:00Z",
-    "last_login": "2023-11-21T14:25:00Z"
-  },
-  "training_profile": {
-    "goals": ["strength_training", "flexibility"],
-    "level": "intermediate",
-    "preferences": {
-      "workout_duration": "45-60_min",
-      "equipment": ["dumbbells", "yoga_mat"]
-    }
-  },
-  "account_settings": {
-    "notifications": {
-      "email": true,
-      "push": false
-    },
-    "privacy": {
-      "profile_visibility": "friends_only"
-    }
-  },
-  "metadata": {
-    "cache_expiry": 300,
-    "data_version": "1.2.0"
-  }
-}
-```
-
-
-### ⚠️ Error Responses
-
-| Status Code | Error Type         | Description                      | Typical Resolution               |
-|-------------|--------------------|----------------------------------|----------------------------------|
-| `401`       | Unauthorized       | Invalid/expired token            | 	Re-authenticate via /login      |
-| `404`       | Not Found          | User profile missing             | 	Contact support                 |
-| `500`       | Server Error       | Verification failed              | Contact support                  |
-
-
-
-# PUT /profile - Update User Profile
-
-### 🎯 Purpose
-Updates the authenticated user's profile information including personal details and preferences.
-
-### 🌐 HTTP Method and URL
-**Method:** `PUT`  
-**Endpoint:** `/profile`  
-
-
-### 🔐 Authentication Requirements
-- **Access:** Private (requires valid JWT)  
-- **Authorization:** Bearer token in header  
-- **Permissions:** Owner only  
-
-### 📝 Request Body Schema
-```json
-{
-  "message": "Profile updated successfully",
-  "user_info": {
-    "username": "updated_username",
-    "email": "updated_email@example.com",
-    "full_name": "Updated Full Name"
-  }
-}
-
-```
-
-### 📤 Example Request
-```GET /api/v1/me HTTP/1.1
-Host: api.example.com
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-### ✅ Successful Response(200 OK)
-```{
-  "message": "Profile updated successfully",
-  "user_info": {
-    "username": "fit_user123",
-    "email": "user@example.com",
-    "full_name": "Alex Johnson"
-  }
-}
-
-```
-
-
-### ⚠️ Error Responses
-
-| Status Code | Error Type         | Description                      | Typical Resolution               |
-|-------------|--------------------|----------------------------------|----------------------------------|
-| `400`       | Bad Request        | Email already registered         | 	Use a different email address   |
-| `404`       | Not Found          | User not found                   | 	Contact support                 |
-| `500`       | Server Error       | Update failed                    | Retry or contact support         |
-
-
-# PUT	/change-password
-
-### 🎯 Purpose
-Allows an authenticated user to change their current password to a new one.
-
-### 🌐 HTTP Method and URL
-**Method:** `PUT`  
-**Endpoint:** `/change-password`  
-
-
-### 🔐 Authentication Requirements
-- **Access:** Private (requires valid JWT)  
-- **Authorization:** Bearer token in the Authorization header
-- **Security Level** High (handles sensitive data)
-
-### 📝 Request Body Schema
-```json
-{
-  "current_password": "old_password",
-  "new_password": "new_password"
-}
-
-
-```
-
-### 📤 Example Request
-```PUT /api/v1/change-password HTTP/1.1
-Host: api.example.com
-Authorization: Bearer <your_token>
-Content-Type: application/json
-```
-### ✅ Successful Response(200 OK)
-```{
-  "message": "Password changed successfully"
-}
-
-```
-
-
-### ⚠️ Error Responses
-
-| Status Code | Error Type         | Description                      | Typical Resolution               |
-|-------------|--------------------|----------------------------------|----------------------------------|
-| `400`       | Bad Request        | New password does not meet security criteria | Use a password that meets complexity requirements  |
-| `500`       | Server Error       | Server error during password change          | Retry or contact support         |
-
-# GET	/check-email-availability
+# PUT /trainer-profile — Update Trainer Profile
 
 ### 🎯 Purpose  
-Checks whether a given email address is available for registration or already taken by another user.
+Allows the currently authenticated user to update their trainer profile, including certificates, experience, specializations, and bio.
+
+---
 
 ### 🌐 HTTP Method and URL  
-**Method:** `GET`  
-**Endpoint:** `/check-email-availability`  
+**Method:** `PATCH`  
+**Endpoint:** `/trainer-profile`  
 
+---
 
-### 📝 Request Parameters  
-| Parameter | Type   | Required | Description                      |
-|-----------|--------|----------|--------------------------------|
-| `email`   | string | Yes      | The email address to check availability for |
+### 🔐 Authentication Requirements  
+- **Access:** Private (requires valid JWT)
+- **Authorization:** Bearer token in the Authorization header
 
-### 🔐 Authentication  
-- **Access:** Public (no authentication required)  
-- This endpoint is usually open to allow users to check email availability before registration.
+---
 
-### 📤 Example Request
-```GET /api/v1/check-email-availability?email=user@example.com HTTP/1.1
-Host: api.example.com
-Accept: application/json
-```
-### ✅ Successful Response(200 OK)
-```{
-"email": "user@example.com",
-"available": true
+ 
+
+### 📝 Request Body Schema
+```json
+{
+"trainer_profile": {
+"certificates": [
+{
+"name": "Certified Personal Trainer",
+"issued_by": "National Fitness Association",
+"issue_date": "2023-01-15",
+"expiry_date": "2026-01-15"
 }
+],
+"experience_years": 5,
+"specializations": [
+"strength training",
+"functional training"
+],
+"bio": "Passionate trainer with 5 years of experience helping clients achieve their goals."
+}
+}
+
+```
+
+### ✅ Successful Response (200 OK)
+
+
+
+```{
+"message": "Trainer profile updated successfully",
+"trainer_profile": {
+"certificates": [
+{
+"name": "Certified Personal Trainer",
+"issued_by": "National Fitness Association",
+"issue_date": "2023-01-15",
+"expiry_date": "2026-01-15"
+}
+],
+"experience_years": 5,
+"specializations": [
+"strength training",
+"functional training"
+],
+"bio": "Passionate trainer with 5 years of experience helping clients achieve their goals."
+}
+}
+
+
+
 ```
 
 
 ### ⚠️ Possible Error Responses
 
 | Status Code | Error Type   | Description                      | Typical Resolution                |
+|-------------|--------------|----------------------------------|-----------------------------------|
+| 404         | Not Found    | User not found                   | Check authentication and user ID  |
+| 500         | Server Error | Failed to update trainer profile | Try again later or contact support|
+
+
+# GET /trainer-profile — Get Current User's Trainer Profile
+
+### 🎯 Purpose  
+Retrieves the trainer profile of the currently authenticated user.  
+Used to display or manage the trainer-specific information linked to the user.
+
+---
+
+### 🌐 HTTP Method and URL  
+**Method:** `GET`  
+**Endpoint:** `/trainer-profile`  
+
+
+---
+
+### 🔐 Authentication Requirements  
+- **Access:** Private (requires valid JWT)  
+- **Authorization:** Bearer token in the Authorization header  
+- **Security Level:** Medium (accesses personal profile data)
+
+---
+
+### 📤 Example Request
+```GET /api/v1/trainer-profile HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <your_token>
+Accept: application/json
+```
+### ✅ Successful Response(200 OK)
+```{
+"message": "Trainer profile retrieved successfully",
+"trainer_profile": {
+"certificates": [
+{
+"name": "Certified Personal Trainer",
+"issued_by": "National Fitness Association",
+"issue_date": "2023-01-15",
+"expiry_date": "2026-01-15"
+}
+],
+"experience_years": 5,
+"specializations": [
+"strength training",
+"functional training"
+],
+"bio": "Passionate trainer with 5 years of experience helping clients achieve their goals."
+}
+}
+
+```
+
+
+---
+
+### ⚠️ Possible Error Responses
+
+| Status Code | Error Type   | Description                      | Typical Resolution                |
 |-------------|--------------|----------------------------------|---------------------------------|
-| `400`       | Bad Request  | Invalid or missing email parameter | Provide a valid email address    |
-| `500`       | Server Error | Internal server error             | Retry later or contact support   |
+| `404`       | Not Found    | User not found                   | Verify authentication token and user existence |
+| `500`       | Server Error | Failed to retrieve trainer profile | Retry later or contact support  |
+
+---
+
+# DELETE /trainer-profile — Delete Trainer Profile
+
+### 🎯 Purpose  
+Deletes (removes) the trainer profile of the currently authenticated user.  
+After deletion, the user's trainer profile data will be set to `null`.
+
+---
+
+### 🌐 HTTP Method and URL  
+**Method:** `DELETE`  
+**Endpoint:** `/trainer-profile`  
+
+
+---
+
+### 🔐 Authentication Requirements  
+- **Access:** Private (requires valid JWT)
+- **Authorization:** Bearer token in the Authorization header
+
+---
+
+### 📤 Example Request
+```DELETE /api/v1/trainer-profile HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <your_token>
+Accept: application/json
+```
+
+
+ ### ✅ Successful Response(200 OK)
+```
+{
+"message": "Trainer profile deleted successfully",
+"trainer_profile": null
+}
+
+```
+
+
+### ⚠️ Possible Error Responses
+
+| Status Code | Error Type   | Description                      | Typical Resolution                |
+|-------------|--------------|----------------------------------|-----------------------------------|
+| 404         | Not Found    | User not found                   | Check authentication and user ID  |
+| 500         | Server Error | Failed to delete trainer profile | Try again later or contact support|
+
+
 
 
 # Training profile
 
-## PUT /training-profile — Update Training Profile
+# PUT /training-profile — Update Training Profile
 
 ### 🎯 Purpose  
 Allows an authenticated user to update their detailed training profile, including physical data, goals, experience, preferences, health status, and training type interests.
@@ -767,9 +697,9 @@ Content-Type: application/json
 | `400`       | Bad Request   | Invalid or missing required fields         | Correct the request payload        |
 | `500`       | Server Error  | Internal server error during update        | Retry later or contact support     |
 
-# GET	/training-profile
 
-## GET /training-profile - Get Training Profile Data
+
+# GET /training-profile - Get Training Profile Data
 
 ### 🎯 Purpose
 Retrieves the complete training profile information for the authenticated user, including fitness goals, preferences, and health data.
@@ -841,98 +771,39 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 | `500`       | Server Error | Data retrieval failed            | Retry later or contact support   |
 
 
+# DELETE /training-programs/{training_id} - Delete Training Program
 
+### 🎯 Purpose
+Deletes (deactivates) a specific training program. Users can only delete their own programs unless they are administrators.
 
-# Session Management
+### 🌐 HTTP Method and URL
+**Method:** `DELETE`  
+**Endpoint:** `/training-programs/{training_id}`  
+**Path Parameter:**  
+- `training_id` (integer): ID of the training program to delete
 
-# GET /active-sessions — Retrieve Active User Sessions
-
-### 🎯 Purpose  
-Fetches a list of all active sessions for the currently authenticated user. This allows users to monitor their logged-in devices and manage session security.
-
-### 🌐 HTTP Method and URL  
-**Method:** `GET`  
-**Endpoint:** `/active-sessions`  
-
-
-### 🔐 Authentication Requirements  
+### 🔐 Authentication Requirements
 - **Access:** Private (requires valid JWT)  
-- **Authorization:** Bearer token in the Authorization header  
-- **Security Level:** High (returns sensitive session data)
+- **Authorization:** Bearer token in header  
+- **Required Scopes:** `training:write`  
+- **Security Level:** Medium (modifies user data)  
 
-### 📤 Example Request
-```GET /api/v1/active-sessions HTTP/1.1
-Host: api.example.com
-Authorization: Bearer <your_token>
+### 📝 Request Headers
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 Accept: application/json
 ```
-
-### ✅ Successful Response(200 OK)
-```{
-"sessions": [
-{
-"session_id": "sess_abc123",
-"token": "eyJhbGciOiJI... ", // Показаны первые 10 символов токена с многоточием
-"created_at": "2025-06-20T14:30:00Z",
-"expires_at": "2025-06-22T18:30:00Z",
-"user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)...",
-"ip_address": "192.168.1.10"
-},
-{
-"session_id": "sess_xyz789",
-"token": "eyJ0eXAiOiJKV1Q... ",
-"created_at": "2025-06-21T09:15:00Z",
-"expires_at": "2025-06-22T19:15:00Z",
-"user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)...",
-"ip_address": "203.0.113.42"
-}
-]
-}
-```
-
-
-### ⚠️ Possible Error Responses
-
-| Status Code | Error Type   | Description                      | Typical Resolution               |
-|-------------|--------------|----------------------------------|---------------------------------|
-| `401`       | Unauthorized | Missing or invalid token         | Re-authenticate via /login      |
-| `500`       | Server Error | Internal server error            | Retry later or contact support  |
-
-
-# Accessibility checks
-
-# GET	/check-availability
-
-
-## GET /check-availability — Check Username Availability
-
-### 🎯 Purpose  
-Checks whether a given username is available for registration or already taken by another user.
-
-### 🌐 HTTP Method and URL  
-**Method:** `GET`  
-**Endpoint:** `/check-availability`  
-
-
-### 📝 Request Parameters  
-| Parameter  | Type   | Required | Description                      |
-|------------|--------|----------|--------------------------------|
-| `username` | string | Yes      | The username to check availability for |
-
-### 🔐 Authentication  
-- **Access:** Public (no authentication required)  
-- This endpoint is typically open to allow users to check username availability before registration.
-
 ### 📤 Example Request
-```GET /api/v1/check-availability?username=fit_user123 HTTP/1.1
+```DELETE /api/v1/training-programs/123 HTTP/1.1
 Host: api.example.com
-Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
-
 ### ✅ Successful Response(200 OK)
 ```{
-"username": "fit_user123",
-"available": true
+  "status": "success",
+  "message": "Training program successfully deleted",
+  "deleted_id": 123,
+  "deactivated_at": "2023-11-22T14:30:00Z"
 }
 ```
 
@@ -941,10 +812,297 @@ Accept: application/json
 
 | Status Code | Error Type   | Description                      | Typical Resolution                |
 |-------------|--------------|----------------------------------|---------------------------------|
-| `400`       | Bad Request  | Invalid or missing username parameter | Provide a valid username         |
-| `500`       | Server Error | Internal server error             | Retry later or contact support   |
+| `500`       | Server Error | Data retrieval failed            | Retry later or contact support   |
+| `403`       | Forbidden    | User doesn't own the program     | Check program ownership          |
+| `404`       | Not Found    | Program doesn't exist            | Verify program ID                |
 
 
-  
+
+
+# POST /training-programs - Create Training Program
+
+### 🎯 Purpose
+Creates a new training program. Requires authenticated user with a completed trainer profile.
+
+### 🌐 HTTP Method and URL
+**Method:** `POST`  
+**Endpoint:** `/training-programs`  
+
+### 🔐 Authentication Requirements
+- **Access:** Private (requires valid JWT)  
+- **Authorization:** Bearer token in header  
+- **Required Scopes:** `trainer:create`  
+- **Prerequisite:** Completed trainer profile  
+
+### 📝 Request Headers
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+Accept: application/json
+```
+
+### 📤 Example Request
+```POST /api/v1/training-programs HTTP/1.1
+Host: api.example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+"title": "Summer Strength Program",
+"description": "A 4-week strength-building program for intermediate athletes.",
+"training_data": {
+"weeks": 4,
+"sessions_per_week": 3,
+"focus": ["strength", "mobility"]
+}
+}
+```
+
+
+### ✅ Successful Response (201 Created)
+```json
+{
+  "id": 123,
+  "user_id": 456,
+  "metadata": {
+    "difficulty_level": "advanced",
+    "estimated_duration": 60,
+    "equipment_required": ["barbell", "bench"]
+  },
+  "training_data": {
+    "exercises": [
+      {
+        "name": "Bench Press",
+        "sets": 4,
+        "reps": 8,
+        "rest_interval": 90
+      }
+    ],
+    "weekly_schedule": {
+      "monday": ["chest", "triceps"],
+      "wednesday": ["legs"]
+    }
+  },
+  "title": "Advanced Strength Program",
+  "description": "4-week strength training program",
+  "created_at": "2023-11-22T14:30:00Z",
+  "updated_at": "2023-11-22T14:30:00Z"
+}
+```
+### ⚠️ Possible Error Responses
+
+| Status Code | Error Type   | Description                      | Typical Resolution                |
+|-------------|--------------|----------------------------------|---------------------------------|
+| `500`       | Server Error | Data retrieval failed            | Retry later or contact support   |
+| `403`       | Forbidden    | User doesn't own the program     | Check program ownership          |
+| `404`       | Not Found    | Program doesn't exist            | Verify program ID                |
+
+
+
+# GET /training-programs — Get Trainings Catalog
+
+### 🎯 Purpose  
+Retrieves a paginated list of all training programs with summary information.  
+This endpoint is used to display a catalog of trainings, returning only key details such as title, metadata, description, and basic characteristics.
+
+---
+
+### 🌐 HTTP Method and URL  
+**Method:** `GET`  
+**Endpoint:** `/training-programs`  
+
+
+---
+
+### 🔐 Authentication  
+- **Access:** Public (no authentication required)  
+- Suitable for browsing available training programs.
+
+### 📤 Example Request
+```GET /api/training-programs?skip=0&limit=10&search=cardio HTTP/1.1
+Host: api.example.com
+Accept: application/json
+```
+
+# POST /training-programs - Create Training Program
+
+### ✅ Successful Response (201 Created)
+```json
+[
+{
+"id": 101,
+"title": "Cardio Blast",
+"metadata": {
+"difficulty": "beginner",
+"duration_minutes": 45,
+"equipment": ["treadmill", "jump rope"]
+},
+"description": "An intense cardio program to boost your endurance.",
+"created_at": "2025-06-20T12:00:00Z"
+},
+{
+"id": 102,
+"title": "Strength Builder",
+"metadata": {
+"difficulty": "intermediate",
+"duration_minutes": 60,
+"equipment": ["dumbbells", "bench"]
+},
+"description": "Build muscle and strength with this comprehensive program.",
+"created_at": "2025-06-18T09:30:00Z"
+}
+]
+
+
+
+
+```
+### ⚠️ Possible Error Responses
+
+| Status Code | Error Type   | Description                      | Typical Resolution                |
+|-------------|--------------|----------------------------------|---------------------------------|
+| `500`       | Server Error | Failed to retrieve trainings catalog | Retry later or contact support   |
+
+
+
+## GET /training-programs/user/my — Get Current User's Trainings
+
+### 🎯 Purpose  
+Retrieves a paginated list of training programs created by the currently authenticated user.  
+This endpoint requires user authentication and returns summarized information about the user's own trainings.
+
+---
+
+### 🌐 HTTP Method and URL  
+**Method:** `GET`  
+**Endpoint:** `/training-programs/user/my`  
+
+
+---
+
+### 🔐 Authentication Requirements  
+- **Access:** Private (requires valid JWT)  
+- **Authorization:** Bearer token in the Authorization header  
+- **Security Level:** Medium (accesses user-specific data)
+
+---
+
+
+### 📤 Example Request
+```GET /api/training-programs/user/my?skip=0&limit=10 HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <your_token>
+Accept: application/json
+```
+
+# POST /training-programs - Create Training Program
+
+### ✅ Successful Response (201 Created)
+```json
+[
+{
+"id": 201,
+"title": "Personalized Strength Plan",
+"metadata": {
+"difficulty": "advanced",
+"duration_minutes": 60,
+"equipment": ["barbell", "bench"]
+},
+"description": "Custom strength training program tailored for you.",
+"created_at": "2025-06-15T10:00:00Z"
+},
+{
+"id": 202,
+"title": "Yoga and Flexibility",
+"metadata": {
+"difficulty": "beginner",
+"duration_minutes": 45,
+"equipment": ["mat"]
+},
+"description": "Relaxing yoga sessions to improve flexibility.",
+"created_at": "2025-06-10T08:30:00Z"
+}
+]
+
+
+
+```
+### ⚠️ Possible Error Responses
+
+| Status Code | Error Type   | Description                      | Typical Resolution                |
+|-------------|--------------|----------------------------------|---------------------------------|
+| `500`       | Server Error | Failed to retrieve user trainings | Retry later or contact support   |
+
+
+## GET /training-programs/can-create — Check Training Creation Permission
+
+### 🎯 Purpose  
+Checks whether the currently authenticated user has permission to create training programs.  
+This typically requires the user to have a trainer profile or administrator privileges.
+
+---
+
+### 🌐 HTTP Method and URL  
+**Method:** `GET`  
+**Endpoint:** `/training-programs/can-create`  
+
+
+---
+
+### 🔐 Authentication Requirements  
+- **Access:** Private (requires valid JWT)  
+- **Authorization:** Bearer token in the Authorization header  
+- **Security Level:** Medium (checks user-specific permissions)
+
+---
+
+### 📤 Example Request
+```GET /api/training-programs/can-create HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <your_token>
+Accept: application/json
+```
+
+# POST /training-programs - Create Training Program
+
+###  ✅ Successful Response (200 OK) 
+```json
+
+
+
+ 
+{
+"can_create": true,
+"has_trainer_profile": true,
+"is_admin": false
+}
+
+text
+
+Если пользователь не может создавать программы, возвращается дополнительное сообщение:
+
+{
+"can_create": false,
+"has_trainer_profile": false,
+"is_admin": false,
+"message": "Для создания тренировочных программ необходимо настроить профиль тренера",
+"action_required": "Заполните информацию о ваших сертификатах и опыте работы в профиле тренера"
+}
+
+
+
+```
+
+---
+
+### ⚠️ Possible Error Responses
+
+| Status Code | Error Type   | Description                      | Typical Resolution                |
+|-------------|--------------|----------------------------------|---------------------------------|
+| `404`       | Not Found    | Пользователь не найден           | Проверьте корректность токена и пользователя |
+| `500`       | Server Error | Не удалось проверить права       | Попробуйте позже или свяжитесь с поддержкой |
+
+
+
 
 
