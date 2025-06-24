@@ -454,19 +454,29 @@ Allows the currently authenticated user to update their trainer profile, includi
 ```json
 {
 "trainer_profile": {
-"certificates": [
+"profile_picture": "https://example.com/trainers/avatars/trainer.jpg",
+"certification": {
+"type": "ACE",
+"level": "Advanced", 
+"specialization": "Strength Training"
+},
+"experience": {
+"years": 10,
+"specialization": "Strength Training",
+"courses": 15,
+"rating": 4.8
+},
+"badges": [
 {
-"name": "Certified Personal Trainer",
-"issued_by": "National Fitness Association",
-"issue_date": "2023-01-15",
-"expiry_date": "2026-01-15"
+"text": "#10 in Coaches Honor Roll",
+"color": "#E7C553"
+},
+{
+"text": "Certification approved", 
+"color": "#0C1CFD"
 }
 ],
-"experience_years": 5,
-"specializations": [
-"strength training",
-"functional training"
-],
+"reviews_count": 230,
 "bio": "Passionate trainer with 5 years of experience helping clients achieve their goals."
 }
 }
@@ -480,19 +490,29 @@ Allows the currently authenticated user to update their trainer profile, includi
 ```{
 "message": "Trainer profile updated successfully",
 "trainer_profile": {
-"certificates": [
+"profile_picture": "https://example.com/trainers/avatars/trainer.jpg",
+"certification": {
+"type": "ACE",
+"level": "Advanced", 
+"specialization": "Strength Training"
+},
+"experience": {
+"years": 10,
+"specialization": "Strength Training",
+"courses": 15,
+"rating": 4.8
+},
+"badges": [
 {
-"name": "Certified Personal Trainer",
-"issued_by": "National Fitness Association",
-"issue_date": "2023-01-15",
-"expiry_date": "2026-01-15"
+"text": "#10 in Coaches Honor Roll",
+"color": "#E7C553"
+},
+{
+"text": "Certification approved", 
+"color": "#0C1CFD"
 }
 ],
-"experience_years": 5,
-"specializations": [
-"strength training",
-"functional training"
-],
+"reviews_count": 230,
 "bio": "Passionate trainer with 5 years of experience helping clients achieve their goals."
 }
 }
@@ -542,19 +562,29 @@ Accept: application/json
 ```{
 "message": "Trainer profile retrieved successfully",
 "trainer_profile": {
-"certificates": [
+"profile_picture": "https://example.com/trainers/avatars/trainer.jpg",
+"certification": {
+"type": "ACE",
+"level": "Advanced", 
+"specialization": "Strength Training"
+},
+"experience": {
+"years": 10,
+"specialization": "Strength Training",
+"courses": 15,
+"rating": 4.8
+},
+"badges": [
 {
-"name": "Certified Personal Trainer",
-"issued_by": "National Fitness Association",
-"issue_date": "2023-01-15",
-"expiry_date": "2026-01-15"
+"text": "#10 in Coaches Honor Roll",
+"color": "#E7C553"
+},
+{
+"text": "Certification approved", 
+"color": "#0C1CFD"
 }
 ],
-"experience_years": 5,
-"specializations": [
-"strength training",
-"functional training"
-],
+"reviews_count": 230,
 "bio": "Passionate trainer with 5 years of experience helping clients achieve their goals."
 }
 }
@@ -1104,5 +1134,106 @@ text
 
 
 
+
+
+
+## Training Creation with Auto-filled Trainer Data
+
+### POST /trainings/create
+
+**New endpoint that automatically fills trainer data from user profile**
+
+**Authentication Required**: Yes (Bearer token)
+**Trainer Profile Required**: Yes
+
+**Request Model**: `TrainingCreateMinimal`
+
+This endpoint automatically fills the following fields from the authenticated user's trainer profile:
+
+#### Auto-filled in `coach_data`:
+- `name`: User's name
+- `profile_picture`: From trainer_profile.profile_picture
+- `rating`: From trainer_profile.experience.rating (default: 5.0)
+- `reviews`: From trainer_profile.reviews_count (default: 0)
+- `years`: From trainer_profile.experience.years (default: 0)
+- `badges`: From trainer_profile.badges + any additional badges from request
+
+#### Auto-filled in `course_info`:
+- `author`: User's name
+- `rating`: From trainer_profile.experience.rating (if not provided in request)
+- `reviews`: From trainer_profile.reviews_count (if not provided in request)
+
+**Example Request**:
+```json
+{
+  "header_badges": {
+    "training_type": [{"text": "Strength", "color": "#FF6B6B"}],
+    "training_info": [{"text": "Beginner", "color": "#4ECDC4"}],
+    "training_equipment": [{"text": "No Equipment", "color": "#45B7D1"}]
+  },
+  "course_info": {
+    "id": "course_001",
+    "title": "Complete Beginner Workout",
+    "description": "A comprehensive workout program for beginners"
+    // author, rating, reviews will be auto-filled from trainer profile
+  },
+  "training_plan": [
+    {
+      "title": "Day 1: Upper Body",
+      "exercises": [
+        {
+          "exercise": "Push-ups",
+          "repeats": "10-15",
+          "sets": "3",
+          "duration": "30 seconds",
+          "rest": "60 seconds",
+          "description": "Standard push-ups focusing on chest and arms"
+        }
+      ]
+    }
+  ],
+  "coach_data": {
+    // Only additional badges need to be specified
+    "badges": [{"text": "Custom Badge", "color": "#FF9F43"}]
+    // name, profile_picture, rating, reviews, years will be auto-filled
+  }
+}
+```
+
+**Example Response**:
+```json
+{
+  "id": 1,
+  "user_id": 123,
+  "header_badges": {
+    "training_type": [{"text": "Strength", "color": "#FF6B6B"}],
+    "training_info": [{"text": "Beginner", "color": "#4ECDC4"}],
+    "training_equipment": [{"text": "No Equipment", "color": "#45B7D1"}]
+  },
+  "course_info": {
+    "id": "course_001",
+    "title": "Complete Beginner Workout",
+    "author": "John Smith",  // Auto-filled from user.name
+    "description": "A comprehensive workout program for beginners",
+    "rating": 4.8,  // Auto-filled from trainer_profile.experience.rating
+    "reviews": 25   // Auto-filled from trainer_profile.reviews_count
+  },
+  "training_plan": [...],
+  "coach_data": {
+    "name": "John Smith",  // Auto-filled from user.name
+    "profile_picture": "https://example.com/profile.jpg",  // Auto-filled
+    "rating": 4.8,  // Auto-filled from trainer_profile.experience.rating
+    "reviews": 25,  // Auto-filled from trainer_profile.reviews_count
+    "years": 5,     // Auto-filled from trainer_profile.experience.years
+    "badges": [
+      {"text": "Certified Trainer", "color": "#27AE60"},  // From trainer_profile
+      {"text": "Custom Badge", "color": "#FF9F43"}       // From request
+    ]
+  },
+  "metadata": {},
+  "created_at": "2024-01-15T10:30:00Z",
+  "updated_at": "2024-01-15T10:30:00Z"
+}
+```
 
 

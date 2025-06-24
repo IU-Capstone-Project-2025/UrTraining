@@ -50,7 +50,7 @@ class TrainingGoal(str, Enum):
     REHABILITATION = "rehabilitation"
 
 class PersonalData(BaseModel):
-    full_name: str = Field(..., description="User's full name")
+    name: str = Field(..., description="User's name")
 
 class BasicInformation(BaseModel):
     gender: Gender = Field(..., description="User's gender")
