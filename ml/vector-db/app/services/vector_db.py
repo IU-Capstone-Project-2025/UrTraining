@@ -77,7 +77,7 @@ class VectorDB:
             vectors.append(doc.vector)
 
             # Store document
-            self.documents[doc.id] = doc
+            self.documents[str(doc.id)] = doc
             self.id_to_index[doc.id] = self._next_index
             self.index_to_id[self._next_index] = doc.id
             self._next_index += 1

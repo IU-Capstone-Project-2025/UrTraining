@@ -162,6 +162,14 @@ class VectorDBService:
 
         return len(doc_objects), [doc.id for doc in doc_objects]
 
+    def get_document(self, index_name: str, document_id: str) -> Dict:
+        """Get a document from an index."""
+        if index_name not in self.indices:
+            raise ValueError(f"Index '{index_name}' not found")
+
+        db = self.indices[index_name]
+        return db.get_document(document_id)
+
     def search(
         self,
         index_name: str,

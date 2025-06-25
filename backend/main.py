@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes.auth import router as auth_router, get_current_user
 from app.routes.trainings import router as trainings_router
 from app.database import get_db
-from app.crud import get_training_profile, update_user_profile, update_training_profile
+from app.crud import get_training_profile, update_user_profile, update_training_profile, get_user_by_id
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field, validator
 from typing import Optional, List
@@ -103,7 +103,7 @@ class TrainingProfileUpdate(BaseModel):
     training_types: Optional[TrainingTypes] = None
 
 class UserDataUpdate(BaseModel):
-    full_name: Optional[str] = Field(None, min_length=2, max_length=100)
+    name: Optional[str] = Field(None, min_length=2, max_length=100)
     email: Optional[str] = None
     training_profile: Optional[TrainingProfileUpdate] = None
 
@@ -169,13 +169,19 @@ def get_user_data(current_user: dict = Depends(get_current_user), db: Session = 
         # Get basic user information (already available in current_user)
         user_data = {
             "id": current_user["id"],
-            "username": current_user["username"],
+            "name": current_user["name"],
             "email": current_user["email"],
-            "full_name": current_user["full_name"],
             "is_admin": current_user["is_admin"],
             "created_at": current_user["created_at"],
             "updated_at": current_user["updated_at"]
         }
+        
+        # Get trainer profile
+        user = get_user_by_id(db, current_user["id"])
+        if user and user.trainer_profile:
+            user_data["trainer_profile"] = user.trainer_profile
+        else:
+            user_data["trainer_profile"] = None
         
         # Get training profile
         profile = get_training_profile(db, current_user["id"])
@@ -233,7 +239,7 @@ def update_user_data(
         updated_user = None
         
         # Update basic user information if provided
-        if data.full_name is not None or data.email is not None:
+        if data.name is not None or data.email is not None:
             # Check if new email is already taken by another user
             if data.email and data.email != current_user["email"]:
                 from app.crud import get_user_by_email
@@ -247,7 +253,7 @@ def update_user_data(
             updated_user = update_user_profile(
                 db, 
                 current_user["id"], 
-                data.full_name, 
+                data.name, 
                 data.email
             )
             
@@ -331,7 +337,7 @@ def update_user_data(
         return {
             "message": "User data updated successfully",
             "updated_fields": {
-                "user_profile": bool(data.full_name is not None or data.email is not None),
+                "user_profile": bool(data.name is not None or data.email is not None),
                 "training_profile": bool(data.training_profile is not None)
             }
         }
