@@ -1,7 +1,6 @@
+import type { SignProps } from "../interface/interfaces";
 
-import type { SurveyProps, SignProps } from "../interface/interfaces";
-
-export const example_survey_data: SurveyProps = {
+export const example_survey_data: any = {
     steps_total: [
         {
             value: "step-1",
@@ -145,10 +144,10 @@ export const example_signin_data: SignProps = {
     page_title: "Welcome back!",
     input_fields: [
         {
-            name: "username",
-            id: "username",
+            name: "email",
+            id: "email",
             input_type: "text",
-            placeholder: "Username",
+            placeholder: "Email",
             options: [],
         },
         {
