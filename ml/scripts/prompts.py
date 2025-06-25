@@ -91,3 +91,60 @@ Example output format:
   }
 }
 """
+
+REARRANGE_PROGRAMS_PROMPT = """You are an expert in personalized sport program recommendations.
+
+Given:
+- A user profile describing the client's characteristics, goals, preferences, and health information.
+- A list of sport programs, each with a unique ID and description.
+
+**Task:**  
+Select the single most relevant sport program for this user based on their profile.  
+Return only the program ID of the most relevant course as plain text, with no explanation or formatting.
+
+**Example output:**
+12
+
+**User Profile:**
+{user_profile}
+
+**Sport Programs:**
+{programs}
+"""
+
+GENERATE_USER_METADATA_PROMPT = """You are an expert in simulating user behavior for sport training platforms.
+
+Given:
+- A user profile describing the client's characteristics, goals, preferences, and health information.
+- A seed phrase that sets the context or mood for the user (e.g., "motivated beginner", "recovering from injury", "busy professional").
+- A list of available sport programs (with IDs and descriptions).
+
+**Task:**  
+Generate a realistic metadata example for this user, including:
+- A list of course IDs the user has passed (completed).
+- A list of course IDs the user has abandoned (started but did not finish).
+- Any other relevant user history (e.g., frequency of training, feedback on courses, preferred training times, etc.).
+
+Return your answer as a JSON object with the following structure:
+```json
+{{
+  "passed_courses": ["course_1", "course_2", ...],
+  "abandoned_courses": ["course_3", ...],
+  "training_frequency_per_week": 3,
+  "feedback": {{
+    "course_1": "Very effective, enjoyed the variety.",
+    "course_3": "Too intense, stopped after two sessions."
+  }},
+  "preferred_training_times": "Evenings"
+}}
+```
+
+**User Profile:**  
+{user_profile}
+
+**Seed Phrase:**  
+{seed_phrase}
+
+**Available Programs:**  
+{available_programs}
+"""
