@@ -10,8 +10,8 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 # User CRUD operations
-def get_user_by_name(db: Session, name: str) -> Optional[User]:
-    return db.query(User).filter(User.name == name).first()
+def get_user_by_username(db: Session, username: str) -> Optional[User]:
+    return db.query(User).filter(User.username == username).first()
 
 
 def get_user_by_email(db: Session, email: str) -> Optional[User]:
@@ -22,10 +22,11 @@ def get_user_by_id(db: Session, user_id: int) -> Optional[User]:
     return db.query(User).filter(User.id == user_id).first()
 
 
-def create_user(db: Session, name: str, email: str, password: str, is_admin: bool = False, trainer_profile: Dict[str, Any] = None) -> User:
+def create_user(db: Session, username: str, full_name: str, email: str, password: str, is_admin: bool = False, trainer_profile: Dict[str, Any] = None) -> User:
     hashed_password = pwd_context.hash(password)
     db_user = User(
-        name=name,
+        username=username,
+        full_name=full_name,
         email=email,
         hashed_password=hashed_password,
         is_admin=is_admin,
@@ -54,13 +55,15 @@ def authenticate_user(db: Session, email: str, password: str) -> Optional[User]:
     return user
 
 
-def update_user_profile(db: Session, user_id: int, name: Optional[str] = None, email: Optional[str] = None) -> Optional[User]:
+def update_user_profile(db: Session, user_id: int, username: Optional[str] = None, full_name: Optional[str] = None, email: Optional[str] = None) -> Optional[User]:
     user = get_user_by_id(db, user_id)
     if not user:
         return None
     
-    if name:
-        user.name = name
+    if username:
+        user.username = username
+    if full_name:
+        user.full_name = full_name
     if email:
         user.email = email
     

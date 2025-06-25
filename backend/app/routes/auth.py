@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.crud import (
-    authenticate_user, get_user_by_name, get_user_by_email, create_user,
+    authenticate_user, get_user_by_username, get_user_by_email, create_user,
     create_active_session, get_active_session, revoke_session,
     cleanup_expired_sessions, get_user_by_id, update_user_trainer_profile
 )
@@ -40,7 +40,8 @@ class LogoutResponse(BaseModel):
     message: str
 
 class RegisterRequest(BaseModel):
-    name: str = Field(..., min_length=2, max_length=100, description="Name (2-100 characters)")
+    username: str = Field(..., min_length=3, max_length=50, description="Username (3-50 characters)")
+    full_name: str = Field(..., min_length=2, max_length=100, description="Full name (2-100 characters)")
     password: str = Field(..., min_length=6, description="Password (minimum 6 characters)")
     email: str = Field(..., description="Valid email address")
 
@@ -90,7 +91,8 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
         # Convert user to dict format for backward compatibility
         user_dict = {
             "id": user.id,
-            "name": user.name,
+            "username": user.username,
+            "full_name": user.full_name,
             "email": user.email,
             "is_admin": user.is_admin,
             "created_at": user.created_at.isoformat() if user.created_at else None,
@@ -109,11 +111,11 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
 async def register(data: RegisterRequest, db: Session = Depends(get_db)):
     """Register a new user account"""
     
-    # Validate name availability (optional check)
-    if get_user_by_name(db, data.name):
+    # Validate username availability
+    if get_user_by_username(db, data.username):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User with this name already exists"
+            detail="User with this username already exists"
         )
     
     # Validate email availability
@@ -125,11 +127,12 @@ async def register(data: RegisterRequest, db: Session = Depends(get_db)):
     
     # Create new user
     try:
-        user = create_user(db, data.name, data.email, data.password)
+        user = create_user(db, data.username, data.full_name, data.email, data.password)
         return {
             "message": "User registered successfully",
             "user_info": {
-                "name": user.name,
+                "username": user.username,
+                "full_name": user.full_name,
                 "email": user.email
             }
         }
@@ -169,7 +172,8 @@ async def login(data: LoginRequest, request: Request, db: Session = Depends(get_
         "token_type": "bearer",
         "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         "user_info": {
-            "name": user.name,
+            "username": user.username,
+            "full_name": user.full_name,
             "email": user.email,
             "is_admin": user.is_admin
         }

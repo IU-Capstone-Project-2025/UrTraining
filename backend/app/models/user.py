@@ -50,7 +50,8 @@ class TrainingGoal(str, Enum):
     REHABILITATION = "rehabilitation"
 
 class PersonalData(BaseModel):
-    name: str = Field(..., description="User's name")
+    username: str = Field(..., min_length=3, max_length=50, description="User's unique username")
+    full_name: str = Field(..., min_length=2, max_length=100, description="User's full name")
 
 class BasicInformation(BaseModel):
     gender: Gender = Field(..., description="User's gender")

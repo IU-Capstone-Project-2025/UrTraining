@@ -103,7 +103,8 @@ class TrainingProfileUpdate(BaseModel):
     training_types: Optional[TrainingTypes] = None
 
 class UserDataUpdate(BaseModel):
-    name: Optional[str] = Field(None, min_length=2, max_length=100)
+    username: Optional[str] = Field(None, min_length=3, max_length=50)
+    full_name: Optional[str] = Field(None, min_length=2, max_length=100)
     email: Optional[str] = None
     training_profile: Optional[TrainingProfileUpdate] = None
 
@@ -169,7 +170,8 @@ def get_user_data(current_user: dict = Depends(get_current_user), db: Session = 
         # Get basic user information (already available in current_user)
         user_data = {
             "id": current_user["id"],
-            "name": current_user["name"],
+            "username": current_user["username"],
+            "full_name": current_user["full_name"],
             "email": current_user["email"],
             "is_admin": current_user["is_admin"],
             "created_at": current_user["created_at"],
@@ -239,7 +241,7 @@ def update_user_data(
         updated_user = None
         
         # Update basic user information if provided
-        if data.name is not None or data.email is not None:
+        if data.username is not None or data.full_name is not None or data.email is not None:
             # Check if new email is already taken by another user
             if data.email and data.email != current_user["email"]:
                 from app.crud import get_user_by_email
@@ -250,10 +252,21 @@ def update_user_data(
                         detail="Email already registered by another user"
                     )
             
+            # Check if new username is already taken by another user
+            if data.username and data.username != current_user["username"]:
+                from app.crud import get_user_by_username
+                existing_user = get_user_by_username(db, data.username)
+                if existing_user and existing_user.id != current_user["id"]:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="Username already taken by another user"
+                    )
+            
             updated_user = update_user_profile(
                 db, 
                 current_user["id"], 
-                data.name, 
+                data.username, 
+                data.full_name,
                 data.email
             )
             
@@ -337,7 +350,7 @@ def update_user_data(
         return {
             "message": "User data updated successfully",
             "updated_fields": {
-                "user_profile": bool(data.name is not None or data.email is not None),
+                "user_profile": bool(data.username is not None or data.full_name is not None or data.email is not None),
                 "training_profile": bool(data.training_profile is not None)
             }
         }
