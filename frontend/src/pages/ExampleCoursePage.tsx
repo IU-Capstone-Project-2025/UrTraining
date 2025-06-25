@@ -38,6 +38,7 @@ const ExampleCoursePage = () => {
             ],
         },
         course_info: {
+            id: "exampleTraining",
             title: "Mobility reset",
             author: "trainerOne",
             description: `A short but effective mobility reboot.
@@ -249,6 +250,11 @@ const ExampleCoursePage = () => {
                     color: "#0C1CFD"
                 },
             ]
+        },
+        metadata: {
+            tags: {},
+            certification: {},
+            experience: {}
         }
     }
 
