@@ -99,17 +99,11 @@ Given:
 - A list of sport programs, each with a unique ID and description.
 
 **Task:**  
-For each sport program, assign a relevance score from 1 (not relevant) to 10 (highly relevant) based on how well the program matches the user's profile.  
-Return your answer as a JSON list of objects, each containing the program ID and its score.
+Select the single most relevant sport program for this user based on their profile.  
+Return only the program ID of the most relevant course as plain text, with no explanation or formatting.
 
-**Example format:**
-```json
-[
-  {"program_id": "123", "score": 4},
-  {"program_id": "456", "score": 2},
-  ...
-]
-```
+**Example output:**
+12
 
 **User Profile:**
 {user_profile}
@@ -133,16 +127,16 @@ Generate a realistic metadata example for this user, including:
 
 Return your answer as a JSON object with the following structure:
 ```json
-{
+{{
   "passed_courses": ["course_1", "course_2", ...],
   "abandoned_courses": ["course_3", ...],
   "training_frequency_per_week": 3,
-  "feedback": {
+  "feedback": {{
     "course_1": "Very effective, enjoyed the variety.",
     "course_3": "Too intense, stopped after two sessions."
-  },
+  }},
   "preferred_training_times": "Evenings"
-}
+}}
 ```
 
 **User Profile:**  
@@ -152,5 +146,5 @@ Return your answer as a JSON object with the following structure:
 {seed_phrase}
 
 **Available Programs:**  
-{programs}
+{available_programs}
 """
