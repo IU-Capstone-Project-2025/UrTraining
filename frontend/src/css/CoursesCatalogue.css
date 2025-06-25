@@ -1,166 +1,82 @@
-
-@font-face {
-  font-family: "DM Sans";
-  src: url('../fonts/DMSans-Bold.ttf') format('truetype');
-  font-weight: 700;
+.catalogue__container {
+    display: flex;
+    flex-direction: column;
 }
 
-@font-face {
-  font-family: "TT Travels Bold";
-  src: url('../fonts/TTTravels-Bold.ttf') format('truetype');
+.catalogue__grid {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    flex-wrap: wrap;
+    gap: 2rem;
 }
 
-@font-face {
-  font-family: "TT Travels Regular";
-  src: url('../fonts/TTTravels-Regular.ttf') format('truetype');
+.catalogue__course__card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+
+    height: 100%;
+    padding: 1.5rem;
+
+    border: 1px solid #f0f0f0;
+    border-radius: 1.5rem;
+
+    color: inherit;
+    background-color: rgb(251, 249, 249, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
-/* Основные стили каталога */
-.catalog-container {
-  max-width: 1200px;
-  margin: 0 100px;
-  padding: 0px 0px;
-  padding-top: 10rem;
+.catalogue__course__card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.catalog-title {
-  color: #000;
-  font-family: "TT Travels Bold";
-  font-size: 40px;
-  font-weight: 700;
-  margin-bottom: 60px;
-}
-
-/* Сетка карточек */
-.courses-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 40rem; /* Увеличенное расстояние между карточками */
-}
-
-/* Адаптация для планшетов */
-@media (max-width: 1024px) {
-  .courses-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-  }
-}
-
-/* Адаптация для мобильных */
-@media (max-width: 640px) {
-  .catalog-container {
-    padding: 30px 15px;
-  }
-  
-  .catalog-title {
-    font-size: 36px;
-    margin-bottom: 40px;
-  }
-  
-  .courses-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-}
-
-.course-card {
-  background: rgb(251, 249, 249, 0.3);
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  height: 200%;
-  border: 1px solid #f0f0f0;
-  text-decoration: none;
-  color: inherit;
-  flex-shrink: 0;
-}
-
-.course-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.course-tags-container {
+.catalogue__course__tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 0.5rem 2rem;
 }
 
-.badges-group {
+.catalogue__tags__category {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    gap: 0.25rem;
 }
 
-.badge {
-    padding: 4px 12px;
-    border-radius: 9999px;
-    font-size: 12px;
+.catalogue__tag {
+    padding: 0.25rem 0.75rem;
+    border-radius: 24rem;
+    font-size: 0.75rem;
     font-weight: 500;
     font-family: "TT Travels Regular";
+    line-height: 1;
 }
 
-.course-title {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  line-height: 1.3;
-  font-family: "TT Travels Bold", sans-serif;
+.catalogue__course__rating {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
 }
 
-.course-author {
-  color: #666;
-  font-size: 14px;
-  margin-bottom: 20px;
-  font-family: "TT Travels Regular", sans-serif;
+.catalogue__course__title {
+    white-space: initial;
 }
 
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
+.catalogue__course__title > h2 {
+    font-family: "TT Travels Bold", sans-serif;
+    font-size: 2rem;
 }
 
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 14px;
+.catalogue__course__title > p {
+    font-family: "TT Travels Regular", sans-serif;
+    font-size: 1.5rem;
 }
 
-.star-icon {
-  width: 16px;
-  height: 16px;
-}
-
-.reviews {
-  color: #999;
-  font-size: 12px;
-  margin-left: 5px;
-}
-
-
-@media (max-width: 768px) {
-  .course-card {
-    padding: 1rem;
-  }
-  
-  .course__info__name {
-    font-size: 1.1rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .catalog-container {
-    padding: 1rem;
-  }
-  
-  .course-card {
-    min-height: 200px;
-  }
+.catalogue__course__rating {
+    font-family: "TT Travels Regular", sans-serif;
+    font-size: 1rem;
 }

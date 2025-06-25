@@ -1,23 +1,18 @@
-import { Link } from 'react-router-dom';
 import star from '../assets/star.svg';
-import "../css/CoursesCatalogue.css";
 
 const CourseCard = (data: any) => {
   return (
-    <Link 
-        to={`/course/${data.id}`}
-        className="course-card"
-    >
-        <div className='course-tags-container'>
+    <div className='catalogue__course__card'>
+        <div className='catalogue__course__tags'>
             {Object.entries(data.header_badges).map(([sectionKey, badges]: any) => (
             <div 
                 key={sectionKey} 
-                className="badges-group"
+                className="catalogue__tags__category"
             >
                 {badges.map((badge: any, idx: any) => (
                     <div
                         key={idx}
-                        className="badge"
+                        className="catalogue__tag"
                         style={{ 
                             boxShadow: `inset 0px 0px 0px 1.5px ${badge.badge_color}`, color: badge.badge_color}}
                     >
@@ -28,27 +23,21 @@ const CourseCard = (data: any) => {
         ))}
       </div>
 
-      <div className='course__info flex-grow'>
-        <div className='course__info__title mb-4'>
-          <div className='course__info__text'>
-            <h2 className='course__info__name text-xl font-bold mb-1'>{data.course_info.title}</h2>
-            <h3 className='course__info__author text-gray-500'>by {data.course_info.author}</h3>
-          </div>
-        </div>
+      <div className='catalogue__course__title'>
+            <h2>{data.course_info.title}</h2>
+            <p>by {data.course_info.author}</p>
       </div>
 
-      <div className='course__info__reviews flex justify-between items-center mt-auto'>
-        <div className="flex items-center gap-1">
-          <img src={star} alt="Rating" className="w-4 h-4" />
-          <span className="text-sm font-medium">
-            {data.course_info.rating.toFixed(1)}/5 
+      <div className='catalogue__course__rating'>
+          <img src={star} alt="Rating"/>
+          <span>
+            {data.course_info.rating.toFixed(1)}/5.0 
           </span>
-          <span className="text-gray-400 text-xs">
+          <span>
              ({data.course_info.reviews} reviews)
           </span>
-        </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
