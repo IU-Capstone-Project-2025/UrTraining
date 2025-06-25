@@ -8,10 +8,9 @@ class User(Base):
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(50), unique=True, index=True, nullable=False)
+    name = Column(String(100), nullable=False)
     email = Column(String(255), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
-    full_name = Column(String(100), nullable=False)
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -126,13 +125,14 @@ class Training(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     
-    # Основные поля согласно требуемой JSON структуре
-    training_metadata = Column(JSON, nullable=False)  # JSON структура с метаданными тренировки
-    training_data = Column(JSON, nullable=False)  # JSON структура с данными тренировки по дням
+    # Основные поля согласно новой JSON структуре
+    header_badges = Column(JSON, nullable=False)  # JSON структура с значками заголовка
+    course_info = Column(JSON, nullable=False)  # JSON структура с информацией о курсе  
+    training_plan = Column(JSON, nullable=False)  # JSON структура с планом тренировок
+    coach_data = Column(JSON, nullable=False)  # JSON структура с данными тренера
+    training_metadata = Column(JSON, nullable=True)  # JSON структура с метаданными
     
-    # Дополнительные поля для расширенной функциональности
-    title = Column(String(255))
-    description = Column(Text)
+    # Дополнительные поля для работы с базой данных
     is_active = Column(Boolean, default=True)
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())

@@ -17,9 +17,10 @@ from app.crud import (
 )
 from app.models.training import (
     TrainingResponse, 
-    TrainingCreate, 
     TrainingUpdate,
-    TrainingMetadata
+    TrainingCreateMinimal,
+    CourseInfo,
+    HeaderBadges
 )
 from app.routes.auth import get_current_user
 
@@ -29,9 +30,8 @@ router = APIRouter()
 # Pydantic модель для краткой информации о тренировке (для каталога)
 class TrainingSummary(BaseModel):
     id: int
-    title: Optional[str] = None
-    metadata: Optional[TrainingMetadata] = None
-    description: Optional[str] = None
+    header_badges: Optional[HeaderBadges] = None
+    course_info: Optional[CourseInfo] = None
     created_at: Optional[str] = None
     
     class Config:
@@ -42,14 +42,14 @@ class TrainingSummary(BaseModel):
 async def get_trainings_catalog(
     skip: int = Query(0, ge=0, description="Количество записей для пропуска"),
     limit: int = Query(10, ge=1, le=100, description="Максимальное количество записей"),
-    search: Optional[str] = Query(None, description="Поиск по названию или описанию"),
+    search: Optional[str] = Query(None, description="Поиск по названию"),
     db: Session = Depends(get_db)
 ):
     """
     Получить список всех тренировочных программ с краткой информацией.
     
     Этот эндпоинт используется для отображения каталога тренировок.
-    Возвращает только основную информацию: название, метадату, описание и базовые характеристики.
+    Возвращает только основную информацию: значки заголовка, информацию о курсе.
     """
     try:
         if search:
@@ -60,21 +60,26 @@ async def get_trainings_catalog(
         # Преобразуем в формат для краткого отображения
         training_summaries = []
         for training in trainings:
-            # Обрабатываем случай когда training_metadata может быть None или пустым
-            metadata = training.training_metadata or {}
+            # Обрабатываем header_badges
+            header_badges = training.header_badges or {}
             try:
-                # Пытаемся создать TrainingMetadata объект, используя дефолтные значения
-                training_metadata = TrainingMetadata(**metadata)
+                training_header_badges = HeaderBadges(**header_badges)
             except Exception as e:
-                print(f"Error parsing metadata for training {training.id}: {e}")
-                # Создаем объект с дефолтными значениями
-                training_metadata = TrainingMetadata()
+                print(f"Error parsing header_badges for training {training.id}: {e}")
+                training_header_badges = None
+            
+            # Обрабатываем course_info
+            course_info = training.course_info or {}
+            try:
+                training_course_info = CourseInfo(**course_info)
+            except Exception as e:
+                print(f"Error parsing course_info for training {training.id}: {e}")
+                training_course_info = None
             
             training_summaries.append(TrainingSummary(
                 id=training.id,
-                title=training.title,
-                metadata=training_metadata,
-                description=training.description,
+                header_badges=training_header_badges,
+                course_info=training_course_info,
                 created_at=training.created_at.isoformat() if training.created_at else None
             ))
         
@@ -97,7 +102,7 @@ async def get_training_details(
     Получить полную информацию о конкретной тренировочной программе.
     
     Этот эндпоинт используется для детального просмотра тренировки.
-    Возвращает всю информацию включая данные упражнений по дням недели.
+    Возвращает всю информацию включая план тренировок и данные тренера.
     """
     try:
         # Используем новую функцию для получения тренировки с информацией о тренере
@@ -109,22 +114,15 @@ async def get_training_details(
                 detail=f"Тренировочная программа с ID {training_id} не найдена"
             )
         
-        # Обрабатываем метаданные
-        metadata = training.training_metadata or {}
-        try:
-            training_metadata = TrainingMetadata(**metadata)
-        except Exception as e:
-            print(f"Error parsing metadata for training {training.id}: {e}")
-            training_metadata = TrainingMetadata()
-        
         # Преобразуем SQLAlchemy объект в Pydantic модель
         training_response = TrainingResponse(
             id=training.id,
             user_id=training.user_id,
-            metadata=training_metadata,
-            training_data=training.training_data,
-            title=training.title,
-            description=training.description,
+            header_badges=training.header_badges or {},
+            course_info=training.course_info or {},
+            training_plan=training.training_plan or [],
+            coach_data=training.coach_data or {},
+            metadata=training.training_metadata or {},
             created_at=training.created_at.isoformat() if training.created_at else None,
             updated_at=training.updated_at.isoformat() if training.updated_at else None
         )
@@ -141,17 +139,37 @@ async def get_training_details(
         )
 
 
-@router.post("/", response_model=TrainingResponse)
-async def create_training_program(
-    training_data: TrainingCreate,
+@router.post("/", response_model=TrainingResponse, summary="Create Training (Auto-filled)")
+async def create_training_program_minimal(
+    training_data: TrainingCreateMinimal,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     """
-    Создать новую тренировочную программу.
+    ## Создать тренировочную программу с автоматическим заполнением данных тренера
     
-    Требует авторизации и наличия профиля тренера. 
-    Созданная программа будет привязана к текущему пользователю.
+    ### Автоматически заполняется на сервере:
+    
+    **В coach_data (все поля):**
+    - name - из имени пользователя
+    - profile_picture - из trainer_profile.profile_picture  
+    - rating - из trainer_profile.experience.rating
+    - reviews - из trainer_profile.reviews_count
+    - years - из trainer_profile.experience.years
+    - badges - из trainer_profile.badges
+    
+    **В course_info:**
+    - author - из имени пользователя
+    - rating - из trainer_profile (если не указан)
+    - reviews - из trainer_profile (если не указаны)
+    
+    ### Что нужно указать:
+    - header_badges - значки заголовка
+    - course_info.id, title, description - основная информация о курсе
+    - training_plan - план тренировок
+    - coach_data - можно оставить пустым или не указывать
+    
+    **Требует авторизации и настроенного профиля тренера.**
     """
     try:
         # Проверяем наличие профиля тренера у пользователя
@@ -172,25 +190,18 @@ async def create_training_program(
         # Преобразуем Pydantic модель в словарь
         training_dict = training_data.model_dump()
         
-        # Создаем тренировку
+        # Создаем тренировку с автоматическим заполнением данных тренера
         db_training = create_training(db, training_dict, current_user["id"])
-        
-        # Обрабатываем метаданные для ответа
-        metadata = db_training.training_metadata or {}
-        try:
-            training_metadata = TrainingMetadata(**metadata)
-        except Exception as e:
-            print(f"Error parsing metadata for new training: {e}")
-            training_metadata = TrainingMetadata()
         
         # Возвращаем созданную тренировку
         return TrainingResponse(
             id=db_training.id,
             user_id=db_training.user_id,
-            metadata=training_metadata,
-            training_data=db_training.training_data,
-            title=db_training.title,
-            description=db_training.description,
+            header_badges=db_training.header_badges or {},
+            course_info=db_training.course_info or {},
+            training_plan=db_training.training_plan or [],
+            coach_data=db_training.coach_data or {},
+            metadata=db_training.training_metadata or {},
             created_at=db_training.created_at.isoformat() if db_training.created_at else None,
             updated_at=db_training.updated_at.isoformat() if db_training.updated_at else None
         )
@@ -213,67 +224,49 @@ async def update_training_program(
     db: Session = Depends(get_db)
 ):
     """
-    Обновить существующую тренировочную программу.
+    Обновить тренировочную программу.
     
-    Требует авторизации и наличия профиля тренера.
-    Пользователь может редактировать только свои тренировки.
+    Может обновлять только создатель программы.
+    Все поля опциональны - обновляются только переданные поля.
     """
     try:
-        # Проверяем наличие профиля тренера у пользователя
-        user = get_user_by_id(db, current_user["id"])
-        
-        if not user:
-            raise HTTPException(
-                status_code=404,
-                detail="Пользователь не найден"
-            )
-        
-        if not user.trainer_profile and not current_user.get("is_admin", False):
-            raise HTTPException(
-                status_code=403,
-                detail="Для редактирования тренировочных программ необходимо иметь профиль тренера"
-            )
-        
-        # Проверяем существование тренировки
+        # Получаем существующую тренировку
         existing_training = get_training_by_id(db, training_id)
+        
         if not existing_training:
             raise HTTPException(
                 status_code=404,
                 detail=f"Тренировочная программа с ID {training_id} не найдена"
             )
         
-        # Проверяем права на редактирование
-        if existing_training.user_id != current_user["id"] and not current_user.get("is_admin", False):
+        # Проверяем права доступа - только создатель может обновлять
+        if existing_training.user_id != current_user["id"]:
             raise HTTPException(
                 status_code=403,
-                detail="У вас нет прав для редактирования этой тренировки"
+                detail="У вас нет прав для редактирования этой тренировочной программы"
             )
         
-        # Обновляем тренировку
+        # Преобразуем Pydantic модель в словарь (исключая None значения)
         training_dict = training_data.model_dump(exclude_unset=True)
+        
+        # Обновляем тренировку
         updated_training = update_training(db, training_id, training_dict)
         
         if not updated_training:
             raise HTTPException(
                 status_code=500,
-                detail="Не удалось обновить тренировку"
+                detail="Не удалось обновить тренировочную программу"
             )
         
-        # Обрабатываем метаданные для ответа
-        metadata = updated_training.training_metadata or {}
-        try:
-            training_metadata = TrainingMetadata(**metadata)
-        except Exception as e:
-            print(f"Error parsing metadata for updated training: {e}")
-            training_metadata = TrainingMetadata()
-        
+        # Возвращаем обновленную тренировку
         return TrainingResponse(
             id=updated_training.id,
             user_id=updated_training.user_id,
-            metadata=training_metadata,
-            training_data=updated_training.training_data,
-            title=updated_training.title,
-            description=updated_training.description,
+            header_badges=updated_training.header_badges or {},
+            course_info=updated_training.course_info or {},
+            training_plan=updated_training.training_plan or [],
+            coach_data=updated_training.coach_data or {},
+            metadata=updated_training.training_metadata or {},
             created_at=updated_training.created_at.isoformat() if updated_training.created_at else None,
             updated_at=updated_training.updated_at.isoformat() if updated_training.updated_at else None
         )
@@ -295,37 +288,38 @@ async def delete_training_program(
     db: Session = Depends(get_db)
 ):
     """
-    Удалить тренировочную программу.
+    Удалить (деактивировать) тренировочную программу.
     
-    Требует авторизации. Пользователь может удалять только свои тренировки.
-    Выполняется мягкое удаление (деактивация).
+    Может удалять только создатель программы.
+    Выполняется мягкое удаление - программа остается в базе, но помечается как неактивная.
     """
     try:
-        # Проверяем существование тренировки
+        # Получаем существующую тренировку
         existing_training = get_training_by_id(db, training_id)
+        
         if not existing_training:
             raise HTTPException(
                 status_code=404,
                 detail=f"Тренировочная программа с ID {training_id} не найдена"
             )
         
-        # Проверяем права на удаление
-        if existing_training.user_id != current_user["id"] and not current_user.get("is_admin", False):
+        # Проверяем права доступа - только создатель может удалять
+        if existing_training.user_id != current_user["id"]:
             raise HTTPException(
                 status_code=403,
-                detail="У вас нет прав для удаления этой тренировки"
+                detail="У вас нет прав для удаления этой тренировочной программы"
             )
         
-        # Удаляем тренировку
+        # Выполняем мягкое удаление
         success = delete_training(db, training_id)
         
         if not success:
             raise HTTPException(
                 status_code=500,
-                detail="Не удалось удалить тренировку"
+                detail="Не удалось удалить тренировочную программу"
             )
         
-        return {"message": "Тренировочная программа успешно удалена"}
+        return {"message": f"Тренировочная программа с ID {training_id} успешно удалена"}
         
     except HTTPException:
         raise
@@ -345,9 +339,9 @@ async def get_my_trainings(
     db: Session = Depends(get_db)
 ):
     """
-    Получить список тренировочных программ текущего пользователя.
+    Получить мои тренировочные программы.
     
-    Требует авторизации.
+    Возвращает только тренировки, созданные текущим пользователем.
     """
     try:
         trainings = get_trainings_by_user(db, current_user["id"], skip, limit)
@@ -355,19 +349,26 @@ async def get_my_trainings(
         # Преобразуем в формат для краткого отображения
         training_summaries = []
         for training in trainings:
-            # Обрабатываем случай когда training_metadata может быть None или пустым
-            metadata = training.training_metadata or {}
+            # Обрабатываем header_badges
+            header_badges = training.header_badges or {}
             try:
-                training_metadata = TrainingMetadata(**metadata)
+                training_header_badges = HeaderBadges(**header_badges)
             except Exception as e:
-                print(f"Error parsing metadata for user training {training.id}: {e}")
-                training_metadata = TrainingMetadata()
+                print(f"Error parsing header_badges for training {training.id}: {e}")
+                training_header_badges = None
+            
+            # Обрабатываем course_info
+            course_info = training.course_info or {}
+            try:
+                training_course_info = CourseInfo(**course_info)
+            except Exception as e:
+                print(f"Error parsing course_info for training {training.id}: {e}")
+                training_course_info = None
             
             training_summaries.append(TrainingSummary(
                 id=training.id,
-                title=training.title,
-                metadata=training_metadata,
-                description=training.description,
+                header_badges=training_header_badges,
+                course_info=training_course_info,
                 created_at=training.created_at.isoformat() if training.created_at else None
             ))
         
@@ -377,7 +378,7 @@ async def get_my_trainings(
         print(f"Error fetching user trainings: {e}")
         raise HTTPException(
             status_code=500,
-            detail="Не удалось загрузить ваши тренировки"
+            detail="Не удалось загрузить ваши тренировочные программы"
         )
 
 
@@ -387,12 +388,11 @@ async def can_create_training(
     db: Session = Depends(get_db)
 ):
     """
-    Проверить, может ли текущий пользователь создавать тренировочные программы.
+    Проверить, может ли пользователь создавать тренировочные программы.
     
-    Требует авторизации.
+    Требует наличия заполненного профиля тренера.
     """
     try:
-        # Проверяем наличие профиля тренера у пользователя
         user = get_user_by_id(db, current_user["id"])
         
         if not user:
@@ -401,25 +401,18 @@ async def can_create_training(
                 detail="Пользователь не найден"
             )
         
-        can_create = bool(user.trainer_profile) or current_user.get("is_admin", False)
+        can_create = bool(user.trainer_profile)
         
-        response = {
+        return {
             "can_create": can_create,
-            "has_trainer_profile": bool(user.trainer_profile),
-            "is_admin": current_user.get("is_admin", False)
+            "reason": "Профиль тренера заполнен" if can_create else "Необходимо заполнить профиль тренера"
         }
-        
-        if not can_create:
-            response["message"] = "Для создания тренировочных программ необходимо настроить профиль тренера"
-            response["action_required"] = "Заполните информацию о ваших сертификатах и опыте работы в профиле тренера"
-        
-        return response
         
     except HTTPException:
         raise
     except Exception as e:
-        print(f"Error checking training creation permissions: {e}")
+        print(f"Error checking create permission: {e}")
         raise HTTPException(
             status_code=500,
-            detail="Не удалось проверить права на создание тренировок"
+            detail="Не удалось проверить права создания"
         ) 
