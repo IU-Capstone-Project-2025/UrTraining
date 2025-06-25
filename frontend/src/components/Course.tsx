@@ -64,7 +64,7 @@ const Course = (data: any) => {
                     </div>
                     <div className='course__info__description'>
                         <p>{data.course_info.description}</p>
-                        <h4>view detailed info</h4>
+                        <h4></h4>
                     </div>
                 </div>
 
@@ -127,7 +127,7 @@ const Course = (data: any) => {
                             <p>{data.coach_data.reviews} reviews</p>
                         </div>
                         <div className='course__coach__statistics'>
-                            <p>12 active training courses</p>
+                            <p>12 active training courses, </p>
                             <p>4,100 views</p>
                         </div>
                         <div className='course__coach__tags'>
@@ -135,7 +135,7 @@ const Course = (data: any) => {
                                 <p>#10 in Coaches Honor Roll</p>
                             </div>
                             <div>
-                                <p>Certification approved</p>
+                                <p> Certification approved</p>
                             </div>
                         </div>
                     </div>
