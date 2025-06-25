@@ -118,19 +118,49 @@ class UserCourseProgress(Base):
 
 class Training(Base):
     """
-    SQLAlchemy модель для тренировки в базе данных
+    SQLAlchemy модель для тренировки в базе данных, соответствующая новой JSON структуре
     """
     __tablename__ = "trainings"
     
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     
-    # Основные поля согласно новой JSON структуре
-    header_badges = Column(JSON, nullable=False)  # JSON структура с значками заголовка
-    course_info = Column(JSON, nullable=False)  # JSON структура с информацией о курсе  
-    training_plan = Column(JSON, nullable=False)  # JSON структура с планом тренировок
-    coach_data = Column(JSON, nullable=False)  # JSON структура с данными тренера
-    training_metadata = Column(JSON, nullable=True)  # JSON структура с метаданными
+    # Основная информация о курсе
+    activity_type = Column(String(100), nullable=False)
+    program_goal = Column(JSON, nullable=False)  # List[str]
+    training_environment = Column(JSON, nullable=False)  # List[str]
+    difficulty_level = Column(String(50), nullable=False)
+    course_duration_weeks = Column(Integer, nullable=False)
+    weekly_training_frequency = Column(String(50), nullable=False)
+    average_workout_duration = Column(String(50), nullable=False)
+    age_group = Column(JSON, nullable=False)  # List[str]
+    gender_orientation = Column(String(50), nullable=False)
+    physical_limitations = Column(JSON, nullable=True)  # List[str]
+    required_equipment = Column(JSON, nullable=False)  # List[str]
+    course_language = Column(String(50), nullable=False)
+    visual_content = Column(JSON, nullable=False)  # List[str]
+    trainer_feedback_options = Column(JSON, nullable=False)  # List[str]
+    tags = Column(JSON, nullable=True)  # List[str]
+    
+    # Рейтинги и статистика (заполняются автоматически)
+    average_course_rating = Column(Float, default=0.0)
+    active_participants = Column(Integer, default=0)
+    number_of_reviews = Column(Integer, default=0)
+    
+    # Данные о тренере (JSON структуры)
+    certification = Column(JSON, nullable=False)  # Certification model
+    experience = Column(JSON, nullable=False)  # Experience model
+    trainer_name = Column(String(100), nullable=False)
+    
+    # Информация о курсе
+    course_title = Column(String(255), nullable=False)
+    program_description = Column(Text, nullable=False)
+    
+    # План тренировок (JSON структура)
+    training_plan = Column(JSON, nullable=False)  # List[TrainingDay]
+    
+    # Уникальный идентификатор курса (UUID)
+    course_id = Column(String(255), nullable=False, unique=True)
     
     # Дополнительные поля для работы с базой данных
     is_active = Column(Boolean, default=True)
