@@ -10,8 +10,8 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 # User CRUD operations
-def get_user_by_username(db: Session, username: str) -> Optional[User]:
-    return db.query(User).filter(User.username == username).first()
+def get_user_by_name(db: Session, name: str) -> Optional[User]:
+    return db.query(User).filter(User.name == name).first()
 
 
 def get_user_by_email(db: Session, email: str) -> Optional[User]:
@@ -22,13 +22,12 @@ def get_user_by_id(db: Session, user_id: int) -> Optional[User]:
     return db.query(User).filter(User.id == user_id).first()
 
 
-def create_user(db: Session, username: str, email: str, password: str, full_name: str, is_admin: bool = False, trainer_profile: Dict[str, Any] = None) -> User:
+def create_user(db: Session, name: str, email: str, password: str, is_admin: bool = False, trainer_profile: Dict[str, Any] = None) -> User:
     hashed_password = pwd_context.hash(password)
     db_user = User(
-        username=username,
+        name=name,
         email=email,
         hashed_password=hashed_password,
-        full_name=full_name,
         is_admin=is_admin,
         trainer_profile=trainer_profile
     )
@@ -46,8 +45,8 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def authenticate_user(db: Session, username: str, password: str) -> Optional[User]:
-    user = get_user_by_username(db, username)
+def authenticate_user(db: Session, email: str, password: str) -> Optional[User]:
+    user = get_user_by_email(db, email)
     if not user:
         return None
     if not verify_password(password, user.hashed_password):
@@ -55,13 +54,13 @@ def authenticate_user(db: Session, username: str, password: str) -> Optional[Use
     return user
 
 
-def update_user_profile(db: Session, user_id: int, full_name: Optional[str] = None, email: Optional[str] = None) -> Optional[User]:
+def update_user_profile(db: Session, user_id: int, name: Optional[str] = None, email: Optional[str] = None) -> Optional[User]:
     user = get_user_by_id(db, user_id)
     if not user:
         return None
     
-    if full_name:
-        user.full_name = full_name
+    if name:
+        user.name = name
     if email:
         user.email = email
     
@@ -259,24 +258,45 @@ def get_trainings_by_user(db: Session, user_id: int, skip: int = 0, limit: int =
 
 
 def create_training(db: Session, training_data: Dict[str, Any], user_id: int = None) -> Training:
-    """Создать новую тренировку"""
-    # Если пользователь является тренером, заполняем информацию о тренере в metadata
-    metadata = training_data.get("metadata", {})
+    """Создать новую тренировку с автоматическим заполнением данных тренера"""
+    
+    # Получаем пользователя и его профиль тренера
+    user = None
+    trainer_profile = None
     if user_id:
         user = get_user_by_id(db, user_id)
-        if user and user.trainer_profile:
+        if user and hasattr(user, 'trainer_profile') and user.trainer_profile:
             trainer_profile = user.trainer_profile
-            metadata["trainer_name"] = trainer_profile.get("name")
-            metadata["certification"] = trainer_profile.get("certification")
-            metadata["experience"] = trainer_profile.get("experience")
     
+    # Автоматически заполняем coach_data
+    coach_data = {}
+    if trainer_profile and user:
+        # Строим полные данные тренера без дополнительных badges
+        coach_data = build_coach_data_from_trainer_profile(
+            user.name, 
+            trainer_profile, 
+            additional_badges=None  # Не добавляем дополнительные badges
+        )
+    
+    # Автоматически заполняем course_info
+    course_info = training_data.get("course_info", {})
+    if user:
+        course_info = build_course_info_with_trainer_data(
+            course_info, 
+            user.name, 
+            trainer_profile
+        )
+    
+    # Создаем тренировку с заполненными данными
     db_training = Training(
         user_id=user_id,
-        training_metadata=metadata,
-        training_data=training_data.get("training_data"),
-        title=training_data.get("title"),
-        description=training_data.get("description")
+        header_badges=training_data.get("header_badges", {}),
+        course_info=course_info,
+        training_plan=training_data.get("training_plan", []),
+        coach_data=coach_data,
+        training_metadata=training_data.get("metadata", {})
     )
+    
     db.add(db_training)
     db.commit()
     db.refresh(db_training)
@@ -291,22 +311,31 @@ def update_training(db: Session, training_id: int, training_data: Dict[str, Any]
     
     # Обновляем поля
     for field, value in training_data.items():
-        if field == "metadata":
-            # Специальная обработка для metadata - сохраняем в training_metadata
-            training.training_metadata = value
-        elif hasattr(training, field) and value is not None:
+        if hasattr(training, field) and value is not None:
             setattr(training, field, value)
     
-    # Если обновляется metadata и пользователь является тренером, обновляем информацию о тренере
-    if "metadata" in training_data and training.user_id:
+    # Если обновляется coach_data или course_info и пользователь является тренером, обновляем информацию
+    if training.user_id:
         user = get_user_by_id(db, training.user_id)
-        if user and user.trainer_profile:
+        if user and hasattr(user, 'trainer_profile') and user.trainer_profile:
             trainer_profile = user.trainer_profile
-            metadata = training_data["metadata"]
-            metadata["trainer_name"] = trainer_profile.get("name")
-            metadata["certification"] = trainer_profile.get("certification")
-            metadata["experience"] = trainer_profile.get("experience")
-            training.training_metadata = metadata
+            
+            # Обновляем coach_data с данными тренера
+            if "coach_data" in training_data:
+                training.coach_data = build_coach_data_from_trainer_profile(
+                    user.name, 
+                    trainer_profile, 
+                    additional_badges=None  # Не добавляем дополнительные badges
+                )
+            
+            # Обновляем course_info с данными тренера
+            if "course_info" in training_data:
+                course_info = training_data["course_info"]
+                training.course_info = build_course_info_with_trainer_data(
+                    course_info, 
+                    user.name, 
+                    trainer_profile
+                )
     
     training.updated_at = datetime.utcnow()
     db.commit()
@@ -327,12 +356,12 @@ def delete_training(db: Session, training_id: int) -> bool:
 
 
 def search_trainings(db: Session, query: str, skip: int = 0, limit: int = 100) -> List[Training]:
-    """Поиск тренировок по названию или описанию"""
+    """Поиск тренировок по названию из course_info"""
     search_filter = f"%{query}%"
     return db.query(Training).filter(
         and_(
             Training.is_active == True,
-            (Training.title.ilike(search_filter) | Training.description.ilike(search_filter))
+            Training.course_info['title'].astext.ilike(search_filter)
         )
     ).offset(skip).limit(limit).all()
 
@@ -347,31 +376,101 @@ def get_training_with_trainer_info(db: Session, training_id: int) -> Optional[Tr
     if training.user_id:
         user = get_user_by_id(db, training.user_id)
         if user and user.trainer_profile:
-            # Создаем копию metadata для модификации
-            metadata = training.training_metadata.copy() if training.training_metadata else {}
+            # Создаем копию coach_data для модификации
+            coach_data = training.coach_data.copy() if training.coach_data else {}
             trainer_profile = user.trainer_profile
             
             # Заполняем данные тренера
-            metadata["trainer_name"] = trainer_profile.get("name", "")
-            metadata["certification"] = trainer_profile.get("certification", {})
-            metadata["experience"] = trainer_profile.get("experience", {})
+            coach_data.update({
+                "name": user.name,
+                "profile_picture": trainer_profile.get("profile_picture"),
+                "rating": trainer_profile.get("experience", {}).get("rating", 0.0),
+                "reviews": trainer_profile.get("reviews_count", 0),
+                "years": trainer_profile.get("experience", {}).get("years", 0),
+                "badges": trainer_profile.get("badges", [])
+            })
             
-            # Обновляем metadata в объекте тренировки
-            training.training_metadata = metadata
+            # Обновляем coach_data в объекте тренировки
+            training.coach_data = coach_data
     
     return training
 
 
-def merge_trainer_info_to_metadata(metadata: Dict[str, Any], trainer_profile: Dict[str, Any]) -> Dict[str, Any]:
-    """Объединить metadata тренировки с данными trainer_profile"""
+def merge_trainer_info_to_coach_data(coach_data: Dict[str, Any], trainer_profile: Dict[str, Any], name: str) -> Dict[str, Any]:
+    """Объединить coach_data тренировки с данными trainer_profile"""
     if not trainer_profile:
-        return metadata
+        return coach_data
     
-    updated_metadata = metadata.copy()
+    updated_coach_data = coach_data.copy()
     
     # Заполняем поля тренера
-    updated_metadata["trainer_name"] = trainer_profile.get("name", "")
-    updated_metadata["certification"] = trainer_profile.get("certification", {})
-    updated_metadata["experience"] = trainer_profile.get("experience", {})
+    updated_coach_data.update({
+        "name": name,
+        "profile_picture": trainer_profile.get("profile_picture"),
+        "rating": trainer_profile.get("experience", {}).get("rating", 0.0),
+        "reviews": trainer_profile.get("reviews_count", updated_coach_data.get("reviews", 0)),
+        "years": trainer_profile.get("experience", {}).get("years", 0),
+        "badges": trainer_profile.get("badges", [])
+    })
     
-    return updated_metadata 
+    return updated_coach_data
+
+
+def build_coach_data_from_trainer_profile(user_name: str, trainer_profile: Dict[str, Any], additional_badges: List[Dict] = None) -> Dict[str, Any]:
+    """
+    Построить полные данные тренера (coach_data) из trainer_profile пользователя
+    
+    Args:
+        user_name: Имя пользователя
+        trainer_profile: Профиль тренера из базы данных
+        additional_badges: Дополнительные значки для добавления (если None, то не добавляются)
+    
+    Returns:
+        Словарь с полными данными тренера
+    """
+    if not trainer_profile:
+        return {}
+    
+    experience = trainer_profile.get("experience", {})
+    badges = trainer_profile.get("badges", []).copy()  # Создаем копию для безопасности
+    
+    # Добавляем дополнительные значки только если они переданы
+    if additional_badges:
+        badges.extend(additional_badges)
+    
+    return {
+        "name": user_name,
+        "profile_picture": trainer_profile.get("profile_picture"),
+        "rating": experience.get("rating", 5.0),
+        "reviews": trainer_profile.get("reviews_count", 0),
+        "years": experience.get("years", 0),
+        "badges": badges
+    }
+
+
+def build_course_info_with_trainer_data(course_info: Dict[str, Any], user_name: str, trainer_profile: Dict[str, Any] = None) -> Dict[str, Any]:
+    """
+    Дополнить информацию о курсе данными тренера
+    
+    Args:
+        course_info: Базовая информация о курсе
+        user_name: Имя пользователя (автор курса)
+        trainer_profile: Профиль тренера для заполнения рейтинга и отзывов
+    
+    Returns:
+        Словарь с дополненной информацией о курсе
+    """
+    updated_course_info = course_info.copy()
+    updated_course_info["author"] = user_name
+    
+    # Заполняем рейтинг и отзывы из профиля тренера, если они не указаны
+    if trainer_profile:
+        experience = trainer_profile.get("experience", {})
+        
+        if "rating" not in updated_course_info or updated_course_info["rating"] is None:
+            updated_course_info["rating"] = experience.get("rating", 5.0)
+        
+        if "reviews" not in updated_course_info or updated_course_info["reviews"] is None:
+            updated_course_info["reviews"] = trainer_profile.get("reviews_count", 0)
+    
+    return updated_course_info 

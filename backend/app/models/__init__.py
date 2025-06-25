@@ -17,10 +17,16 @@ from .training import (
     TrainingCreate,
     TrainingUpdate,
     TrainingResponse,
-    TrainingData,
+    Badge,
+    HeaderBadges,
+    CourseInfo,
     Exercise,
-    DayTraining,
-    DayOfWeek
+    TrainingDay,
+    CoachData,
+    TrainingMetadata,
+    TrainerCertification,
+    TrainerExperience,
+    TrainerProfile
 )
 
 __all__ = [
@@ -50,8 +56,14 @@ __all__ = [
     "TrainingCreate",
     "TrainingUpdate",
     "TrainingResponse",
-    "TrainingData",
+    "Badge",
+    "HeaderBadges",
+    "CourseInfo",
     "Exercise",
-    "DayTraining",
-    "DayOfWeek"
+    "TrainingDay",
+    "CoachData",
+    "TrainingMetadata",
+    "TrainerCertification",
+    "TrainerExperience",
+    "TrainerProfile"
 ] 
