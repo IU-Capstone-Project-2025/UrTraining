@@ -1,7 +1,6 @@
 # ML Datasets
 ml/dataset
 ml/scripts/data/*.json
-ml/scripts/data/*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
