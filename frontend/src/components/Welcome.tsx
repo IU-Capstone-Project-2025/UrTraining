@@ -8,7 +8,7 @@ const Welcome = () => {
             <div className='welcome__info'>
                 <div className='welcome__info__text'>
                     <h1>
-                        Smart approach to training with AI assistant
+                        Smart approach to training powered by AI
                     </h1>
                     <h3>
                         Create and share your training programs as a coach faster.

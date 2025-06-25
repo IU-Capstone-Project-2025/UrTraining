@@ -11,7 +11,9 @@ import SignUpPage from '../pages/SignUpPage';
 import TraineeBeginPage from '../pages/TraineeBeginPage';
 import TrainerBeginPage from '../pages/TrainerBeginPage';
 import SurveyPage from '../pages/SurveyPage';
+import CoursesCataloguePage from '../pages/CoursesCataloguePage';
 import ExampleCoursePage from '../pages/ExampleCoursePage';
+import CoursePage from '../pages/CoursePage';
 import { useEffect, useState } from 'react';
 import { AuthContext, type AuthCredentialsTokens } from './context/AuthContext';
 
@@ -60,7 +62,9 @@ const App = () => {
               <Route path="trainee-begin" element={<TraineeBeginPage />} />
               <Route path="trainer-begin" element={<TrainerBeginPage />} />
               <Route path="survey" element={<SurveyPage />} />
+              <Route path="course/catalogue" element={<CoursesCataloguePage />} />
               <Route path="course/example-course" element={<ExampleCoursePage />} />
+              <Route path="course/:courseId" element={<CoursePage />} />
             </Route>
           </Routes>
         </BrowserRouter>
