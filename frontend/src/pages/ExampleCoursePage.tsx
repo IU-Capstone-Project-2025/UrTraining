@@ -8,36 +8,37 @@ const ExampleCoursePage = () => {
         header_badges: {
             training_type: [
                 {
-                    badge_text: "Mobility",
-                    badge_color: "#9747FF"
+                    text: "Mobility",
+                    color: "#9747FF"
                 }
             ],
             training_info: [
                 {
-                    badge_text: "for all levels",
-                    badge_color: "#696969"
+                    text: "for all levels",
+                    color: "#696969"
                 },
                 {
-                    badge_text: "30 min/training",
-                    badge_color: "#696969"
+                    text: "30 min/training",
+                    color: "#696969"
                 },
                 {
-                    badge_text: "3-4 trainings/week",
-                    badge_color: "#696969"
+                    text: "3-4 trainings/week",
+                    color: "#696969"
                 },
                 {
-                    badge_text: "2 weeks",
-                    badge_color: "#696969"
+                    text: "2 weeks",
+                    color: "#696969"
                 },
             ],
             training_equipment: [
                 {
-                    badge_text: "No equipment",
-                    badge_color: "#888EE3"
+                    text: "No equipment",
+                    color: "#888EE3"
                 }
             ],
         },
         course_info: {
+            id: "exampleTraining",
             title: "Mobility reset",
             author: "trainerOne",
             description: `A short but effective mobility reboot.
@@ -237,6 +238,23 @@ const ExampleCoursePage = () => {
             profile_picture: kanye,
             rating: 4.8,
             reviews: 230,
+            years: 10,
+            issa_cert: true,
+            badges: [
+                {
+                    text: "#10 in Coaches Honor Roll",
+                    color: "#E7C553"
+                },
+                {
+                    text: "Certification approved",
+                    color: "#0C1CFD"
+                },
+            ]
+        },
+        metadata: {
+            tags: {},
+            certification: {},
+            experience: {}
         }
     }
 

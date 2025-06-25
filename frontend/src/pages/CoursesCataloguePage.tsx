@@ -2,9 +2,9 @@ import React from 'react';
 import courses from '../components/data/selected_courses_with_ids_plus_plan.json';
 import { transformRawCourseData } from '../utils/transformRawCouseData';
 import '../css/CoursesCatalogue.css';
-import CourseCard from "../components/CourseCard";
+import CourseCatalogue from '../components/CourseCatalogue';
 
-const CoursesCatalogue: React.FC = () => {
+const CoursesCataloguePage = () => {
   const catalogCourses = courses.map(course => {
     const transformed = transformRawCourseData(course);
     return {
@@ -18,19 +18,10 @@ const CoursesCatalogue: React.FC = () => {
   });
 
   return (
-    <div className="catalog-container">
-      <h1 className="catalog-title">
-        <span style={{display: 'block'}}>All trainings</span>
-        <span style={{display: 'block'}}>in one place</span>
-      </h1>
-
-      <div className="course-grid">
-        {courses.map((course) => (
-          <CourseCard key={course.id} {...transformRawCourseData(course)} />
-        ))}
-      </div>
-    </div>
+    <>
+      <CourseCatalogue courses={courses}/>
+    </>
   );
 };
 
-export default CoursesCatalogue;
+export default CoursesCataloguePage;
