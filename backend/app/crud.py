@@ -241,75 +241,97 @@ def get_training_by_id(db: Session, training_id: int) -> Optional[Training]:
 
 
 def get_trainings_summary(db: Session, skip: int = 0, limit: int = 100) -> List[Training]:
-    """Получить список всех активных тренировок с краткой информацией"""
-    return db.query(Training).filter(
-        Training.is_active == True
-    ).offset(skip).limit(limit).all()
+    """Получить список всех тренировок с краткой информацией"""
+    return db.query(Training).offset(skip).limit(limit).all()
 
 
 def get_trainings_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[Training]:
     """Получить тренировки конкретного пользователя"""
     return db.query(Training).filter(
-        and_(
-            Training.user_id == user_id,
-            Training.is_active == True
-        )
+        Training.user_id == user_id
     ).offset(skip).limit(limit).all()
 
 
-def create_training(db: Session, training_data: Dict[str, Any], user_id: int = None) -> Training:
-    """Создать новую тренировку с данными в новом формате"""
+def create_training(db: Session, training_data: dict, user_id: int):
+    """
+    Создать новую тренировку в базе данных.
+    Обрабатывает опциональные поля и устанавливает значения по умолчанию.
+    """
     import uuid
     
-    # Получаем пользователя для заполнения данных тренера
-    user = None
-    trainer_profile = None
-    if user_id:
-        user = get_user_by_id(db, user_id)
-        if user and hasattr(user, 'trainer_profile') and user.trainer_profile:
-            trainer_profile = user.trainer_profile
-
-    # Автоматически заполняем статистику и рейтинги
-    average_course_rating = trainer_profile.get("experience", {}).get("rating", 0.0) if trainer_profile else 0.0
-    number_of_reviews = trainer_profile.get("reviews_count", 0) if trainer_profile else 0
+    # Генерируем уникальный course_id если не предоставлен
+    if 'id' not in training_data or not training_data['id']:
+        course_id = str(uuid.uuid4())
+    else:
+        course_id = training_data['id']
     
-    # Генерируем уникальный ID для курса если не предоставлен
-    course_id = training_data.get("id", str(uuid.uuid4()))
+    # Создаем дефолтные объекты для certification и experience если они не предоставлены
+    certification = training_data.get('certification')
+    if certification is None:
+        certification = {
+            "Type": "",
+            "Level": "",
+            "Specialization": ""
+        }
     
-    # Создаем тренировку с новой структурой
+    experience = training_data.get('experience')
+    if experience is None:
+        experience = {
+            "Years": 0,
+            "Specialization": "",
+            "Courses": 0,
+            "Rating": 0.0
+        }
+    
+    # Создаем объект тренировки с обработкой всех полей
     db_training = Training(
+        course_id=course_id,
         user_id=user_id,
-        activity_type=training_data.get("activity_type", ""),
-        program_goal=training_data.get("program_goal", []),
-        training_environment=training_data.get("training_environment", []),
-        difficulty_level=training_data.get("difficulty_level", ""),
-        course_duration_weeks=training_data.get("course_duration_weeks", 1),
-        weekly_training_frequency=training_data.get("weekly_training_frequency", ""),
-        average_workout_duration=training_data.get("average_workout_duration", ""),
-        age_group=training_data.get("age_group", []),
-        gender_orientation=training_data.get("gender_orientation", ""),
-        physical_limitations=training_data.get("physical_limitations", []),
-        required_equipment=training_data.get("required_equipment", []),
-        course_language=training_data.get("course_language", ""),
-        visual_content=training_data.get("visual_content", []),
-        trainer_feedback_options=training_data.get("trainer_feedback_options", []),
-        tags=training_data.get("tags", []),
-        average_course_rating=average_course_rating,
-        active_participants=0,  # Начинаем с 0
-        number_of_reviews=number_of_reviews,
-        certification=training_data.get("certification", {}),
-        experience=training_data.get("experience", {}),
-        trainer_name=training_data.get("trainer_name", user.name if user else ""),
-        course_title=training_data.get("course_title", ""),
-        program_description=training_data.get("program_description", ""),
-        training_plan=training_data.get("training_plan", []),
-        course_id=course_id
+        
+        # Основная информация о курсе
+        activity_type=training_data.get('activity_type', ''),
+        program_goal=training_data.get('program_goal', []),
+        training_environment=training_data.get('training_environment', []),
+        difficulty_level=training_data.get('difficulty_level', ''),
+        course_duration_weeks=training_data.get('course_duration_weeks', 0),
+        weekly_training_frequency=training_data.get('weekly_training_frequency', ''),
+        average_workout_duration=training_data.get('average_workout_duration', ''),
+        age_group=training_data.get('age_group', []),
+        gender_orientation=training_data.get('gender_orientation', ''),
+        physical_limitations=training_data.get('physical_limitations', []),
+        required_equipment=training_data.get('required_equipment', []),
+        course_language=training_data.get('course_language', ''),
+        visual_content=training_data.get('visual_content', []),
+        trainer_feedback_options=training_data.get('trainer_feedback_options', []),
+        tags=training_data.get('tags', []),
+        
+        # Рейтинги и статистика
+        average_course_rating=training_data.get('average_course_rating', 0.0),
+        active_participants=training_data.get('active_participants', 0),
+        number_of_reviews=training_data.get('number_of_reviews', 0),
+        
+        # Данные о тренере
+        certification=certification,
+        experience=experience,
+        trainer_name=training_data.get('trainer_name', ''),
+        
+        # Информация о курсе
+        course_title=training_data.get('course_title', ''),
+        program_description=training_data.get('program_description', ''),
+        
+        # План тренировок
+        training_plan=training_data.get('training_plan', [])
     )
     
-    db.add(db_training)
-    db.commit()
-    db.refresh(db_training)
-    return db_training
+    try:
+        db.add(db_training)
+        db.commit()
+        db.refresh(db_training)
+        return db_training
+    except Exception as e:
+        db.rollback()
+        print(f"Error creating training: {e}")
+        raise e
 
 
 def update_training(db: Session, training_id: int, training_data: Dict[str, Any]) -> Optional[Training]:
@@ -339,13 +361,12 @@ def update_training(db: Session, training_id: int, training_data: Dict[str, Any]
 
 
 def delete_training(db: Session, training_id: int) -> bool:
-    """Мягкое удаление тренировки (деактивация)"""
+    """Удаление тренировки"""
     training = get_training_by_id(db, training_id)
     if not training:
         return False
     
-    training.is_active = False
-    training.updated_at = datetime.utcnow()
+    db.delete(training)
     db.commit()
     return True
 
@@ -354,10 +375,7 @@ def search_trainings(db: Session, query: str, skip: int = 0, limit: int = 100) -
     """Поиск тренировок по названию курса"""
     search_filter = f"%{query}%"
     return db.query(Training).filter(
-        and_(
-            Training.is_active == True,
-            Training.course_title.ilike(search_filter)
-        )
+        Training.course_title.ilike(search_filter)
     ).offset(skip).limit(limit).all()
 
 

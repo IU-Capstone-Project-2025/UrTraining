@@ -40,7 +40,7 @@ class TrainingSummary(BaseModel):
         from_attributes = True
 
 
-@router.get("/", response_model=List[TrainingSummary])
+@router.get("/", response_model=List[TrainingResponse])
 async def get_trainings_catalog(
     skip: int = Query(0, ge=0, description="Количество записей для пропуска"),
     limit: int = Query(10, ge=1, le=100, description="Максимальное количество записей"),
@@ -48,10 +48,10 @@ async def get_trainings_catalog(
     db: Session = Depends(get_db)
 ):
     """
-    Получить список всех тренировочных программ с краткой информацией.
+    Получить список всех тренировочных программ с полной информацией.
     
     Этот эндпоинт используется для отображения каталога тренировок.
-    Возвращает только основную информацию: тип активности, название курса, имя тренера и др.
+    Возвращает полную информацию о каждой тренировке включая план тренировок и данные тренера.
     """
     try:
         if search:
@@ -59,21 +59,65 @@ async def get_trainings_catalog(
         else:
             trainings = get_trainings_summary(db, skip, limit)
         
-        # Преобразуем в формат для краткого отображения
-        training_summaries = []
+        # Helper function to create response dict from db training
+        def create_response_dict(db_training):
+            # Handle None values for certification and experience
+            certification = db_training.certification
+            if certification is None:
+                certification = {
+                    "Type": "",
+                    "Level": "",
+                    "Specialization": ""
+                }
+            
+            experience = db_training.experience
+            if experience is None:
+                experience = {
+                    "Years": 0,
+                    "Specialization": "",
+                    "Courses": 0,
+                    "Rating": 0.0
+                }
+            
+            return {
+                "activity_type": db_training.activity_type,
+                "program_goal": db_training.program_goal,
+                "training_environment": db_training.training_environment,
+                "difficulty_level": db_training.difficulty_level,
+                "course_duration_weeks": db_training.course_duration_weeks,
+                "weekly_training_frequency": db_training.weekly_training_frequency,
+                "average_workout_duration": db_training.average_workout_duration,
+                "age_group": db_training.age_group,
+                "gender_orientation": db_training.gender_orientation,
+                "physical_limitations": db_training.physical_limitations,
+                "required_equipment": db_training.required_equipment,
+                "course_language": db_training.course_language,
+                "visual_content": db_training.visual_content,
+                "trainer_feedback_options": db_training.trainer_feedback_options,
+                "tags": db_training.tags,
+                "average_course_rating": db_training.average_course_rating,
+                "active_participants": db_training.active_participants,
+                "number_of_reviews": db_training.number_of_reviews,
+                "certification": certification,
+                "experience": experience,
+                "trainer_name": db_training.trainer_name,
+                "course_title": db_training.course_title,
+                "program_description": db_training.program_description,
+                "training_plan": db_training.training_plan,
+                "id": db_training.course_id,
+                "db_id": db_training.id,
+                "user_id": db_training.user_id,
+                "created_at": db_training.created_at.isoformat() if db_training.created_at else None,
+                "updated_at": db_training.updated_at.isoformat() if db_training.updated_at else None
+            }
+
+        # Преобразуем в полный формат TrainingResponse
+        training_responses = []
         for training in trainings:
-            training_summaries.append(TrainingSummary(
-                id=training.id,
-                activity_type=training.activity_type,
-                course_title=training.course_title,
-                trainer_name=training.trainer_name,
-                difficulty_level=training.difficulty_level,
-                average_course_rating=training.average_course_rating,
-                tags=training.tags or [],
-                created_at=training.created_at.isoformat() if training.created_at else None
-            ))
+            training_dict = create_response_dict(training)
+            training_responses.append(TrainingResponse(**training_dict))
         
-        return training_summaries
+        return training_responses
         
     except Exception as e:
         print(f"Error fetching trainings catalog: {e}")
@@ -103,38 +147,59 @@ async def get_training_details(
                 detail=f"Тренировочная программа с ID {training_id} не найдена"
             )
         
-        # Используем model_validate для создания из SQLAlchemy объекта
-        training_dict = {
-            "activity_type": training.activity_type,
-            "program_goal": training.program_goal,
-            "training_environment": training.training_environment,
-            "difficulty_level": training.difficulty_level,
-            "course_duration_weeks": training.course_duration_weeks,
-            "weekly_training_frequency": training.weekly_training_frequency,
-            "average_workout_duration": training.average_workout_duration,
-            "age_group": training.age_group,
-            "gender_orientation": training.gender_orientation,
-            "physical_limitations": training.physical_limitations,
-            "required_equipment": training.required_equipment,
-            "course_language": training.course_language,
-            "visual_content": training.visual_content,
-            "trainer_feedback_options": training.trainer_feedback_options,
-            "tags": training.tags,
-            "average_course_rating": training.average_course_rating,
-            "active_participants": training.active_participants,
-            "number_of_reviews": training.number_of_reviews,
-            "certification": training.certification,
-            "experience": training.experience,
-            "trainer_name": training.trainer_name,
-            "course_title": training.course_title,
-            "program_description": training.program_description,
-            "training_plan": training.training_plan,
-            "id": training.course_id,
-            "db_id": training.id,
-            "user_id": training.user_id,
-            "created_at": training.created_at.isoformat() if training.created_at else None,
-            "updated_at": training.updated_at.isoformat() if training.updated_at else None
-        }
+        # Helper function to create response dict from db training
+        def create_response_dict(db_training):
+            # Handle None values for certification and experience
+            certification = db_training.certification
+            if certification is None:
+                certification = {
+                    "Type": "",
+                    "Level": "",
+                    "Specialization": ""
+                }
+            
+            experience = db_training.experience
+            if experience is None:
+                experience = {
+                    "Years": 0,
+                    "Specialization": "",
+                    "Courses": 0,
+                    "Rating": 0.0
+                }
+            
+            return {
+                "activity_type": db_training.activity_type,
+                "program_goal": db_training.program_goal,
+                "training_environment": db_training.training_environment,
+                "difficulty_level": db_training.difficulty_level,
+                "course_duration_weeks": db_training.course_duration_weeks,
+                "weekly_training_frequency": db_training.weekly_training_frequency,
+                "average_workout_duration": db_training.average_workout_duration,
+                "age_group": db_training.age_group,
+                "gender_orientation": db_training.gender_orientation,
+                "physical_limitations": db_training.physical_limitations,
+                "required_equipment": db_training.required_equipment,
+                "course_language": db_training.course_language,
+                "visual_content": db_training.visual_content,
+                "trainer_feedback_options": db_training.trainer_feedback_options,
+                "tags": db_training.tags,
+                "average_course_rating": db_training.average_course_rating,
+                "active_participants": db_training.active_participants,
+                "number_of_reviews": db_training.number_of_reviews,
+                "certification": certification,
+                "experience": experience,
+                "trainer_name": db_training.trainer_name,
+                "course_title": db_training.course_title,
+                "program_description": db_training.program_description,
+                "training_plan": db_training.training_plan,
+                "id": db_training.course_id,
+                "db_id": db_training.id,
+                "user_id": db_training.user_id,
+                "created_at": db_training.created_at.isoformat() if db_training.created_at else None,
+                "updated_at": db_training.updated_at.isoformat() if db_training.updated_at else None
+            }
+
+        training_dict = create_response_dict(training)
         
         return TrainingResponse(**training_dict)
         
@@ -148,6 +213,157 @@ async def get_training_details(
         )
 
 
+@router.post("/list", response_model=List[TrainingResponse], summary="Create Multiple Trainings")
+async def create_training_programs_bulk(
+    trainings_data: List[TrainingCreate],
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    ## Создать несколько тренировочных программ одновременно
+    
+    Создает список новых тренировочных программ в новом формате JSON.
+    Принимает массив объектов тренировок и создает их все за один запрос.
+    
+    **Все поля опциональны** - незаполненные поля получают значения по умолчанию:
+    - Строки: пустая строка `""`
+    - Списки: пустой массив `[]`
+    - Числа: `0` или `0.0`
+    - Объекты: структуры с пустыми значениями
+    
+    **Требует авторизации.**
+    
+    ### Пример с полными данными:
+    ```json
+    [
+        {
+            "Activity Type": "Strength Training",
+            "Gender Orientation": "Mixed",
+            "Course Title": "Advanced Strength Training",
+            "Course Duration (weeks)": 12,
+            "Certification": {
+                "Type": "NASM",
+                "Level": "Advanced",
+                "Specialization": "Strength Training"
+            }
+        }
+    ]
+    ```
+    
+    ### Пример с минимальными данными:
+    ```json
+    [
+        {
+            "Course Title": "Basic Workout"
+        },
+        {
+            "Activity Type": "Cardio",
+            "Course Title": "HIIT Training"
+        }
+    ]
+    ```
+    """
+    try:
+        created_trainings = []
+        failed_trainings = []
+        
+        for i, training_data in enumerate(trainings_data):
+            try:
+                # Преобразуем Pydantic модель в словарь
+                training_dict = training_data.model_dump()
+                
+                # Создаем тренировку
+                db_training = create_training(db, training_dict, current_user["id"])
+                
+                # Helper function to create response dict from db training
+                def create_response_dict(db_training):
+                    # Handle None values for certification and experience
+                    certification = db_training.certification
+                    if certification is None:
+                        certification = {
+                            "Type": "",
+                            "Level": "",
+                            "Specialization": ""
+                        }
+                    
+                    experience = db_training.experience
+                    if experience is None:
+                        experience = {
+                            "Years": 0,
+                            "Specialization": "",
+                            "Courses": 0,
+                            "Rating": 0.0
+                        }
+                    
+                    return {
+                        "activity_type": db_training.activity_type,
+                        "program_goal": db_training.program_goal,
+                        "training_environment": db_training.training_environment,
+                        "difficulty_level": db_training.difficulty_level,
+                        "course_duration_weeks": db_training.course_duration_weeks,
+                        "weekly_training_frequency": db_training.weekly_training_frequency,
+                        "average_workout_duration": db_training.average_workout_duration,
+                        "age_group": db_training.age_group,
+                        "gender_orientation": db_training.gender_orientation,
+                        "physical_limitations": db_training.physical_limitations,
+                        "required_equipment": db_training.required_equipment,
+                        "course_language": db_training.course_language,
+                        "visual_content": db_training.visual_content,
+                        "trainer_feedback_options": db_training.trainer_feedback_options,
+                        "tags": db_training.tags,
+                        "average_course_rating": db_training.average_course_rating,
+                        "active_participants": db_training.active_participants,
+                        "number_of_reviews": db_training.number_of_reviews,
+                        "certification": certification,
+                        "experience": experience,
+                        "trainer_name": db_training.trainer_name,
+                        "course_title": db_training.course_title,
+                        "program_description": db_training.program_description,
+                        "training_plan": db_training.training_plan,
+                        "id": db_training.course_id,
+                        "db_id": db_training.id,
+                        "user_id": db_training.user_id,
+                        "created_at": db_training.created_at.isoformat() if db_training.created_at else None,
+                        "updated_at": db_training.updated_at.isoformat() if db_training.updated_at else None
+                    }
+
+                response_dict = create_response_dict(db_training)
+                
+                created_trainings.append(TrainingResponse(**response_dict))
+                
+            except Exception as e:
+                print(f"Error creating training {i}: {e}")
+                failed_trainings.append({
+                    "index": i,
+                    "error": str(e),
+                    "course_title": getattr(training_data, 'course_title', 'Unknown')
+                })
+                continue
+        
+        # Если все тренировки не удалось создать, возвращаем ошибку
+        if not created_trainings:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Не удалось создать ни одной тренировочной программы. Ошибки: {failed_trainings}"
+            )
+        
+        # Если некоторые тренировки не удалось создать, логируем это
+        if failed_trainings:
+            print(f"Warning: Failed to create {len(failed_trainings)} trainings out of {len(trainings_data)}")
+            print(f"Failed trainings: {failed_trainings}")
+        
+        return created_trainings
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error in bulk training creation: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Не удалось создать тренировочные программы"
+        )
+
+
 @router.post("/", response_model=TrainingResponse, summary="Create Training")
 async def create_training_program(
     training_data: TrainingCreate,
@@ -158,9 +374,33 @@ async def create_training_program(
     ## Создать тренировочную программу
     
     Создает новую тренировочную программу в новом формате JSON.
-    Все поля обязательны согласно структуре курса.
+    
+    **Все поля опциональны** - незаполненные поля получают значения по умолчанию:
+    - Строки: пустая строка `""`
+    - Списки: пустой массив `[]`
+    - Числа: `0` или `0.0`
+    - Объекты: структуры с пустыми значениями
     
     **Требует авторизации.**
+    
+    ### Примеры использования:
+    
+    Минимальный запрос:
+    ```json
+    {
+        "Course Title": "My Training Program"
+    }
+    ```
+    
+    Частично заполненный:
+    ```json
+    {
+        "Activity Type": "Strength Training",
+        "Course Title": "Advanced Strength Program",
+        "Trainer Name": "John Doe",
+        "Course Duration (weeks)": 12
+    }
+    ```
     """
     try:
         # Преобразуем Pydantic модель в словарь

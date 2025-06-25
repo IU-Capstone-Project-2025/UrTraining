@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, 
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
+from datetime import datetime
 
 
 class User(Base):
@@ -123,50 +124,46 @@ class Training(Base):
     __tablename__ = "trainings"
     
     id = Column(Integer, primary_key=True, index=True)
+    course_id = Column(String, unique=True, index=True, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     
     # Основная информация о курсе
-    activity_type = Column(String(100), nullable=False)
-    program_goal = Column(JSON, nullable=False)  # List[str]
-    training_environment = Column(JSON, nullable=False)  # List[str]
-    difficulty_level = Column(String(50), nullable=False)
-    course_duration_weeks = Column(Integer, nullable=False)
-    weekly_training_frequency = Column(String(50), nullable=False)
-    average_workout_duration = Column(String(50), nullable=False)
-    age_group = Column(JSON, nullable=False)  # List[str]
-    gender_orientation = Column(String(50), nullable=False)
-    physical_limitations = Column(JSON, nullable=True)  # List[str]
-    required_equipment = Column(JSON, nullable=False)  # List[str]
-    course_language = Column(String(50), nullable=False)
-    visual_content = Column(JSON, nullable=False)  # List[str]
-    trainer_feedback_options = Column(JSON, nullable=False)  # List[str]
-    tags = Column(JSON, nullable=True)  # List[str]
+    activity_type = Column(String, default="")
+    program_goal = Column(JSON, default=list)
+    training_environment = Column(JSON, default=list)
+    difficulty_level = Column(String, default="")
+    course_duration_weeks = Column(Integer, default=0)
+    weekly_training_frequency = Column(String, default="")
+    average_workout_duration = Column(String, default="")
+    age_group = Column(JSON, default=list)
+    gender_orientation = Column(String, default="")
+    physical_limitations = Column(JSON, default=list)
+    required_equipment = Column(JSON, default=list)
+    course_language = Column(String, default="")
+    visual_content = Column(JSON, default=list)
+    trainer_feedback_options = Column(JSON, default=list)
+    tags = Column(JSON, default=list)
     
-    # Рейтинги и статистика (заполняются автоматически)
+    # Рейтинги и статистика
     average_course_rating = Column(Float, default=0.0)
     active_participants = Column(Integer, default=0)
     number_of_reviews = Column(Integer, default=0)
     
-    # Данные о тренере (JSON структуры)
-    certification = Column(JSON, nullable=False)  # Certification model
-    experience = Column(JSON, nullable=False)  # Experience model
-    trainer_name = Column(String(100), nullable=False)
+    # Данные о тренере (могут быть NULL)
+    certification = Column(JSON, nullable=True)
+    experience = Column(JSON, nullable=True)
+    trainer_name = Column(String, default="")
     
     # Информация о курсе
-    course_title = Column(String(255), nullable=False)
-    program_description = Column(Text, nullable=False)
+    course_title = Column(String, default="")
+    program_description = Column(Text, default="")
     
-    # План тренировок (JSON структура)
-    training_plan = Column(JSON, nullable=False)  # List[TrainingDay]
+    # План тренировок
+    training_plan = Column(JSON, default=list)
     
-    # Уникальный идентификатор курса (UUID)
-    course_id = Column(String(255), nullable=False, unique=True)
+    # Временные метки
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Дополнительные поля для работы с базой данных
-    is_active = Column(Boolean, default=True)
-    
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
-    # Relationship to user
+    # Связь с пользователем
     user = relationship("User", back_populates="trainings") 

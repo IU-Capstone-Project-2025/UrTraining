@@ -5,9 +5,9 @@ from enum import Enum
 
 class Certification(BaseModel):
     """Модель для сертификации тренера"""
-    Type: str = Field(..., description="Тип сертификации (ISSA, ACE, NASM и т.д.)")
-    Level: str = Field(..., description="Уровень сертификации (Basic, Advanced, Master)")
-    Specialization: str = Field(..., description="Специализация")
+    Type: str = Field(default="", description="Тип сертификации (ISSA, ACE, NASM и т.д.)")
+    Level: str = Field(default="", description="Уровень сертификации (Basic, Advanced, Master)")
+    Specialization: str = Field(default="", description="Специализация")
     
     class Config:
         use_enum_values = True
@@ -15,10 +15,10 @@ class Certification(BaseModel):
 
 class Experience(BaseModel):
     """Модель для опыта тренера"""
-    Years: int = Field(..., description="Количество лет опыта")
-    Specialization: str = Field(..., description="Специализация")
-    Courses: int = Field(..., description="Количество созданных курсов")
-    Rating: float = Field(..., description="Рейтинг тренера")
+    Years: int = Field(default=0, description="Количество лет опыта")
+    Specialization: str = Field(default="", description="Специализация")
+    Courses: int = Field(default=0, description="Количество созданных курсов")
+    Rating: float = Field(default=0.0, description="Рейтинг тренера")
     
     class Config:
         use_enum_values = True
@@ -26,12 +26,12 @@ class Experience(BaseModel):
 
 class Exercise(BaseModel):
     """Модель для упражнения"""
-    exercise: str = Field(..., description="Название упражнения")
-    repeats: str = Field(..., description="Количество повторений")
-    sets: str = Field(..., description="Количество подходов")
-    duration: str = Field(..., description="Продолжительность")
-    rest: str = Field(..., description="Время отдыха")
-    description: str = Field(..., description="Описание упражнения")
+    exercise: str = Field(default="", description="Название упражнения")
+    repeats: str = Field(default="", description="Количество повторений")
+    sets: str = Field(default="", description="Количество подходов")
+    duration: str = Field(default="", description="Продолжительность")
+    rest: str = Field(default="", description="Время отдыха")
+    description: str = Field(default="", description="Описание упражнения")
     
     class Config:
         use_enum_values = True
@@ -39,8 +39,8 @@ class Exercise(BaseModel):
 
 class TrainingDay(BaseModel):
     """Модель для тренировочного дня"""
-    title: str = Field(..., description="Название дня тренировки")
-    exercises: List[Exercise] = Field(..., description="Список упражнений")
+    title: str = Field(default="", description="Название дня тренировки")
+    exercises: List[Exercise] = Field(default_factory=list, description="Список упражнений")
     
     class Config:
         use_enum_values = True
@@ -94,107 +94,114 @@ class Training(BaseModel):
 
 class TrainingCreate(BaseModel):
     """Модель для создания новой тренировки"""
-    activity_type: str = Field(..., description="Тип активности")
-    program_goal: List[str] = Field(..., description="Цели программы")
-    training_environment: List[str] = Field(..., description="Среда тренировок")
-    difficulty_level: str = Field(..., description="Уровень сложности")
-    course_duration_weeks: int = Field(..., description="Продолжительность курса в неделях")
-    weekly_training_frequency: str = Field(..., description="Частота тренировок в неделю")
-    average_workout_duration: str = Field(..., description="Средняя продолжительность тренировки")
-    age_group: List[str] = Field(..., description="Возрастная группа")
-    gender_orientation: str = Field(..., description="Гендерная ориентация")
-    physical_limitations: List[str] = Field(default_factory=list, description="Физические ограничения")
-    required_equipment: List[str] = Field(..., description="Необходимое оборудование")
-    course_language: str = Field(..., description="Язык курса")
-    visual_content: List[str] = Field(..., description="Визуальный контент")
-    trainer_feedback_options: List[str] = Field(..., description="Варианты обратной связи от тренера")
-    tags: List[str] = Field(default_factory=list, description="Теги")
+    activity_type: str = Field(default="", alias="Activity Type", description="Тип активности")
+    program_goal: List[str] = Field(default_factory=list, alias="Program Goal", description="Цели программы")
+    training_environment: List[str] = Field(default_factory=list, alias="Training Environment", description="Среда тренировок")
+    difficulty_level: str = Field(default="", alias="Difficulty Level", description="Уровень сложности")
+    course_duration_weeks: int = Field(default=0, alias="Course Duration (weeks)", description="Продолжительность курса в неделях")
+    weekly_training_frequency: str = Field(default="", alias="Weekly Training Frequency", description="Частота тренировок в неделю")
+    average_workout_duration: str = Field(default="", alias="Average Workout Duration", description="Средняя продолжительность тренировки")
+    age_group: List[str] = Field(default_factory=list, alias="Age Group", description="Возрастная группа")
+    gender_orientation: str = Field(default="", alias="Gender Orientation", description="Гендерная ориентация")
+    physical_limitations: List[str] = Field(default_factory=list, alias="Physical Limitations", description="Физические ограничения")
+    required_equipment: List[str] = Field(default_factory=list, alias="Required Equipment", description="Необходимое оборудование")
+    course_language: str = Field(default="", alias="Course Language", description="Язык курса")
+    visual_content: List[str] = Field(default_factory=list, alias="Visual Content", description="Визуальный контент")
+    trainer_feedback_options: List[str] = Field(default_factory=list, alias="Trainer Feedback Options", description="Варианты обратной связи от тренера")
+    tags: List[str] = Field(default_factory=list, alias="Tags", description="Теги")
     
-    # Данные о тренере
-    certification: Certification = Field(..., description="Сертификация тренера")
-    experience: Experience = Field(..., description="Опыт тренера")
-    trainer_name: str = Field(..., description="Имя тренера")
+    # Рейтинги и статистика с дефолтными значениями
+    average_course_rating: float = Field(default=0.0, alias="Average Course Rating", description="Средний рейтинг курса")
+    active_participants: int = Field(default=0, alias="Active Participants", description="Активные участники")
+    number_of_reviews: int = Field(default=0, alias="Number of Reviews", description="Количество отзывов")
+    
+    # Данные о тренере с дефолтными значениями
+    certification: Optional[Certification] = Field(default=None, alias="Certification", description="Сертификация тренера")
+    experience: Optional[Experience] = Field(default=None, alias="Experience", description="Опыт тренера")
+    trainer_name: str = Field(default="", alias="Trainer Name", description="Имя тренера")
     
     # Информация о курсе
-    course_title: str = Field(..., description="Название курса")
-    program_description: str = Field(..., description="Описание программы")
+    course_title: str = Field(default="", alias="Course Title", description="Название курса")
+    program_description: str = Field(default="", alias="Program Description", description="Описание программы")
     
     # План тренировок
-    training_plan: List[TrainingDay] = Field(..., description="План тренировок")
+    training_plan: List[TrainingDay] = Field(default_factory=list, alias="training_plan", description="План тренировок")
     
     class Config:
         use_enum_values = True
+        populate_by_name = True
 
 
 class TrainingUpdate(BaseModel):
     """Модель для обновления тренировки"""
-    activity_type: Optional[str] = Field(None, description="Тип активности")
-    program_goal: Optional[List[str]] = Field(None, description="Цели программы")
-    training_environment: Optional[List[str]] = Field(None, description="Среда тренировок")
-    difficulty_level: Optional[str] = Field(None, description="Уровень сложности")
-    course_duration_weeks: Optional[int] = Field(None, description="Продолжительность курса в неделях")
-    weekly_training_frequency: Optional[str] = Field(None, description="Частота тренировок в неделю")
-    average_workout_duration: Optional[str] = Field(None, description="Средняя продолжительность тренировки")
-    age_group: Optional[List[str]] = Field(None, description="Возрастная группа")
-    gender_orientation: Optional[str] = Field(None, description="Гендерная ориентация")
-    physical_limitations: Optional[List[str]] = Field(None, description="Физические ограничения")
-    required_equipment: Optional[List[str]] = Field(None, description="Необходимое оборудование")
-    course_language: Optional[str] = Field(None, description="Язык курса")
-    visual_content: Optional[List[str]] = Field(None, description="Визуальный контент")
-    trainer_feedback_options: Optional[List[str]] = Field(None, description="Варианты обратной связи от тренера")
-    tags: Optional[List[str]] = Field(None, description="Теги")
+    activity_type: Optional[str] = Field(None, alias="Activity Type", description="Тип активности")
+    program_goal: Optional[List[str]] = Field(None, alias="Program Goal", description="Цели программы")
+    training_environment: Optional[List[str]] = Field(None, alias="Training Environment", description="Среда тренировок")
+    difficulty_level: Optional[str] = Field(None, alias="Difficulty Level", description="Уровень сложности")
+    course_duration_weeks: Optional[int] = Field(None, alias="Course Duration (weeks)", description="Продолжительность курса в неделях")
+    weekly_training_frequency: Optional[str] = Field(None, alias="Weekly Training Frequency", description="Частота тренировок в неделю")
+    average_workout_duration: Optional[str] = Field(None, alias="Average Workout Duration", description="Средняя продолжительность тренировки")
+    age_group: Optional[List[str]] = Field(None, alias="Age Group", description="Возрастная группа")
+    gender_orientation: Optional[str] = Field(None, alias="Gender Orientation", description="Гендерная ориентация")
+    physical_limitations: Optional[List[str]] = Field(None, alias="Physical Limitations", description="Физические ограничения")
+    required_equipment: Optional[List[str]] = Field(None, alias="Required Equipment", description="Необходимое оборудование")
+    course_language: Optional[str] = Field(None, alias="Course Language", description="Язык курса")
+    visual_content: Optional[List[str]] = Field(None, alias="Visual Content", description="Визуальный контент")
+    trainer_feedback_options: Optional[List[str]] = Field(None, alias="Trainer Feedback Options", description="Варианты обратной связи от тренера")
+    tags: Optional[List[str]] = Field(None, alias="Tags", description="Теги")
     
     # Данные о тренере
-    certification: Optional[Certification] = Field(None, description="Сертификация тренера")
-    experience: Optional[Experience] = Field(None, description="Опыт тренера")
-    trainer_name: Optional[str] = Field(None, description="Имя тренера")
+    certification: Optional[Certification] = Field(None, alias="Certification", description="Сертификация тренера")
+    experience: Optional[Experience] = Field(None, alias="Experience", description="Опыт тренера")
+    trainer_name: Optional[str] = Field(None, alias="Trainer Name", description="Имя тренера")
     
     # Информация о курсе
-    course_title: Optional[str] = Field(None, description="Название курса")
-    program_description: Optional[str] = Field(None, description="Описание программы")
+    course_title: Optional[str] = Field(None, alias="Course Title", description="Название курса")
+    program_description: Optional[str] = Field(None, alias="Program Description", description="Описание программы")
     
     # План тренировок
-    training_plan: Optional[List[TrainingDay]] = Field(None, description="План тренировок")
+    training_plan: Optional[List[TrainingDay]] = Field(None, alias="training_plan", description="План тренировок")
     
     class Config:
         use_enum_values = True
+        populate_by_name = True
 
 
 class TrainingResponse(BaseModel):
     """Модель для ответа с дополнительными полями"""
     # Основная информация о курсе
-    activity_type: str = Field(..., description="Тип активности")
-    program_goal: List[str] = Field(..., description="Цели программы")
-    training_environment: List[str] = Field(..., description="Среда тренировок")
-    difficulty_level: str = Field(..., description="Уровень сложности")
-    course_duration_weeks: int = Field(..., description="Продолжительность курса в неделях")
-    weekly_training_frequency: str = Field(..., description="Частота тренировок в неделю")
-    average_workout_duration: str = Field(..., description="Средняя продолжительность тренировки")
-    age_group: List[str] = Field(..., description="Возрастная группа")
-    gender_orientation: str = Field(..., description="Гендерная ориентация")
-    physical_limitations: List[str] = Field(..., description="Физические ограничения")
-    required_equipment: List[str] = Field(..., description="Необходимое оборудование")
-    course_language: str = Field(..., description="Язык курса")
-    visual_content: List[str] = Field(..., description="Визуальный контент")
-    trainer_feedback_options: List[str] = Field(..., description="Варианты обратной связи от тренера")
-    tags: List[str] = Field(..., description="Теги")
+    activity_type: str = Field(..., alias="Activity Type", description="Тип активности")
+    program_goal: List[str] = Field(..., alias="Program Goal", description="Цели программы")
+    training_environment: List[str] = Field(..., alias="Training Environment", description="Среда тренировок")
+    difficulty_level: str = Field(..., alias="Difficulty Level", description="Уровень сложности")
+    course_duration_weeks: int = Field(..., alias="Course Duration (weeks)", description="Продолжительность курса в неделях")
+    weekly_training_frequency: str = Field(..., alias="Weekly Training Frequency", description="Частота тренировок в неделю")
+    average_workout_duration: str = Field(..., alias="Average Workout Duration", description="Средняя продолжительность тренировки")
+    age_group: List[str] = Field(..., alias="Age Group", description="Возрастная группа")
+    gender_orientation: str = Field(..., alias="Gender Orientation", description="Гендерная ориентация")
+    physical_limitations: List[str] = Field(..., alias="Physical Limitations", description="Физические ограничения")
+    required_equipment: List[str] = Field(..., alias="Required Equipment", description="Необходимое оборудование")
+    course_language: str = Field(..., alias="Course Language", description="Язык курса")
+    visual_content: List[str] = Field(..., alias="Visual Content", description="Визуальный контент")
+    trainer_feedback_options: List[str] = Field(..., alias="Trainer Feedback Options", description="Варианты обратной связи от тренера")
+    tags: List[str] = Field(..., alias="Tags", description="Теги")
     
     # Рейтинги и статистика
-    average_course_rating: float = Field(..., description="Средний рейтинг курса")
-    active_participants: int = Field(..., description="Активные участники")
-    number_of_reviews: int = Field(..., description="Количество отзывов")
+    average_course_rating: float = Field(..., alias="Average Course Rating", description="Средний рейтинг курса")
+    active_participants: int = Field(..., alias="Active Participants", description="Активные участники")
+    number_of_reviews: int = Field(..., alias="Number of Reviews", description="Количество отзывов")
     
     # Данные о тренере
-    certification: Certification = Field(..., description="Сертификация тренера")
-    experience: Experience = Field(..., description="Опыт тренера")
-    trainer_name: str = Field(..., description="Имя тренера")
+    certification: Certification = Field(..., alias="Certification", description="Сертификация тренера")
+    experience: Experience = Field(..., alias="Experience", description="Опыт тренера")
+    trainer_name: str = Field(..., alias="Trainer Name", description="Имя тренера")
     
     # Информация о курсе
-    course_title: str = Field(..., description="Название курса")
-    program_description: str = Field(..., description="Описание программы")
+    course_title: str = Field(..., alias="Course Title", description="Название курса")
+    program_description: str = Field(..., alias="Program Description", description="Описание программы")
     
     # План тренировок
-    training_plan: List[TrainingDay] = Field(..., description="План тренировок")
+    training_plan: List[TrainingDay] = Field(..., alias="training_plan", description="План тренировок")
     
     # ID курса
     id: str = Field(..., description="Уникальный идентификатор курса")
@@ -208,6 +215,7 @@ class TrainingResponse(BaseModel):
     class Config:
         use_enum_values = True
         from_attributes = True
+        populate_by_name = True
 
 
 # Deprecated models for backwards compatibility
