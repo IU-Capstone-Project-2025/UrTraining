@@ -29,6 +29,62 @@
           "required": true
         },
         "description": "User's unique username"
+      },
+      "country": {
+        "type": "string",
+        "possible_values": [
+          "kz",
+          "ru", 
+          "us"
+        ],
+        "descriptions": {
+          "kz": "Kazakhstan",
+          "ru": "Russia",
+          "us": "United States"
+        },
+        "validation": {
+          "required": false
+        },
+        "description": "User's country code"
+      },
+      "city": {
+        "type": "string",
+        "possible_values": [
+          "Almaty",
+          "Nur-Sultan",
+          "Shymkent",
+          "Aktobe",
+          "Taraz",
+          "Moscow",
+          "Saint Petersburg",
+          "Kazan",
+          "Innopolis",
+          "Novosibirsk",
+          "Yekaterinburg",
+          "Nizhny Novgorod",
+          "Rostov-on-Don",
+          "New York",
+          "Los Angeles",
+          "Chicago",
+          "Houston",
+          "Phoenix",
+          "Philadelphia",
+          "San Antonio",
+          "San Diego",
+          "Dallas",
+          "San Francisco"
+        ],
+        "country_mapping": {
+          "kz": ["Almaty", "Nur-Sultan", "Shymkent", "Aktobe", "Taraz"],
+          "ru": ["Moscow", "Saint Petersburg", "Kazan", "Innopolis", "Novosibirsk", "Yekaterinburg", "Nizhny Novgorod", "Rostov-on-Don"],
+          "us": ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", "San Antonio", "San Diego", "Dallas", "San Francisco"]
+        },
+        "validation": {
+          "required": false,
+          "dependent_on": "country",
+          "validation_rule": "city must belong to the selected country"
+        },
+        "description": "User's city - must match the selected country"
       }
     }
   },
@@ -304,6 +360,7 @@
       "string_lengths": {
         "username": { "min": 3, "max": 50 },
         "full_name": { "min": 2, "max": 100 },
+        "city": { "min": 1, "max": 100 },
         "health_details": { "max": 1000 }
       }
     }
@@ -311,6 +368,8 @@
   "default_values": {
     "description": "Default values for optional fields",
     "defaults": {
+      "user_data.country": null,
+      "user_data.city": null,
       "training_profile.basic_information.gender": "male",
       "training_profile.basic_information.age": 25,
       "training_profile.basic_information.height_cm": 170,

@@ -22,7 +22,7 @@ def get_user_by_id(db: Session, user_id: int) -> Optional[User]:
     return db.query(User).filter(User.id == user_id).first()
 
 
-def create_user(db: Session, username: str, full_name: str, email: str, password: str, is_admin: bool = False, trainer_profile: Dict[str, Any] = None) -> User:
+def create_user(db: Session, username: str, full_name: str, email: str, password: str, is_admin: bool = False, trainer_profile: Dict[str, Any] = None, country: str = None, city: str = None) -> User:
     hashed_password = pwd_context.hash(password)
     db_user = User(
         username=username,
@@ -30,7 +30,9 @@ def create_user(db: Session, username: str, full_name: str, email: str, password
         email=email,
         hashed_password=hashed_password,
         is_admin=is_admin,
-        trainer_profile=trainer_profile
+        trainer_profile=trainer_profile,
+        country=country,
+        city=city
     )
     db.add(db_user)
     db.commit()
@@ -55,7 +57,7 @@ def authenticate_user(db: Session, email: str, password: str) -> Optional[User]:
     return user
 
 
-def update_user_profile(db: Session, user_id: int, username: Optional[str] = None, full_name: Optional[str] = None, email: Optional[str] = None) -> Optional[User]:
+def update_user_profile(db: Session, user_id: int, username: Optional[str] = None, full_name: Optional[str] = None, email: Optional[str] = None, country: Optional[str] = None, city: Optional[str] = None) -> Optional[User]:
     user = get_user_by_id(db, user_id)
     if not user:
         return None
@@ -66,6 +68,10 @@ def update_user_profile(db: Session, user_id: int, username: Optional[str] = Non
         user.full_name = full_name
     if email:
         user.email = email
+    if country is not None:
+        user.country = country
+    if city is not None:
+        user.city = city
     
     user.updated_at = datetime.utcnow()
     db.commit()
