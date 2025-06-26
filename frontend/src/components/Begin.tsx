@@ -17,6 +17,9 @@ const Begin = ({ css_style, button_link, text }: BeginProps) => {
         <div className={"begin basic-page " + css_style}>
             <div className="begin__container">
                 <div className="begin__title">
+                    <div style={{ position: "relative" }}>
+                        <div className="assets__background__gradient" style={{ top: "0", right: "0" }}></div>
+                    </div>
                     <h1>
                         {text.title}
                     </h1>

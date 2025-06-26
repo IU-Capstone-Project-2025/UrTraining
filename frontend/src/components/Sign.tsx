@@ -65,8 +65,8 @@ const Sign = (props: SignProps) => {
                             onClick={handleSubmit}
                         >Let's start!</button>
                     </form>
-                    <div className='signup__form-area__divider'></div>
-                    <div className='signup__form-area__social'>
+                    <div className='signup__form-area__divider' style={{display: "none"}}></div>
+                    <div className='signup__form-area__social' style={{display: "none"}}>
                         {props.social_links.map((social: SocialLink, value: number) => {
                             return (<button key={value} className='btn-basic-white'>
                                 {social.placeholder}
