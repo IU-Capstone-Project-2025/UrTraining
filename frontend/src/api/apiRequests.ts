@@ -8,7 +8,7 @@ import type {
 } from "../components/interface/interfaces";
 import type { SurveyProp } from "../components/interface/surveyInterface";
 
-const endpoint = "http://localhost:8000";
+const endpoint = import.meta.env.VITE_API_URL;
 
 export async function userInfoRequest(token: String): Promise<String> {
     try {
@@ -34,6 +34,23 @@ export async function surveyDataRequest(token: String): Promise<SurveyProp> {
             },
         });
         return resp.data as unknown as SurveyProp;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function trainingsDataRequest(token: String): Promise<any> {
+    try {
+        const resp = await axios.get<String>(`${endpoint}/trainings`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        console.log("бро красава")
+        return resp.data;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             throw error;

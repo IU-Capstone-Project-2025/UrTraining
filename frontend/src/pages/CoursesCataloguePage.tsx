@@ -1,25 +1,25 @@
 import React from 'react';
-import courses from '../components/data/selected_courses_with_ids_plus_plan.json';
+//import courses from '../components/data/selected_courses_with_ids_plus_plan.json';
 import { transformRawCourseData } from '../utils/transformRawCouseData';
 import '../css/CoursesCatalogue.css';
 import CourseCatalogue from '../components/CourseCatalogue';
+import AuthContext from "../components/context/AuthContext";
+import { trainingsDataRequest } from "../api/apiRequests";
+import { useQuery } from "@tanstack/react-query";
+import { useContext } from "react";
 
 const CoursesCataloguePage = () => {
-  const catalogCourses = courses.map(course => {
-    const transformed = transformRawCourseData(course);
-    return {
-      id: course.id,
-      title: transformed.course_info.title,
-      author: transformed.course_info.author,
-      tags: transformed.header_badges.training_type.map(t => t.badge_text),
-      rating: transformed.course_info.rating,
-      reviews: transformed.course_info.reviews
-    };
-  });
+
+  const authData = useContext(AuthContext)
+
+  const { data: trainingsData = [], isLoading, status } = useQuery<any, Error>({
+    queryKey: ['formTrainings'],
+    queryFn: () => trainingsDataRequest(authData.access_token)
+  })
 
   return (
     <>
-      <CourseCatalogue courses={courses}/>
+      <CourseCatalogue courses={trainingsData}/>
     </>
   );
 };
