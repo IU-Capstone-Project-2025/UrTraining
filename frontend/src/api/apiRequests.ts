@@ -8,7 +8,7 @@ import type {
 } from "../components/interface/interfaces";
 import type { SurveyProp } from "../components/interface/surveyInterface";
 
-const endpoint = "http://localhost:8000";
+const endpoint = import.meta.env.VITE_API_URL;
 
 export async function userInfoRequest(token: String): Promise<String> {
     try {
