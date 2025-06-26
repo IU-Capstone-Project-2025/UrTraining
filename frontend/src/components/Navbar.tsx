@@ -19,7 +19,7 @@ const Navbar = (data: UserProp) => {
           </div>
         </Link>
         <div className='navbar__links'>
-          <Link to="/">
+          <Link to="/" style={{display: "none"}}>
             Profile
           </Link>
           <Link to="/catalogue">
@@ -31,7 +31,7 @@ const Navbar = (data: UserProp) => {
           <Link to="/">
             Upload
           </Link>
-          <Link to="/">
+          <Link to="http://t.me/mescudiway">
             About Us
           </Link>
         </div>
