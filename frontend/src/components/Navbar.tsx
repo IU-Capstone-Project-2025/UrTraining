@@ -22,10 +22,10 @@ const Navbar = (data: UserProp) => {
           <Link to="/">
             Profile
           </Link>
-          <Link to="/">
+          <Link to="/catalogue">
             Catalogue
           </Link>
-          <Link to="/">
+          <Link to="/recommendations">
             Recommendations
           </Link>
           <Link to="/">
