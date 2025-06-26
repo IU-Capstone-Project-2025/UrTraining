@@ -40,7 +40,7 @@ export const SelectInputTemplate = (props: InputField) => {
             defaultValue={"select"}
         >
             <option disabled value={"select"}>Select... </option>
-            {props.options === "" ? [] : props.options.map((option: SelectOption, value: number) => {
+            {props.options.length === 0 ? [] : props.options.map((option: SelectOption, value: number) => {
                 return (
                     <option key={value} value={option.value}>
                         {option.placeholder}
@@ -54,7 +54,7 @@ export const SelectInputTemplate = (props: InputField) => {
 export const RadioInputTemplate = (props: InputField) => {
     return (
         <>
-            {(props.options === "" ? [] : props.options).map((option: SelectOption, value: number) => {
+            {(props.options.length === 0 ? [] : props.options).map((option: SelectOption, value: number) => {
                 return (
                     <label key={value} className="radio-basic-black">
                         <input

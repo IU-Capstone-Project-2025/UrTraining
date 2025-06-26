@@ -52,7 +52,7 @@ export function transformRawCourseData(serverData: any): TrainingData {
 
   const trainingInfoBadges: Badge[] = [
     {
-      badge_text: serverData["Difficulty Level"]?.toLowerCase() || "all levels",
+      badge_text: serverData["Difficulty Level"]?.toLowerCase().split(/[,(]/)[0].trim() || "all levels",
       badge_color: "#696969"
     },
     {
@@ -71,7 +71,7 @@ export function transformRawCourseData(serverData: any): TrainingData {
 
   const equipmentBadges: Badge[] = serverData["Required Equipment"]?.length 
     ? serverData["Required Equipment"].map((eq: string) => ({
-        badge_text: eq,
+        badge_text: eq.split(/[,(]/)[0].trim(),
         badge_color: "#888EE3"
       }))
     : [{

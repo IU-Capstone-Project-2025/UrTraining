@@ -17,7 +17,7 @@ const CourseCatalogue = (data: any) => {
 
           {data.courses.map((course: any) => (
             <Link
-              to={`/course/${data.id}`} key={course.id}
+              to={`/course/${course.id}`} key={course.id}
             >
               <CourseCard {...transformRawCourseData(course)} />
             </Link>

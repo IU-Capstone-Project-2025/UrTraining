@@ -40,7 +40,7 @@ export function transformToApiPayload(formData: FlatFormData) {
 
   return {
     full_name: `${name} ${surname}`,
-    email: 'test@example.com',
+    email: email,
     training_profile: {
       basic_information: {
         gender,

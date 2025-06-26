@@ -1151,7 +1151,7 @@ text
 This endpoint automatically fills the following fields from the authenticated user's trainer profile:
 
 #### Auto-filled in `coach_data`:
-- `name`: User's name
+- `name`: User's full name (from user.full_name)
 - `profile_picture`: From trainer_profile.profile_picture
 - `rating`: From trainer_profile.experience.rating (default: 5.0)
 - `reviews`: From trainer_profile.reviews_count (default: 0)
@@ -1159,7 +1159,7 @@ This endpoint automatically fills the following fields from the authenticated us
 - `badges`: From trainer_profile.badges + any additional badges from request
 
 #### Auto-filled in `course_info`:
-- `author`: User's name
+- `author`: User's full name (from user.full_name)
 - `rating`: From trainer_profile.experience.rating (if not provided in request)
 - `reviews`: From trainer_profile.reviews_count (if not provided in request)
 
@@ -1213,14 +1213,14 @@ This endpoint automatically fills the following fields from the authenticated us
   "course_info": {
     "id": "course_001",
     "title": "Complete Beginner Workout",
-    "author": "John Smith",  // Auto-filled from user.name
+    "author": "John Smith",  // Auto-filled from user.full_name
     "description": "A comprehensive workout program for beginners",
     "rating": 4.8,  // Auto-filled from trainer_profile.experience.rating
     "reviews": 25   // Auto-filled from trainer_profile.reviews_count
   },
   "training_plan": [...],
   "coach_data": {
-    "name": "John Smith",  // Auto-filled from user.name
+    "name": "John Smith",  // Auto-filled from user.full_name
     "profile_picture": "https://example.com/profile.jpg",  // Auto-filled
     "rating": 4.8,  // Auto-filled from trainer_profile.experience.rating
     "reviews": 25,  // Auto-filled from trainer_profile.reviews_count

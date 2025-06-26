@@ -17,16 +17,21 @@ from .training import (
     TrainingCreate,
     TrainingUpdate,
     TrainingResponse,
+    Certification,
+    Experience,
+    Exercise,
+    TrainingDay,
+    TrainerProfile,
+    # Legacy models for backward compatibility
     Badge,
     HeaderBadges,
     CourseInfo,
-    Exercise,
-    TrainingDay,
     CoachData,
     TrainingMetadata,
+    LegacyTraining,
+    # Aliases for backward compatibility
     TrainerCertification,
-    TrainerExperience,
-    TrainerProfile
+    TrainerExperience
 )
 
 __all__ = [
@@ -51,19 +56,24 @@ __all__ = [
     "SessionDuration",
     "TrainingGoal",
     
-    # Pydantic models for Training
+    # New Training models
     "TrainingModel",
     "TrainingCreate",
     "TrainingUpdate",
     "TrainingResponse",
+    "Certification",
+    "Experience",
+    "Exercise",
+    "TrainingDay",
+    "TrainerProfile",
+    
+    # Legacy Training models (deprecated)
     "Badge",
     "HeaderBadges",
     "CourseInfo",
-    "Exercise",
-    "TrainingDay",
     "CoachData",
     "TrainingMetadata",
+    "LegacyTraining",
     "TrainerCertification",
-    "TrainerExperience",
-    "TrainerProfile"
+    "TrainerExperience"
 ] 
