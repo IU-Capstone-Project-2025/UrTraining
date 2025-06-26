@@ -16,7 +16,7 @@ const NavbarPage = () => {
     })  
 
     const userData = data as unknown as UserProp; 
-
+    
     return (
         <>
             <Navbar {...userData}/>

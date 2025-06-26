@@ -49,7 +49,7 @@ export async function trainingsDataRequest(token: String): Promise<any> {
                 Authorization: `Bearer ${token}`,
             },
         });
-        console.log("бро красава")
+        // console.log("бро красава")
         return resp.data;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -96,11 +96,11 @@ export async function signInRequest(
 export async function submitSurveyRequest(token: String, data: any) {
     try {
         console.log(data);
-        
+
         const resp = await axios.post(`${endpoint}/user-data`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
-                "Content-Type": 'application/json'
+                "Content-Type": "application/json",
             },
         });
         return resp.data;
