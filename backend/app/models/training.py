@@ -127,6 +127,9 @@ class TrainingCreate(BaseModel):
     # План тренировок
     training_plan: List[TrainingDay] = Field(default_factory=list, alias="training_plan", description="План тренировок")
     
+    # ID курса (опциональный для создания)
+    id: Optional[str] = Field(None, description="Уникальный идентификатор курса из JSON")
+    
     class Config:
         use_enum_values = True
         populate_by_name = True

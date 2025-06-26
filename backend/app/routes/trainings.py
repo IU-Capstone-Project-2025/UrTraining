@@ -27,7 +27,7 @@ router = APIRouter()
 
 # Pydantic модель для краткой информации о тренировке (для каталога)
 class TrainingSummary(BaseModel):
-    id: int
+    id: str  # UUID из JSON
     activity_type: str
     course_title: str
     trainer_name: str
@@ -129,7 +129,7 @@ async def get_trainings_catalog(
 
 @router.get("/{training_id}", response_model=TrainingResponse)
 async def get_training_details(
-    training_id: int,
+    training_id: str,
     db: Session = Depends(get_db)
 ):
     """
@@ -454,7 +454,7 @@ async def create_training_program(
 
 @router.put("/{training_id}", response_model=TrainingResponse)
 async def update_training_program(
-    training_id: int,
+    training_id: str,
     training_data: TrainingUpdate,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -541,7 +541,7 @@ async def update_training_program(
 
 @router.delete("/{training_id}")
 async def delete_training_program(
-    training_id: int,
+    training_id: str,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -608,7 +608,7 @@ async def get_my_trainings(
         training_summaries = []
         for training in trainings:
             training_summaries.append(TrainingSummary(
-                id=training.id,
+                id=training.course_id,  # UUID из JSON вместо database id
                 activity_type=training.activity_type,
                 course_title=training.course_title,
                 trainer_name=training.trainer_name,
