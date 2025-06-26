@@ -31,6 +31,7 @@
 | **height_cm** | integer |                             | Minimum: 100, Maximum: 250 |
 | **weight_kg** | float  |                              | Minimum: 30.0, Maximum: 300.0 |
 
+
 ---
 
 ## 2.2 Training Goals
@@ -91,6 +92,38 @@ Allowed values include the following country objects:
 - `{ "code": "kz", "name": "kazakhstan", "display_name": "Kazakhstan" }`
 - `{ "code": "ru", "name": "russia", "display_name": "Russia" }`
 - `{ "code": "us", "name": "usa", "display_name": "United States" }`
+
+### Available Cities
+
+#### Kazakhstan
+- Almaty (`ALMATY`)
+- Nur-Sultan (`ASTANA`)
+- Shymkent (`SHYMKENT`)
+- Aktobe (`AKTOBE`)
+- Taraz (`TARAZ`)
+
+#### Russia
+- Moscow (`MOSCOW`)
+- Saint Petersburg (`SAINT_PETERSBURG`)
+- Kazan (`KAZAN`)
+- Innopolis (`INNOPOLIS`)
+- Novosibirsk (`NOVOSIBIRSK`)
+- Yekaterinburg (`YEKATERINBURG`)
+- Nizhny Novgorod (`NIZHNY_NOVGOROD`)
+- Rostov-on-Don (`ROSTOV_ON_DON`)
+
+#### United States
+- New York (`NEW_YORK`)
+- Los Angeles (`LOS_ANGELES`)
+- Chicago (`CHICAGO`)
+- Houston (`HOUSTON`)
+- Phoenix (`PHOENIX`)
+- Philadelphia (`PHILADELPHIA`)
+- San Antonio (`SAN_ANTONIO`)
+- San Diego (`SAN_DIEGO`)
+- Dallas (`DALLAS`)
+- San Francisco (`SAN_FRANCISCO`)
+
 
 ---
 
