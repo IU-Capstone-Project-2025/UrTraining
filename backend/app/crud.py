@@ -238,9 +238,9 @@ def update_course_progress(db: Session, user_id: int, course_id: int, progress_p
 
 
 # Training CRUD operations
-def get_training_by_id(db: Session, training_id: int) -> Optional[Training]:
-    """Получить тренировку по ID"""
-    return db.query(Training).filter(Training.id == training_id).first()
+def get_training_by_id(db: Session, training_id: str) -> Optional[Training]:
+    """Получить тренировку по course_id (UUID из JSON)"""
+    return db.query(Training).filter(Training.course_id == training_id).first()
 
 
 def get_trainings_summary(db: Session, skip: int = 0, limit: int = 100) -> List[Training]:
@@ -337,8 +337,8 @@ def create_training(db: Session, training_data: dict, user_id: int):
         raise e
 
 
-def update_training(db: Session, training_id: int, training_data: Dict[str, Any]) -> Optional[Training]:
-    """Обновить существующую тренировку"""
+def update_training(db: Session, training_id: str, training_data: Dict[str, Any]) -> Optional[Training]:
+    """Обновить существующую тренировку по course_id"""
     training = get_training_by_id(db, training_id)
     if not training:
         return None
@@ -363,8 +363,8 @@ def update_training(db: Session, training_id: int, training_data: Dict[str, Any]
     return training
 
 
-def delete_training(db: Session, training_id: int) -> bool:
-    """Удаление тренировки"""
+def delete_training(db: Session, training_id: str) -> bool:
+    """Удаление тренировки по course_id"""
     training = get_training_by_id(db, training_id)
     if not training:
         return False
@@ -382,6 +382,6 @@ def search_trainings(db: Session, query: str, skip: int = 0, limit: int = 100) -
     ).offset(skip).limit(limit).all()
 
 
-def get_training_with_trainer_info(db: Session, training_id: int) -> Optional[Training]:
-    """Получить тренировку (в новом формате уже содержит всю информацию о тренере)"""
+def get_training_with_trainer_info(db: Session, training_id: str) -> Optional[Training]:
+    """Получить тренировку по course_id (в новом формате уже содержит всю информацию о тренере)"""
     return get_training_by_id(db, training_id) 

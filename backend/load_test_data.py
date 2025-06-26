@@ -155,7 +155,7 @@ def load_test_data() -> bool:
                 "course_title": training.get("Course Title", ""),
                 "program_description": training.get("Program Description", ""),
                 "training_plan": training.get("training_plan", []),
-                "course_id": training.get("id", "")
+                "id": training.get("id", "")
             }
             api_data.append(api_training)
         
@@ -170,8 +170,10 @@ def load_test_data() -> bool:
         if check_response.status_code == 200:
             existing_trainings = check_response.json()
             if existing_trainings and len(existing_trainings) > 0:
-                print(f"Found {len(existing_trainings)} existing training programs. Skipping data load.")
-                return True
+                print(f"Found {len(existing_trainings)} existing training programs.")
+                print("WARNING: Forcing data reload to fix UUID mapping issue!")
+                # Skip the return to force reload
+                # return True
         
         # Send POST request to API
         print(f"Sending data to {API_BASE_URL}{TRAININGS_ENDPOINT}...")
