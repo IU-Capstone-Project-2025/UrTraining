@@ -8,7 +8,7 @@ from app.database import get_db
 from app.crud import get_training_profile, update_user_profile, update_training_profile, get_user_by_id
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field, validator
-from typing import Optional, List
+from typing import Optional, List, Dict
 from enum import Enum
 import json
 import os
@@ -18,6 +18,73 @@ from app.database import engine
 from app.models.database_models import Base
 
 # Enums for validation
+class CountryEnum(str, Enum):
+    kz = "kz"
+    ru = "ru"
+    us = "us"
+
+class CityEnum(str, Enum):
+    # Kazakhstan cities
+    ALMATY = "Almaty"
+    ASTANA = "Nur-Sultan"
+    SHYMKENT = "Shymkent"
+    AKTOBE = "Aktobe"
+    TARAZ = "Taraz"
+    
+    # Russia cities
+    MOSCOW = "Moscow"
+    SAINT_PETERSBURG = "Saint Petersburg"
+    KAZAN = "Kazan"
+    INNOPOLIS = "Innopolis"
+    NOVOSIBIRSK = "Novosibirsk"
+    YEKATERINBURG = "Yekaterinburg"
+    NIZHNY_NOVGOROD = "Nizhny Novgorod"
+    ROSTOV_ON_DON = "Rostov-on-Don"
+    
+    # United States cities
+    NEW_YORK = "New York"
+    LOS_ANGELES = "Los Angeles"
+    CHICAGO = "Chicago"
+    HOUSTON = "Houston"
+    PHOENIX = "Phoenix"
+    PHILADELPHIA = "Philadelphia"
+    SAN_ANTONIO = "San Antonio"
+    SAN_DIEGO = "San Diego"
+    DALLAS = "Dallas"
+    SAN_FRANCISCO = "San Francisco"
+
+# City-to-country mapping for validation
+CITY_COUNTRY_MAP: Dict[str, str] = {
+    # Kazakhstan
+    "Almaty": "kz",
+    "Nur-Sultan": "kz", 
+    "Shymkent": "kz",
+    "Aktobe": "kz",
+    "Taraz": "kz",
+    
+    # Russia
+    "Moscow": "ru",
+    "Saint Petersburg": "ru",
+    "Kazan": "ru",
+    "Innopolis": "ru", 
+    "Novosibirsk": "ru",
+    "Yekaterinburg": "ru",
+    "Nizhny Novgorod": "ru",
+    "Rostov-on-Don": "ru",
+    
+    # United States
+    "New York": "us",
+    "Los Angeles": "us",
+    "Chicago": "us",
+    "Houston": "us",
+    "Phoenix": "us",
+    "Philadelphia": "us",
+    "San Antonio": "us",
+    "San Diego": "us",
+    "Dallas": "us",
+    "San Francisco": "us",
+}
+
 class GenderEnum(str, Enum):
     male = "male"
     female = "female"
@@ -106,7 +173,39 @@ class UserDataUpdate(BaseModel):
     username: Optional[str] = Field(None, min_length=3, max_length=50)
     full_name: Optional[str] = Field(None, min_length=2, max_length=100)
     email: Optional[str] = None
+    country: Optional[CountryEnum] = None
+    city: Optional[CityEnum] = None
     training_profile: Optional[TrainingProfileUpdate] = None
+    
+    @validator('city')
+    def validate_city_country_match(cls, city, values):
+        """Validate that city belongs to the specified country"""
+        if city is None:
+            return city
+            
+        country = values.get('country')
+        if country is None:
+            # If no country specified, city can be any valid city
+            return city
+            
+        # Check if city belongs to the specified country
+        expected_country = CITY_COUNTRY_MAP.get(city)
+        if expected_country and expected_country != country:
+            city_name = city
+            country_name = country
+            
+            # Get readable country names
+            country_names = {"kz": "Kazakhstan", "ru": "Russia", "us": "United States"}
+            country_display = country_names.get(country, country)
+            expected_country_display = country_names.get(expected_country, expected_country)
+            
+            raise ValueError(
+                f"City '{city_name}' belongs to {expected_country_display}, "
+                f"but country is set to {country_display}. "
+                f"Please choose a city from {country_display} or change the country."
+            )
+        
+        return city
 
 app = FastAPI(
     title="UrTraining Backend API",
@@ -173,6 +272,8 @@ def get_user_data(current_user: dict = Depends(get_current_user), db: Session = 
             "username": current_user["username"],
             "full_name": current_user["full_name"],
             "email": current_user["email"],
+            "country": current_user.get("country"),
+            "city": current_user.get("city"),
             "is_admin": current_user["is_admin"],
             "created_at": current_user["created_at"],
             "updated_at": current_user["updated_at"]
@@ -241,7 +342,7 @@ def update_user_data(
         updated_user = None
         
         # Update basic user information if provided
-        if data.username is not None or data.full_name is not None or data.email is not None:
+        if data.username is not None or data.full_name is not None or data.email is not None or data.country is not None or data.city is not None:
             # Check if new email is already taken by another user
             if data.email and data.email != current_user["email"]:
                 from app.crud import get_user_by_email
@@ -267,7 +368,9 @@ def update_user_data(
                 current_user["id"], 
                 data.username, 
                 data.full_name,
-                data.email
+                data.email,
+                data.country.value if data.country else None,
+                data.city.value if data.city else None
             )
             
             if not updated_user:
@@ -350,7 +453,7 @@ def update_user_data(
         return {
             "message": "User data updated successfully",
             "updated_fields": {
-                "user_profile": bool(data.username is not None or data.full_name is not None or data.email is not None),
+                "user_profile": bool(data.username is not None or data.full_name is not None or data.email is not None or data.country is not None or data.city is not None),
                 "training_profile": bool(data.training_profile is not None)
             }
         }

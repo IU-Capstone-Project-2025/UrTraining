@@ -13,6 +13,8 @@ class User(Base):
     full_name = Column(String(100), nullable=False)
     email = Column(String(255), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
+    country = Column(String(3), nullable=True)  # Country code (kz, ru, us)
+    city = Column(String(100), nullable=True)   # City name
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

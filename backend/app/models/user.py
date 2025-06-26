@@ -1,7 +1,74 @@
-from pydantic import BaseModel, Field
-from typing import List, Optional, Literal
+from pydantic import BaseModel, Field, validator
+from typing import List, Optional, Literal, Dict
 from enum import Enum
 from .training import TrainerProfile
+
+class Country(str, Enum):
+    KAZAKHSTAN = "kz"
+    RUSSIA = "ru"
+    USA = "us"
+
+class City(str, Enum):
+    # Kazakhstan cities
+    ALMATY = "Almaty"
+    ASTANA = "Nur-Sultan"
+    SHYMKENT = "Shymkent"
+    AKTOBE = "Aktobe"
+    TARAZ = "Taraz"
+    
+    # Russia cities
+    MOSCOW = "Moscow"
+    SAINT_PETERSBURG = "Saint Petersburg"
+    KAZAN = "Kazan"
+    INNOPOLIS = "Innopolis"
+    NOVOSIBIRSK = "Novosibirsk"
+    YEKATERINBURG = "Yekaterinburg"
+    NIZHNY_NOVGOROD = "Nizhny Novgorod"
+    ROSTOV_ON_DON = "Rostov-on-Don"
+    
+    # United States cities
+    NEW_YORK = "New York"
+    LOS_ANGELES = "Los Angeles"
+    CHICAGO = "Chicago"
+    HOUSTON = "Houston"
+    PHOENIX = "Phoenix"
+    PHILADELPHIA = "Philadelphia"
+    SAN_ANTONIO = "San Antonio"
+    SAN_DIEGO = "San Diego"
+    DALLAS = "Dallas"
+    SAN_FRANCISCO = "San Francisco"
+
+# City-to-country mapping for validation
+CITY_COUNTRY_MAP: Dict[str, str] = {
+    # Kazakhstan
+    "Almaty": "kz",
+    "Nur-Sultan": "kz", 
+    "Shymkent": "kz",
+    "Aktobe": "kz",
+    "Taraz": "kz",
+    
+    # Russia
+    "Moscow": "ru",
+    "Saint Petersburg": "ru",
+    "Kazan": "ru",
+    "Innopolis": "ru", 
+    "Novosibirsk": "ru",
+    "Yekaterinburg": "ru",
+    "Nizhny Novgorod": "ru",
+    "Rostov-on-Don": "ru",
+    
+    # United States
+    "New York": "us",
+    "Los Angeles": "us",
+    "Chicago": "us",
+    "Houston": "us",
+    "Phoenix": "us",
+    "Philadelphia": "us",
+    "San Antonio": "us",
+    "San Diego": "us",
+    "Dallas": "us",
+    "San Francisco": "us",
+}
 
 class Gender(str, Enum):
     MALE = "male"
@@ -52,6 +119,38 @@ class TrainingGoal(str, Enum):
 class PersonalData(BaseModel):
     username: str = Field(..., min_length=3, max_length=50, description="User's unique username")
     full_name: str = Field(..., min_length=2, max_length=100, description="User's full name")
+    country: Optional[Country] = Field(None, description="User's country")
+    city: Optional[City] = Field(None, description="User's city")
+    
+    @validator('city')
+    def validate_city_country_match(cls, city, values):
+        """Validate that city belongs to the specified country"""
+        if city is None:
+            return city
+            
+        country = values.get('country')
+        if country is None:
+            # If no country specified, city can be any valid city
+            return city
+            
+        # Check if city belongs to the specified country
+        expected_country = CITY_COUNTRY_MAP.get(city)
+        if expected_country and expected_country != country:
+            city_name = city
+            country_name = country
+            
+            # Get readable country names
+            country_names = {"kz": "Kazakhstan", "ru": "Russia", "us": "United States"}
+            country_display = country_names.get(country, country)
+            expected_country_display = country_names.get(expected_country, expected_country)
+            
+            raise ValueError(
+                f"City '{city_name}' belongs to {expected_country_display}, "
+                f"but country is set to {country_display}. "
+                f"Please choose a city from {country_display} or change the country."
+            )
+        
+        return city
 
 class BasicInformation(BaseModel):
     gender: Gender = Field(..., description="User's gender")

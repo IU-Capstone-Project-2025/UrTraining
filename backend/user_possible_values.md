@@ -20,6 +20,32 @@
 - Minimum length: 3 characters
 - Maximum length: 50 characters
 - Unique: Yes (system-wide)
+
+## 4. `country`
+**Type:** `string`
+**Allowed Values:** `"kz"`, `"ru"`, `"us"`
+**Descriptions:**
+- `"kz"` - Kazakhstan
+- `"ru"` - Russia  
+- `"us"` - United States
+**Validation Rules:**
+- Required: No (optional)
+
+## 5. `city`
+**Type:** `string` (enum)
+**Allowed Values:**
+- **Kazakhstan (kz):** `"Almaty"`, `"Nur-Sultan"`, `"Shymkent"`, `"Aktobe"`, `"Taraz"`
+- **Russia (ru):** `"Moscow"`, `"Saint Petersburg"`, `"Kazan"`, `"Innopolis"`, `"Novosibirsk"`, `"Yekaterinburg"`, `"Nizhny Novgorod"`, `"Rostov-on-Don"`
+- **United States (us):** `"New York"`, `"Los Angeles"`, `"Chicago"`, `"Houston"`, `"Phoenix"`, `"Philadelphia"`, `"San Antonio"`, `"San Diego"`, `"Dallas"`, `"San Francisco"`
+
+**Validation Rules:**
+- Required: No (optional)
+- **Cross-validation:** City must belong to the selected country
+  - If country is `"kz"`, only Kazakhstan cities are allowed
+  - If country is `"ru"`, only Russia cities are allowed  
+  - If country is `"us"`, only US cities are allowed
+- If no country is specified, any valid city can be selected
+
 # Training Profile
 
 ## 2.1 Basic Information
@@ -101,6 +127,10 @@ Allowed values include the following country objects:
 - `user_data.email`
 - `user_data.username`
 
+### Optional Fields
+- `user_data.country`
+- `user_data.city`
+
 ### Unique Fields
 - `user_data.email`
 - `user_data.username`
@@ -124,6 +154,10 @@ When a user does not provide certain data in their profile, the system will auto
 ---
 
 ## Data Structure
+
+### Personal Data (personal_data):
+- Country: not specified (null)
+- City: not specified (null)
 
 ### Basic Information (basic_information):
 - Gender: male (`"male"`)

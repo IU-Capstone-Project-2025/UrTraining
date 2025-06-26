@@ -10,7 +10,16 @@ from .user import (
     TrainingLocation,
     LocationDetails,
     SessionDuration,
-    TrainingGoal
+    TrainingGoal,
+    PersonalData,
+    BasicInformation,
+    TrainingExperience,
+    Preferences,
+    Health,
+    TrainingTypes,
+    Country,
+    City,
+    CITY_COUNTRY_MAP
 )
 from .training import (
     Training as TrainingModel,
@@ -55,6 +64,15 @@ __all__ = [
     "LocationDetails",
     "SessionDuration",
     "TrainingGoal",
+    "PersonalData",
+    "BasicInformation",
+    "TrainingExperience",
+    "Preferences",
+    "Health",
+    "TrainingTypes",
+    "Country",
+    "City",
+    "CITY_COUNTRY_MAP",
     
     # New Training models
     "TrainingModel",

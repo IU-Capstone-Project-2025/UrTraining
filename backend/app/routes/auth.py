@@ -94,6 +94,8 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
             "username": user.username,
             "full_name": user.full_name,
             "email": user.email,
+            "country": user.country,
+            "city": user.city,
             "is_admin": user.is_admin,
             "created_at": user.created_at.isoformat() if user.created_at else None,
             "updated_at": user.updated_at.isoformat() if user.updated_at else None
