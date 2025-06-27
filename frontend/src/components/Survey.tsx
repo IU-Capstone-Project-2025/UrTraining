@@ -5,6 +5,7 @@ import { InputTemplates } from './InputTemplates'
 import "../css/Survey.css"
 import type { InputField } from './interface/interfaces';
 import AuthContext from './context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface StepData {
     [key: string]: any;
@@ -12,7 +13,10 @@ interface StepData {
 
 const Survey = (props: SurveyStep) => {
     const [savedData, setSavedData] = useState<StepData>({})
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const stepContext = useContext(SurveyPageContext)
+
+    const navigate = useNavigate();
 
     // Get first and last step
     const first_step = props.steps_total[0].value
@@ -33,9 +37,11 @@ const Survey = (props: SurveyStep) => {
     }
     
     const handleSubmit = () => {
+        setIsSubmitting(true);
         console.log(savedData);
         console.log("Handle submit call");
-        stepContext.submitSurvey(savedData)
+        stepContext.submitSurvey(savedData);
+        navigate('/recommendations');
     }
 
     return (

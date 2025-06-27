@@ -24,7 +24,7 @@ from app.routes.auth import get_current_user
 router = APIRouter()
 
 @router.get("/")
-def get_user_recommendations(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
+async def get_user_recommendations(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
     """Get the recommendations for user considering all the training profile information"""
     try:
         # Get training profile
@@ -124,7 +124,7 @@ def get_user_recommendations(current_user: dict = Depends(get_current_user), db:
 
         for training_id in recommended_ids:
             try:
-                training = get_training_details(training_id=training_id, db=db)
+                training = await get_training_details(training_id=training_id, db=db)
                 recommended_trainings.append(training)
             except HTTPException as e:
                 print(f"Failed to fetch training {training_id}: {e.detail}")

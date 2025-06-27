@@ -43,7 +43,7 @@ class TrainingSummary(BaseModel):
 @router.get("/", response_model=List[TrainingResponse])
 async def get_trainings_catalog(
     skip: int = Query(0, ge=0, description="Количество записей для пропуска"),
-    limit: int = Query(10, ge=1, le=100, description="Максимальное количество записей"),
+    limit: int = Query(100, ge=1, le=100, description="Максимальное количество записей"),
     search: Optional[str] = Query(None, description="Поиск по названию"),
     db: Session = Depends(get_db)
 ):

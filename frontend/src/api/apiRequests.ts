@@ -7,17 +7,18 @@ import type {
     SignUpSuccess,
 } from "../components/interface/interfaces";
 import type { SurveyProp } from "../components/interface/surveyInterface";
+import type { UserProp } from "../components/interface/userInterface";
 
 const endpoint = import.meta.env.VITE_API_URL;
 
-export async function userInfoRequest(token: String): Promise<String> {
+export async function userInfoRequest(token: String): Promise<UserProp> {
     try {
         const resp = await axios.get<String>(`${endpoint}/user-data`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
-        return resp.data;
+        return resp.data as unknown as UserProp;
     } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
             throw error;
@@ -58,6 +59,23 @@ export async function trainingsDataRequest(token: String): Promise<any> {
         throw error;
     }
 }
+
+
+export async function getRecommendations(token: String): Promise<any> {
+    const response = await fetch(`${endpoint}/recommendations`, {
+        headers: {
+        Authorization: `Bearer ${token}`,
+        }
+    });
+    
+    if (!response.ok) {
+        throw new Error('Failed to fetch recommendations');
+    }
+    
+    const data = await response.json();
+    return data.recommendations || [];
+}
+
 
 export async function signUpRequest(
     credentials: CredentialsData
