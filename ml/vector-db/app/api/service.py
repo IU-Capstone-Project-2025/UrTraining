@@ -9,9 +9,11 @@ import numpy as np
 
 from ..services.config import VectorDBConfig, DistanceMetric, IndexType
 from ..services.vector_db import VectorDB
+from ..services.bm25_index import BM25Index
 from ..services.document import Document
 from ..services.embedder.huggingface import HuggingFaceEmbedder
 from ..services.embedder.api import KlusterAIEmbedder
+from ..services.embedder.bm25 import BM25Embedder
 from ..services.embedder.base import BaseEmbedder
 
 logging.basicConfig(level=logging.INFO)
@@ -76,6 +78,12 @@ class VectorDBService:
                     model_name=model_name,
                     dimension=kwargs.get("dimension", 1024),
                 )
+            elif model_type == "bm25":
+                self.embedders[model_name] = BM25Embedder(
+                    k1=kwargs.get("k1", 1.2),
+                    b=kwargs.get("b", 0.75),
+                    epsilon=kwargs.get("epsilon", 0.25),
+                )
             else:
                 raise ValueError(f"Unsupported model type: {model_type}")
         return self.embedders[model_name]
@@ -88,33 +96,43 @@ class VectorDBService:
         index_type: Optional[str] = None,
         nlist: Optional[int] = None,
         nprobe: Optional[int] = None,
+        bm25_k1: Optional[float] = None,
+        bm25_b: Optional[float] = None,
+        bm25_epsilon: Optional[float] = None,
     ) -> bool:
-        """Create a new vector index with default values from environment."""
+        """Create a new index with default values from environment."""
         if name in self.indices:
             raise ValueError(f"Index '{name}' already exists")
 
-        # Use provided values or fall back to environment defaults
         distance_metric = distance_metric or self.default_distance_metric
         index_type = index_type or self.default_index_type
         nlist = nlist or self.default_nlist
         nprobe = nprobe or self.default_nprobe
-
-        # Convert string enums
         distance_metric_enum = DistanceMetric(distance_metric)
         index_type_enum = IndexType(index_type)
 
-        # Create config
-        config = VectorDBConfig(
-            dimension=dimension,
-            distance_metric=distance_metric_enum,
-            index_type=index_type_enum,
-            nlist=nlist,
-            nprobe=nprobe,
-            index_path=os.path.join(self.data_dir, name),
-        )
+        if index_type_enum == IndexType.BM25:
+            self.indices[name] = BM25Index(
+                k1=bm25_k1 or 1.2,
+                b=bm25_b or 0.75,
+                epsilon=bm25_epsilon or 0.25,
+                index_path=os.path.join(self.data_dir, name),
+            )
+        else:
+            config = VectorDBConfig(
+                dimension=dimension,
+                distance_metric=distance_metric_enum,
+                index_type=index_type_enum,
+                nlist=nlist,
+                nprobe=nprobe,
+                bm25_k1=bm25_k1 or 1.2,
+                bm25_b=bm25_b or 0.75,
+                bm25_epsilon=bm25_epsilon or 0.25,
+                index_path=os.path.join(self.data_dir, name),
+            )
 
-        # Create vector database
-        self.indices[name] = VectorDB(config)
+            self.indices[name] = VectorDB(config)
+
         return True
 
     def add_documents(
@@ -128,21 +146,17 @@ class VectorDBService:
             raise ValueError(f"Index '{index_name}' not found")
 
         db = self.indices[index_name]
-        embedder = self._get_embedder(embedder_model or self.default_embedder)
 
-        # Process documents
         doc_objects = []
         texts = []
 
         for doc_data in documents:
-            # Extract text content
             content = doc_data.get("content", "")
             if not content:
                 raise ValueError("Document must have 'content' field")
 
             texts.append(content)
 
-            # Create document object
             doc = Document(
                 id=doc_data.get("id", None),
                 content=content,
@@ -150,15 +164,16 @@ class VectorDBService:
             )
             doc_objects.append(doc)
 
-        # Generate embeddings
-        embeddings = embedder.encode(texts)
+        if isinstance(db, BM25Index):
+            db.add_documents(doc_objects)
+        else:
+            embedder = self._get_embedder(embedder_model or self.default_embedder)
+            embeddings = embedder.encode(texts)
 
-        # Add vectors to documents
-        for doc, embedding in zip(doc_objects, embeddings):
-            doc.vector = embedding
+            for doc, embedding in zip(doc_objects, embeddings):
+                doc.vector = embedding
 
-        # Add to database
-        db.add_documents(doc_objects)
+            db.add_documents(doc_objects)
 
         return len(doc_objects), [doc.id for doc in doc_objects]
 
@@ -179,7 +194,7 @@ class VectorDBService:
         nprobe: Optional[int] = None,
         embedder_model: Optional[str] = None,
     ) -> Tuple[List[float], List[Document], float]:
-        """Search for similar vectors."""
+        """Search for similar documents."""
         if index_name not in self.indices:
             raise ValueError(f"Index '{index_name}' not found")
 
@@ -189,23 +204,31 @@ class VectorDBService:
         db = self.indices[index_name]
         start_time = time.time()
 
-        # Convert query text to vector if needed
-        if query_text:
-            embedder = self._get_embedder(embedder_model or self.default_embedder)
-            query_vector = embedder.encode([query_text])[0].tolist()
+        if isinstance(db, BM25Index):
+            if not query_text:
+                raise ValueError("BM25 search requires query_text")
 
-        # Search
-        query_array = np.array(query_vector, dtype=np.float32)
+            scores, documents = db.search(query_text, k=k)
+            query_time = (time.time() - start_time) * 1000
 
-        search_kwargs = {}
-        if nprobe:
-            search_kwargs["nprobe"] = nprobe
+            return scores, documents, query_time
+        else:
+            if query_text:
+                embedder = self._get_embedder(embedder_model or self.default_embedder)
+                query_vector = embedder.encode([query_text])[0].tolist()
 
-        distances, documents = db.search(query_array, k=k, **search_kwargs)
+            # Search
+            query_array = np.array(query_vector, dtype=np.float32)
 
-        query_time = (time.time() - start_time) * 1000  # Convert to ms
+            search_kwargs = {}
+            if nprobe:
+                search_kwargs["nprobe"] = nprobe
 
-        return distances.tolist(), documents, query_time
+            distances, documents = db.search(query_array, k=k, **search_kwargs)
+
+            query_time = (time.time() - start_time) * 1000
+
+            return distances.tolist(), documents, query_time
 
     def get_embeddings(
         self, texts: List[str], model_name: Optional[str] = None
@@ -238,13 +261,25 @@ class VectorDBService:
         """Get health information about the service."""
         indices_info = {}
         for name, db in self.indices.items():
-            indices_info[name] = {
-                "document_count": len(db.documents),
-                "vector_count": db.index.ntotal,
-                "dimension": db.dimension,
-                "distance_metric": db.config.distance_metric.value,
-                "index_type": db.config.index_type.value,
-            }
+            if isinstance(db, BM25Index):
+                stats = db.get_stats()
+                indices_info[name] = {
+                    "document_count": stats["num_documents"],
+                    "vocabulary_size": stats["vocabulary_size"],
+                    "avg_doc_length": stats["avg_doc_length"],
+                    "index_type": "BM25",
+                    "bm25_k1": stats["k1"],
+                    "bm25_b": stats["b"],
+                    "bm25_epsilon": stats["epsilon"],
+                }
+            else:
+                indices_info[name] = {
+                    "document_count": len(db.documents),
+                    "vector_count": db.index.ntotal,
+                    "dimension": db.dimension,
+                    "distance_metric": db.config.distance_metric.value,
+                    "index_type": db.config.index_type.value,
+                }
 
         return {
             "status": "healthy",
@@ -271,6 +306,7 @@ class VectorDBService:
         if name not in self.indices:
             raise ValueError(f"Index '{name}' not found")
 
+        db = self.indices[name]
         del self.indices[name]
 
         index_path: str = os.path.join(self.data_dir, name)
@@ -280,8 +316,19 @@ class VectorDBService:
             else:
                 os.remove(index_path)
 
-        index_file: str = f"{index_path}.index"
-        if os.path.exists(index_file):
-            os.remove(index_file)
+        if isinstance(db, BM25Index):
+            # BM25 index file
+            bm25_file: str = f"{index_path}.bm25"
+            if os.path.exists(bm25_file):
+                os.remove(bm25_file)
+        else:
+            # Vector index files
+            index_file: str = f"{index_path}.index"
+            if os.path.exists(index_file):
+                os.remove(index_file)
+
+            data_file: str = f"{index_path}.data"
+            if os.path.exists(data_file):
+                os.remove(data_file)
 
         return True

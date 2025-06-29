@@ -16,6 +16,7 @@ class IndexType(Enum):
 
     FLAT = "Flat"
     IVF_FLAT = "IVFFlat"
+    BM25 = "BM25"
 
 
 @dataclass
@@ -29,5 +30,10 @@ class VectorDBConfig:
     # IVF params
     nlist: int = 100
     nprobe: int = 10
+
+    # BM25 params
+    bm25_k1: float = 1.2
+    bm25_b: float = 0.75
+    bm25_epsilon: float = 0.25
 
     index_path: Optional[str] = None

@@ -52,6 +52,9 @@ async def create_index(
             index_type=request.index_type,
             nlist=request.nlist,
             nprobe=request.nprobe,
+            bm25_k1=request.bm25_k1,
+            bm25_b=request.bm25_b,
+            bm25_epsilon=request.bm25_epsilon,
         )
 
         return CreateIndexResponse(
