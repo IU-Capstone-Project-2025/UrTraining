@@ -12,10 +12,15 @@ class CreateIndexRequest(BaseModel):
         default="L2", description="Distance metric (L2, IP, COSINE)"
     )
     index_type: str = Field(
-        default="IVF_FLAT", description="Index type (FLAT, IVF_FLAT)"
+        default="IVF_FLAT", description="Index type (FLAT, IVF_FLAT, BM25)"
     )
     nlist: int = Field(default=100, gt=0, description="Number of clusters for IVF")
     nprobe: int = Field(default=10, gt=0, description="Number of clusters to probe")
+    
+    # BM25-specific parameters
+    bm25_k1: Optional[float] = Field(default=1.2, gt=0, description="BM25 k1 parameter (term frequency saturation)")
+    bm25_b: Optional[float] = Field(default=0.75, ge=0, le=1, description="BM25 b parameter (length normalization)")
+    bm25_epsilon: Optional[float] = Field(default=0.25, ge=0, description="BM25 epsilon parameter (IDF floor)")
 
 
 class CreateIndexResponse(BaseModel):
