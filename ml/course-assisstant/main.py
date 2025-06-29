@@ -3,7 +3,7 @@ import fastapi
 import uvicorn
 from openai import OpenAI
 from models import CourseAssistantRequest
-from course_assistant import CourseAssistant
+from selection_assistant import CourseAssistant
 
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
