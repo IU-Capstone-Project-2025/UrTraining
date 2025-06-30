@@ -1,0 +1,38 @@
+ Here's the text extracted from the image:
+
+**DATE** __________________ **START** __________________
+
+**TYPES OF EXERCISE** | S M T W TH F S | **FINISH** __________________
+
+| EXERCISE | SET 1 | SET 2 | SET 3 | SET 4 | SET 5 | SET 6 |
+|---|---|---|---|---|---|---|
+| 1 | **Warm up** | WEIGHT | WEIGHT |  |  |  |
+|  |  | REPS | REPS |  |  |  |
+| 2 | **Work with dumbbells** | WEIGHT |  |  |  |  |
+|  |  | REPS | **5 rounds of 3 minutes dumbbells 1 kg** |  |  |  |
+| 3 | **Work on the punch bag** | WEIGHT |  |  |  |  |
+|  |  | REPS | **8 rounds of 3 minutes** |  |  |  |
+| 4 | **Sparring** | WEIGHT |  |  |  |  |
+|  |  | REPS | **3 rounds of 3 minutes** |  |  |  |
+| 5 | **Jumping rope** | WEIGHT |  |  |  |  |
+|  |  | REPS | **3 rounds of 3 minutes** |  |  |  |
+| 6 | **Pulling up on a horizontal bar** | WEIGHT |  |  |  |  |
+|  |  | REPS | **5 x 20** |  |  |  |
+| 7 | **Push up** | WEIGHT |  |  |  |  |
+|  |  | REPS | **5 x 35** |  |  |  |
+| 8 | **Rope** | WEIGHT |  |  |  |  |
+|  |  | REPS | **10 x 1** |  |  |  |
+| 9 | **Running** | WEIGHT |  |  |  |  |
+|  |  | REPS | **30 min** | **07 km** | **0500s** |  |
+| 10 | **CARDIO** | TIME | DISTANCE | CALORIES |  |  |
+
+**NOTES**
+
+| PROTEIN | FAT | CARBOHYDRATES | SUPPLEMENTS |
+|---|---|---|---|
+| **Reception 1 capsule of multivitamins** |  |  | **4L** |
+| **50 grams of protein** |  |  | **XX** |
+| **50 grams of creatine** |  |  | **XX** |
+|  |  |  | **00** |
+
+**RATE WORKOUT** ☐BAD  ☑GOOD ☐GREAT   **BODY FAT%** 12   **WEIGHT** 90 kg 
