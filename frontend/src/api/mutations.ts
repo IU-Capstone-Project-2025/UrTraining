@@ -7,7 +7,7 @@ import type {
     SignUpSuccess,
 } from "../components/interface/interfaces";
 import type { AxiosError } from "axios";
-import { signInRequest, signUpRequest, submitSurveyRequest } from "./apiRequests";
+import { signInRequest, signUpRequest, submitSurveyRequest, submitCoachDataRequest } from "./apiRequests";
 import { useNavigate } from "react-router-dom";
 import type { AuthCredentialsTokens } from "../components/context/AuthContext";
 
@@ -56,6 +56,19 @@ export const useSubmitSurvey = (token: String) => {
     },
     onError: (error) => {
       console.error("Failed to submit survey: ", error);
+    }
+  })
+};
+
+export const useSubmitCoachData = (token: String) => {
+  return useMutation({
+    mutationFn: (data: any) => submitCoachDataRequest(token, data),
+    onSuccess: (data) => {
+      console.log(data);
+      console.log("Coach data submitted successfully!");
+    },
+    onError: (error) => {
+      console.error("Failed to submit coach data: ", error);
     }
   })
 };

@@ -262,6 +262,26 @@ def get_survey_data():
     except Exception as e:
         print(f"Error reading survey data: {e}")
         raise HTTPException(status_code=500, detail="Failed to load survey data")
+    
+
+@app.get("/trainer-survey-data")
+def get_survey_data():
+    """Return authentication data for coach from JSON file"""
+    try:
+        file_path = "data/coach_auth_data.json"
+        if not os.path.exists(file_path):
+            raise HTTPException(status_code=404, detail="Coach auth data file not found")
+        
+        with open(file_path, "r", encoding="utf-8") as file:
+            survey_data = json.load(file)
+        
+        return survey_data
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="Invalid JSON format in coach auth data file")
+    except Exception as e:
+        print(f"Error reading coach auth data: {e}")
+        raise HTTPException(status_code=500, detail="Failed to load coach auth data")
+
 
 @app.get("/user-data")
 def get_user_data(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):

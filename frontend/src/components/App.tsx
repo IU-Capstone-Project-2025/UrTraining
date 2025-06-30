@@ -11,6 +11,7 @@ import SignUpPage from '../pages/SignUpPage';
 import TraineeBeginPage from '../pages/TraineeBeginPage';
 import TrainerBeginPage from '../pages/TrainerBeginPage';
 import SurveyPage from '../pages/SurveyPage';
+import AdvancedRegistrationPage from '../pages/AdvancedRegistrationPage';
 import CoursesCataloguePage from '../pages/CoursesCataloguePage';
 import ExampleCoursePage from '../pages/ExampleCoursePage';
 import CoursePage from '../pages/CoursePage';
@@ -63,6 +64,7 @@ const App = () => {
               <Route path="trainee-begin" element={<TraineeBeginPage />} />
               <Route path="trainer-begin" element={<TrainerBeginPage />} />
               <Route path="survey" element={<SurveyPage />} />
+              <Route path="trainer-registration" element={<AdvancedRegistrationPage />} />
               <Route path="catalogue" element={<CoursesCataloguePage />} />
               <Route path="recommendations" element={<RecommendationsPage />} />
               <Route path="course/example-course" element={<ExampleCoursePage />} />

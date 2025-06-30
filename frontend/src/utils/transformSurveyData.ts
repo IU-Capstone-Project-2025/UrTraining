@@ -18,6 +18,7 @@ export function transformToApiPayload(formData: FlatFormData) {
     health_details,
     location_details,
     training_location,
+    level,
     ...rest
   } = formData;
 
@@ -50,7 +51,7 @@ export function transformToApiPayload(formData: FlatFormData) {
       },
       training_goals,
       training_experience: {
-        level: "beginner",
+        level: level,
         frequency_last_3_months,
       },
       preferences: {

@@ -43,6 +43,22 @@ export async function surveyDataRequest(token: String): Promise<SurveyProp> {
     }
 }
 
+export async function coachAuthDataRequest(token: String): Promise<SurveyProp> {
+    try {
+        const resp = await axios.get<String>(`${endpoint}/trainer-survey-data`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return resp.data as unknown as SurveyProp;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
 export async function trainingsDataRequest(token: String): Promise<any> {
     try {
         const resp = await axios.get<String>(`${endpoint}/trainings`, {
@@ -116,6 +132,25 @@ export async function submitSurveyRequest(token: String, data: any) {
         console.log(data);
 
         const resp = await axios.post(`${endpoint}/user-data`, data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function submitCoachDataRequest(token: String, data: any) {
+    try {
+        console.log(data);
+
+        const resp = await axios.put(`${endpoint}/auth/trainer-profile`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
