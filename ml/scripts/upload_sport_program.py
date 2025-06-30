@@ -18,8 +18,7 @@ import requests
 
 # ─── Configuration ─────────────────────────────────────────────────────────────
 
-# KLUSTER_API_KEY = os.environ["KLUSTER_API_KEY"] 
-KLUSTER_API_KEY = "885a33a9-169b-498f-942a-549f7a80dd02"
+KLUSTER_API_KEY = os.environ["KLUSTER_API_KEY"] 
 if not KLUSTER_API_KEY:
     print("❗ Please set your KLUSTER_API_KEY environment variable.")
     sys.exit(1)
