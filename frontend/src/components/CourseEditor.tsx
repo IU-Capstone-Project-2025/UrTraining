@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import '../css/Course.css';
+import Metadata from './Metadata';
 import star from '../assets/star.svg';
 
 interface Exercise {
@@ -17,7 +18,7 @@ type EditableField = ExerciseField | 'title';
 const TrainingEditor = ({ initialData }: { initialData?: any }) => {
   const [data, setData] = useState<any>(initialData || {
     header_badges: {},
-    course_info: { title: "Новый план тренировок" },
+    course_info: { title: "New trainings plan" },
     training_plan: [],
     coach_data: {}
   });
@@ -124,6 +125,7 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
               <input
                 type="text"
                 value={data.course_info.title}
+                placeholder='Title...'
                 onChange={(e) => setData((prev: any) => ({
                   ...prev,
                   course_info: { ...prev.course_info, title: e.target.value }
@@ -139,7 +141,7 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
           <div className='course__structure__header'>
             <h3>Course Structure</h3>
             <button onClick={addTrainingDay} className="btn-basic-white">
-               Add new day
+              Add new day
             </button>
           </div>
 
@@ -157,28 +159,28 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
                       onBlur={stopEditing}
                     />
                   ) : (
-                    <h2 
+                    <h2
                       onClick={() => startEditing(dayIndex, null, 'title')}
                       className="editable-title"
                     >
                       {day.title}
                     </h2>
                   )}
-                  
+
                   <div className="course__table__header">
                     {["Exercise", "Reps", "Sets", "Duration", "Rest", "Description"].map((h) => (
                       <div key={h} className="course__table__cell">{h}</div>
                     ))}
                   </div>
-                  
+
                   <div className="course__table__body">
                     {day.exercises.map((exercise: any, exIndex: number) => (
                       <div key={exIndex} className="course__table__row">
                         {(Object.keys(exercise) as ExerciseField[]).map((field) => (
                           <div key={field} className="course__table__cell">
-                            {editing.dayIndex === dayIndex && 
-                            editing.exerciseIndex === exIndex && 
-                            editing.field === field ? (
+                            {editing.dayIndex === dayIndex &&
+                              editing.exerciseIndex === exIndex &&
+                              editing.field === field ? (
                               <input
                                 type="text"
                                 value={String(exercise[field])}
@@ -188,7 +190,7 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
                                 onBlur={stopEditing}
                               />
                             ) : (
-                              <span 
+                              <span
                                 onClick={() => startEditing(dayIndex, exIndex, field)}
                                 className="editable-field"
                               >
@@ -199,7 +201,7 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
                         ))}
                       </div>
                     ))}
-                    <button 
+                    <button
                       onClick={() => addExercise(dayIndex)}
                       className="btn-basic-white"
                     >
@@ -210,11 +212,14 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
               </div>
             ))}
           </div>
+
+          <Metadata />
+
         </div>
 
         {/* Кнопка сохранения */}
         <div className="editor-actions">
-          <button 
+          <button
             onClick={() => console.log("Saved data:", data)}
             className="btn-basic-black"
           >
