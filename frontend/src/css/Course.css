@@ -8,7 +8,8 @@
 
     padding: 3rem 2rem;
     border-radius: 2rem;
-    background-color: rgba(166, 147, 147, 0.1);
+    background-color: rgba(166, 147, 147, 0.06);
+    box-shadow: 0 4px 6px rgba(1, 0, 0, 0.05);
 }
 
 .course__tags {
@@ -171,4 +172,105 @@
     display: flex;
     align-items: flex-end;
     gap: 0.5rem;
+}
+
+/* Стили для редактора */
+.course-title-input {
+  font-size: 2rem;
+  font-weight: bold;
+  border: none;
+  border-bottom: 2px solid #eee;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
+.session-title-input {
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-bottom: 1px dashed #ccc;
+  width: 100%;
+  margin: 1rem 0;
+  padding: 0.5rem;
+}
+
+.exercise-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #eee;
+  padding: 0.3rem;
+}
+
+.add-day-btn, .add-exercise-btn, .save-btn {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.add-day-btn:hover, .add-exercise-btn:hover, .save-btn:hover {
+  background: #e0e0e0;
+}
+
+.save-btn {
+  background: #4CAF50;
+  color: white;
+  font-weight: bold;
+  padding: 0.8rem 2rem;
+  margin-top: 2rem;
+}
+
+.save-btn:hover {
+  background: #3e8e41;
+}
+
+.editor-actions {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+/* Стили для редактируемых полей */
+.editable-title, .editable-field {
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.editable-title:hover, .editable-field:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.editable-title {
+  font-size: 1.5rem;
+  margin: 1rem 0;
+}
+
+.edit-input {
+  border: 2px solid #4285f4;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font: inherit;
+  width: calc(100% - 20px);
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #4285f4;
+}
+
+/* Анимация при редактировании */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.edit-input {
+  animation: fadeIn 0.2s ease-out;
 }

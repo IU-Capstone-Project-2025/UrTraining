@@ -23,7 +23,8 @@
   border: none;
   box-shadow:inset 0px 0px 0px 1.5px #000;
 
-  background-color: #F3F3F3;
+  background-color: #ffffff;
+  background-color: transparent;
   color: #000;
 }
 
