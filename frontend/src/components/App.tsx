@@ -18,6 +18,7 @@ import CoursePage from '../pages/CoursePage';
 import { useEffect, useState } from 'react';
 import { AuthContext, type AuthCredentialsTokens } from './context/AuthContext';
 import RecommendationsPage from '../pages/RecommendationsPage';
+import UploadTrainingPage from '../pages/UploadTrainingPage';
 
 const queryClient = new QueryClient()
 
@@ -69,6 +70,7 @@ const App = () => {
               <Route path="recommendations" element={<RecommendationsPage />} />
               <Route path="course/example-course" element={<ExampleCoursePage />} />
               <Route path="course/:courseId" element={<CoursePage />} />
+              <Route path="upload-training" element={<UploadTrainingPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
