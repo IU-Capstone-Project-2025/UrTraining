@@ -19,21 +19,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install and build
-        run: |
-          cd frontend
-          npm install
-          npm run build
-
-      - name: Copy frontend dist to server via SCP
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          source: "frontend/dist/**"
-          target: "/tmp/frontend-dist"
-
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -44,6 +29,8 @@ jobs:
             cd UrTraining
             git pull origin main
             cd frontend
+            npm install
+            npm run build
             sudo rm -rf /var/www/myfrontend/*
-            sudo cp -r /tmp/frontend-dist/* /var/www/myfrontend/
+            sudo cp -r dist/* /var/www/myfrontend/
             sudo systemctl restart nginx

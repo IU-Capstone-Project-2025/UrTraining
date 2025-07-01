@@ -60,7 +60,7 @@ const Course = (data: any) => {
                             <p>
                                 {data.course_info.reviews} reviews
                             </p>
-                        </div>
+                        </div> 
                     </div>
                     <div className='course__info__description'>
                         <p>{data.course_info.description}</p>
