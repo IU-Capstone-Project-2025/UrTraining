@@ -4,7 +4,7 @@ import CourseCreationForm from "../components/CourseCreationForm";
 const UploadTrainingPage = () => {
 
 
-    return <TrainingEditor />; 
+    return <TrainingEditor />;
 };
 
 export default UploadTrainingPage;
