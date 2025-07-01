@@ -15,20 +15,32 @@ jobs:
       github.event_name == 'push' ||
       (github.event_name == 'pull_request' && github.event.pull_request.merged)
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Install and build
         run: |
-          cd frontend/
+          cd frontend
           npm install
           npm run build
-      - name: Deploy to server
-        uses: appleboy/ssh-action@v1
+
+      - name: Copy frontend dist to server via SCP
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "frontend/dist/*"
+          target: "/tmp/frontend-dist"
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
             sudo rm -rf /var/www/myfrontend/*
-            sudo cp -r dist/* /var/www/myfrontend/
+            sudo cp -r /tmp/frontend-dist/* /var/www/myfrontend/
             sudo systemctl restart nginx
