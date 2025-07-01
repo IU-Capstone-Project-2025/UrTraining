@@ -7,17 +7,18 @@ import type {
     SignUpSuccess,
 } from "../components/interface/interfaces";
 import type { SurveyProp } from "../components/interface/surveyInterface";
+import type { UserProp } from "../components/interface/userInterface";
 
 const endpoint = import.meta.env.VITE_API_URL;
 
-export async function userInfoRequest(token: String): Promise<String> {
+export async function userInfoRequest(token: String): Promise<UserProp> {
     try {
         const resp = await axios.get<String>(`${endpoint}/user-data`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
-        return resp.data;
+        return resp.data as unknown as UserProp;
     } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
             throw error;
@@ -29,6 +30,22 @@ export async function userInfoRequest(token: String): Promise<String> {
 export async function surveyDataRequest(token: String): Promise<SurveyProp> {
     try {
         const resp = await axios.get<String>(`${endpoint}/survey-data`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return resp.data as unknown as SurveyProp;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function coachAuthDataRequest(token: String): Promise<SurveyProp> {
+    try {
+        const resp = await axios.get<String>(`${endpoint}/trainer-survey-data`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -58,6 +75,23 @@ export async function trainingsDataRequest(token: String): Promise<any> {
         throw error;
     }
 }
+
+
+export async function getRecommendations(token: String): Promise<any> {
+    const response = await fetch(`${endpoint}/recommendations`, {
+        headers: {
+        Authorization: `Bearer ${token}`,
+        }
+    });
+    
+    if (!response.ok) {
+        throw new Error('Failed to fetch recommendations');
+    }
+    
+    const data = await response.json();
+    return data.recommendations || [];
+}
+
 
 export async function signUpRequest(
     credentials: CredentialsData
@@ -98,6 +132,25 @@ export async function submitSurveyRequest(token: String, data: any) {
         console.log(data);
 
         const resp = await axios.post(`${endpoint}/user-data`, data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function submitCoachDataRequest(token: String, data: any) {
+    try {
+        console.log(data);
+
+        const resp = await axios.put(`${endpoint}/auth/trainer-profile`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",

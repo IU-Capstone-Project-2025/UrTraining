@@ -20,6 +20,32 @@
 - Minimum length: 3 characters
 - Maximum length: 50 characters
 - Unique: Yes (system-wide)
+
+## 4. `country`
+**Type:** `string`
+**Allowed Values:** `"kz"`, `"ru"`, `"us"`
+**Descriptions:**
+- `"kz"` - Kazakhstan
+- `"ru"` - Russia  
+- `"us"` - United States
+**Validation Rules:**
+- Required: No (optional)
+
+## 5. `city`
+**Type:** `string` (enum)
+**Allowed Values:**
+- **Kazakhstan (kz):** `"Almaty"`, `"Nur-Sultan"`, `"Shymkent"`, `"Aktobe"`, `"Taraz"`
+- **Russia (ru):** `"Moscow"`, `"Saint Petersburg"`, `"Kazan"`, `"Innopolis"`, `"Novosibirsk"`, `"Yekaterinburg"`, `"Nizhny Novgorod"`, `"Rostov-on-Don"`
+- **United States (us):** `"New York"`, `"Los Angeles"`, `"Chicago"`, `"Houston"`, `"Phoenix"`, `"Philadelphia"`, `"San Antonio"`, `"San Diego"`, `"Dallas"`, `"San Francisco"`
+
+**Validation Rules:**
+- Required: No (optional)
+- **Cross-validation:** City must belong to the selected country
+  - If country is `"kz"`, only Kazakhstan cities are allowed
+  - If country is `"ru"`, only Russia cities are allowed  
+  - If country is `"us"`, only US cities are allowed
+- If no country is specified, any valid city can be selected
+
 # Training Profile
 
 ## 2.1 Basic Information
@@ -30,6 +56,7 @@
 | **age**    | integer |                                | Minimum: 13, Maximum: 100 |
 | **height_cm** | integer |                             | Minimum: 100, Maximum: 250 |
 | **weight_kg** | float  |                              | Minimum: 30.0, Maximum: 300.0 |
+
 
 ---
 
@@ -92,6 +119,38 @@ Allowed values include the following country objects:
 - `{ "code": "ru", "name": "russia", "display_name": "Russia" }`
 - `{ "code": "us", "name": "usa", "display_name": "United States" }`
 
+### Available Cities
+
+#### Kazakhstan
+- Almaty (`ALMATY`)
+- Nur-Sultan (`ASTANA`)
+- Shymkent (`SHYMKENT`)
+- Aktobe (`AKTOBE`)
+- Taraz (`TARAZ`)
+
+#### Russia
+- Moscow (`MOSCOW`)
+- Saint Petersburg (`SAINT_PETERSBURG`)
+- Kazan (`KAZAN`)
+- Innopolis (`INNOPOLIS`)
+- Novosibirsk (`NOVOSIBIRSK`)
+- Yekaterinburg (`YEKATERINBURG`)
+- Nizhny Novgorod (`NIZHNY_NOVGOROD`)
+- Rostov-on-Don (`ROSTOV_ON_DON`)
+
+#### United States
+- New York (`NEW_YORK`)
+- Los Angeles (`LOS_ANGELES`)
+- Chicago (`CHICAGO`)
+- Houston (`HOUSTON`)
+- Phoenix (`PHOENIX`)
+- Philadelphia (`PHILADELPHIA`)
+- San Antonio (`SAN_ANTONIO`)
+- San Diego (`SAN_DIEGO`)
+- Dallas (`DALLAS`)
+- San Francisco (`SAN_FRANCISCO`)
+
+
 ---
 
 ## 4. General Validation Rules
@@ -100,6 +159,10 @@ Allowed values include the following country objects:
 - `user_data.full_name`
 - `user_data.email`
 - `user_data.username`
+
+### Optional Fields
+- `user_data.country`
+- `user_data.city`
 
 ### Unique Fields
 - `user_data.email`
@@ -124,6 +187,10 @@ When a user does not provide certain data in their profile, the system will auto
 ---
 
 ## Data Structure
+
+### Personal Data (personal_data):
+- Country: not specified (null)
+- City: not specified (null)
 
 ### Basic Information (basic_information):
 - Gender: male (`"male"`)

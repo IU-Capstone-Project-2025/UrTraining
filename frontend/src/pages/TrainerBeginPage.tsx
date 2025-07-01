@@ -19,7 +19,7 @@ const TrainerBeginPage = () => {
 
     const componentProps = {
         css_style: "begin__left",
-        button_link: authData.access_token === "" ? "/signup" : "/survey",
+        button_link: authData.access_token === "" ? "/signup" : "/trainer-registration",
         text: textProps,
     }
 

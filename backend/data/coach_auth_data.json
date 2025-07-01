@@ -192,7 +192,7 @@
                                 "id": "gym",
                                 "name": "gym",
                                 "value": "gym",
-                                "placeholder": ""
+                                "placeholder": "Gym"
                             },
                             {
                                 "id": "outdoors",
@@ -270,10 +270,22 @@
                 "subtitle": "How long have you been involved in coaching, in your opinion?",
                 "inputs": [
                     {
-                        "name": "experience",
-                        "id": "experience",
+                        "name": "years",
+                        "id": "years",
                         "input_type": "number",
                         "placeholder": "Write in years..",
+                        "options": ""
+                    }
+                ]
+            },
+            {
+                "subtitle": "What is the level of your education/certification?",
+                "inputs": [
+                    {
+                        "name": "level",
+                        "id": "level",
+                        "input_type": "text",
+                        "placeholder": "Level..",
                         "options": ""
                     }
                 ]
@@ -282,8 +294,8 @@
                 "subtitle": "Do you have any proof of your education/certification? Write name of certificate, if any:",
                 "inputs": [
                     {
-                        "name": "education",
-                        "id": "education",
+                        "name": "sertification",
+                        "id": "sertification",
                         "input_type": "text",
                         "placeholder": "Certificate name..",
                         "options": ""

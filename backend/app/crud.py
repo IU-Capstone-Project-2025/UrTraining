@@ -22,7 +22,7 @@ def get_user_by_id(db: Session, user_id: int) -> Optional[User]:
     return db.query(User).filter(User.id == user_id).first()
 
 
-def create_user(db: Session, username: str, full_name: str, email: str, password: str, is_admin: bool = False, trainer_profile: Dict[str, Any] = None) -> User:
+def create_user(db: Session, username: str, full_name: str, email: str, password: str, is_admin: bool = False, trainer_profile: Dict[str, Any] = None, country: str = None, city: str = None) -> User:
     hashed_password = pwd_context.hash(password)
     db_user = User(
         username=username,
@@ -30,7 +30,9 @@ def create_user(db: Session, username: str, full_name: str, email: str, password
         email=email,
         hashed_password=hashed_password,
         is_admin=is_admin,
-        trainer_profile=trainer_profile
+        trainer_profile=trainer_profile,
+        country=country,
+        city=city
     )
     db.add(db_user)
     db.commit()
@@ -55,7 +57,7 @@ def authenticate_user(db: Session, email: str, password: str) -> Optional[User]:
     return user
 
 
-def update_user_profile(db: Session, user_id: int, username: Optional[str] = None, full_name: Optional[str] = None, email: Optional[str] = None) -> Optional[User]:
+def update_user_profile(db: Session, user_id: int, username: Optional[str] = None, full_name: Optional[str] = None, email: Optional[str] = None, country: Optional[str] = None, city: Optional[str] = None) -> Optional[User]:
     user = get_user_by_id(db, user_id)
     if not user:
         return None
@@ -66,6 +68,10 @@ def update_user_profile(db: Session, user_id: int, username: Optional[str] = Non
         user.full_name = full_name
     if email:
         user.email = email
+    if country is not None:
+        user.country = country
+    if city is not None:
+        user.city = city
     
     user.updated_at = datetime.utcnow()
     db.commit()
@@ -238,9 +244,9 @@ def update_course_progress(db: Session, user_id: int, course_id: int, progress_p
 
 
 # Training CRUD operations
-def get_training_by_id(db: Session, training_id: int) -> Optional[Training]:
-    """Получить тренировку по ID"""
-    return db.query(Training).filter(Training.id == training_id).first()
+def get_training_by_id(db: Session, training_id: str) -> Optional[Training]:
+    """Получить тренировку по course_id (UUID из JSON)"""
+    return db.query(Training).filter(Training.course_id == training_id).first()
 
 
 def get_trainings_summary(db: Session, skip: int = 0, limit: int = 100) -> List[Training]:
@@ -337,8 +343,8 @@ def create_training(db: Session, training_data: dict, user_id: int):
         raise e
 
 
-def update_training(db: Session, training_id: int, training_data: Dict[str, Any]) -> Optional[Training]:
-    """Обновить существующую тренировку"""
+def update_training(db: Session, training_id: str, training_data: Dict[str, Any]) -> Optional[Training]:
+    """Обновить существующую тренировку по course_id"""
     training = get_training_by_id(db, training_id)
     if not training:
         return None
@@ -363,8 +369,8 @@ def update_training(db: Session, training_id: int, training_data: Dict[str, Any]
     return training
 
 
-def delete_training(db: Session, training_id: int) -> bool:
-    """Удаление тренировки"""
+def delete_training(db: Session, training_id: str) -> bool:
+    """Удаление тренировки по course_id"""
     training = get_training_by_id(db, training_id)
     if not training:
         return False
@@ -382,6 +388,6 @@ def search_trainings(db: Session, query: str, skip: int = 0, limit: int = 100) -
     ).offset(skip).limit(limit).all()
 
 
-def get_training_with_trainer_info(db: Session, training_id: int) -> Optional[Training]:
-    """Получить тренировку (в новом формате уже содержит всю информацию о тренере)"""
+def get_training_with_trainer_info(db: Session, training_id: str) -> Optional[Training]:
+    """Получить тренировку по course_id (в новом формате уже содержит всю информацию о тренере)"""
     return get_training_by_id(db, training_id) 
