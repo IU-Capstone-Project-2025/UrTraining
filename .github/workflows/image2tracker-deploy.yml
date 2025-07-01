@@ -28,10 +28,11 @@ jobs:
               echo "[$(date)] Starting image2tracker deployment"
 
               flock /tmp/image2tracker-deploy.lock -c '
-                set -e
-                cd ~/UrTraining/ml/image2tracker || exit 1
+                cd ~/UrTraining
                 echo "[$(date)] Pulling latest changes..."
                 git pull origin main
+                set -e
+                cd ml/image2tracker || exit 1
 
                 echo "[$(date)] Stopping containers..."
                 docker-compose down

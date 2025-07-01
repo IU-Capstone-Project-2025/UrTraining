@@ -29,9 +29,10 @@ jobs:
 
               flock /tmp/backend-deploy.lock -c '
                 set -e
-                cd ~/UrTraining/backend || exit 1
+                cd ~/UrTraining
                 echo "[$(date)] Pulling latest changes..."
                 git pull origin main
+                cd backend || exit 1
 
                 echo "[$(date)] Stopping containers..."
                 docker-compose down
