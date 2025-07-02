@@ -12,15 +12,23 @@ interface Exercise {
   description: string;
 }
 
+interface StepData {
+    [key: string]: any;
+}
+
+interface MetadataProps {
+  savedData: Exercise[];
+  setSavedData: React.Dispatch<React.SetStateAction<StepData>>;
+}
+
 type ExerciseField = keyof Exercise;
 type EditableField = ExerciseField | 'title';
 
 const TrainingEditor = ({ initialData }: { initialData?: any }) => {
   const [data, setData] = useState<any>(initialData || {
     header_badges: {},
-    course_info: { title: "New trainings plan" },
-    training_plan: [],
-    coach_data: {}
+    course_info: { course_title: "New trainings plan" },
+    training_plan: []
   });
 
   const [editing, setEditing] = useState<{
@@ -118,7 +126,6 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
   return (
     <div className="course basic-page" onDoubleClick={stopEditing}>
       <div className="course__container">
-        {/* Заголовок и метаданные */}
         <div className='course__info'>
           <div className='course__info__title'>
             <div className='course__info__text'>
@@ -213,7 +220,6 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
             ))}
           </div>
 
-          <Metadata />
 
         </div>
 
