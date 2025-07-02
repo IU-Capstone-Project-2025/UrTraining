@@ -8,9 +8,11 @@ interface StepData {
 interface MetadataProps {
   savedData: StepData;
   setSavedData: React.Dispatch<React.SetStateAction<StepData>>;
+  onNext: () => void;
+  onBack: () => void;
 }
 
-const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData }) => {
+const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, onNext }) => {
     const [goals, setGoals] = useState(1)
     const [environment, setEnvironment] = useState(1)
     const [age, setAge] = useState(1)
@@ -153,8 +155,8 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData }) => {
 
     return (
         <div className="course__container">
+            <h2 className="step-title">Step 1: Course Metadata</h2>
             <div className='course__structure__metadata'>
-                <h3>Metadata</h3>
                 <div className='course__metadata__fields'>
                     {metadataKeys.map((key, index) => {
                         return (
@@ -203,6 +205,10 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData }) => {
                         )
                     })}
                 </div>
+            </div>
+            <div className="button-row">
+                <button className="btn-basic-black" onClick={onBack}>Back</button>
+                <button className="btn-basic-black" onClick={onNext}>Continue</button>
             </div>
         </div>
     )

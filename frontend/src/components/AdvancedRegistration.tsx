@@ -41,7 +41,7 @@ const AdvancedRegistration = (props: SurveyStep) => {
         console.log(savedData);
         console.log("Handle submit call");
         stepContext.submitSurvey(savedData);
-        //navigate('/recommendations');
+        navigate('/upload-training');
     }
 
     return (
