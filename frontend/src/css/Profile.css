@@ -1,0 +1,158 @@
+.profile {
+    overflow-y: auto;
+}
+
+.profile__container {
+    display: grid;
+    grid-template-rows: repeat(6, minmax(100px, auto));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+        "info info"
+        "info info"
+        "personal calendar"
+        "personal calendar"
+        "trainings calendar"
+        "trainings upload";
+    gap: 1rem;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+}
+
+.profile__frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    overflow: hidden;
+
+    background-color: #a693931c;
+    border-radius: 2rem;
+}
+
+.profile__frame h3 {
+    font-family: 'TT Travels Bold', sans-serif;
+    display: inline;
+}
+
+.profile__frame p {
+    font-family: 'TT Travels Regular', sans-serif;
+    display: inline;
+}
+
+.profile__info {
+    gap: 1rem;
+    grid-area: info;
+}
+
+.profile__info__header {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.profile__info__avatar {
+    display: flex;
+    justify-content: center;
+    width: 96px;
+    min-width: 96px;
+    height: 96px;
+    min-height: 96px;
+    border-radius: 16rem;
+    overflow: hidden;
+}
+
+.profile__info__avatar > img {
+    width: auto;
+    height: 100%;
+}
+
+.profile__info__desc {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile__header__logout {
+    padding: 0.25rem; 
+    color: rgb(224, 67, 67);
+    box-shadow: inset 0px 0px 0px 1.5px rgb(224, 67, 67);
+}
+
+.profile__personal {
+    justify-content: space-between;
+    grid-area: personal;
+}
+
+.profile__personal__header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.profile__personal__edit {
+    padding: 0.25rem; 
+}
+
+.profile__personal__fields {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.profile__personal__field {
+    display: flex;
+}
+
+.profile__field__name {
+    flex: 1 3;
+}
+
+.profile__field__value {
+    flex: 2 3;
+}
+
+.profile__calendar {
+    justify-content: center;
+    gap: 2rem;
+    grid-area: calendar;
+}
+
+.profile__calendar__option {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+    text-align: center;
+}
+
+.profile__trainings {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    grid-area: trainings;
+}
+
+.profile__trainings__footer {
+    width: 30%;
+}
+
+.profile__upload {
+    justify-content: center;
+    grid-area: upload;
+}
+
+.profile__upload__button {
+    width: 100%;
+}
+
+.profile__upload__button > button {
+    width: 100%;
+}
+
+@media (min-width: 1160px) {
+    .profile__container {
+        padding: 0 8rem;
+    }
+}

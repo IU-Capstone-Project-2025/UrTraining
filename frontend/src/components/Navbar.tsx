@@ -19,7 +19,7 @@ const Navbar = (data: UserProp) => {
           </div>
         </Link>
         <div className='navbar__links'>
-          <Link to="/" style={{display: "none"}}>
+          <Link to="/" style={{ display: "none" }}>
             Profile
           </Link>
           <Link to="/catalogue">
@@ -36,7 +36,10 @@ const Navbar = (data: UserProp) => {
           </Link>
         </div>
         <div className='navbar__user'>
-          <div className='navbar__auth' style={authData.access_token !== "" ? { display: "none" } : {}}>
+          <div
+            className='navbar__auth'
+            style={authData.access_token !== "" ? { display: "none" } : {}}
+          >
             <Link to="/signin">
               <button className='btn-basic-white'>
                 Sign In
@@ -48,7 +51,10 @@ const Navbar = (data: UserProp) => {
               </button>
             </Link>
           </div>
-          <div className='navbar__user__data' style={authData.access_token === "" ? { display: "none" } : {}}>
+          <div
+            className='navbar__user__data'
+            style={authData.access_token === "" ? { display: "none" } : {}}
+          >
             <h2>Hello, {data?.full_name ?? "none"}</h2>
           </div>
         </div>
