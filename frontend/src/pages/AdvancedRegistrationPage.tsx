@@ -50,7 +50,7 @@ const AdvancedRegistrationPage = () => {
 
   // Receive an array of survey pages from API
   const { data: pagesData = [], isLoading, status } = useQuery<SurveyProp, Error>({
-    queryKey: ['formPages'],
+    queryKey: ['coachAuth'],
     queryFn: () => coachAuthDataRequest(authData.access_token)
   })
 
