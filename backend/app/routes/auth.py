@@ -1,11 +1,12 @@
 from fastapi import APIRouter, HTTPException, Depends, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from typing import Optional
 from sqlalchemy.orm import Session
+import re
 
 from app.database import get_db
 from app.crud import (
@@ -27,8 +28,24 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer()
 
 class LoginRequest(BaseModel):
-    email: str
-    password: str
+    email: str = Field(..., min_length=5, max_length=100, description="Valid email address")
+    password: str = Field(..., min_length=1, description="Password")
+    
+    @validator('email')
+    def validate_email(cls, v):
+        # Check if email is empty or whitespace only
+        if not v or not v.strip():
+            raise ValueError('Email cannot be empty')
+        
+        # Remove whitespace
+        v = v.strip()
+        
+        # Basic email format validation
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, v):
+            raise ValueError('Please enter a valid email address')
+        
+        return v.lower()  # Convert to lowercase for consistency
 
 class LoginResponse(BaseModel):
     access_token: str
@@ -43,10 +60,29 @@ class RegisterRequest(BaseModel):
     username: str = Field(..., min_length=3, max_length=50, description="Username (3-50 characters)")
     full_name: str = Field(..., min_length=2, max_length=100, description="Full name (2-100 characters)")
     password: str = Field(..., min_length=6, description="Password (minimum 6 characters)")
-    email: str = Field(..., description="Valid email address")
+    email: str = Field(..., min_length=5, max_length=100, description="Valid email address")
+    
+    @validator('email')
+    def validate_email(cls, v):
+        # Check if email is empty or whitespace only
+        if not v or not v.strip():
+            raise ValueError('Email cannot be empty')
+        
+        # Remove whitespace
+        v = v.strip()
+        
+        # Basic email format validation
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, v):
+            raise ValueError('Please enter a valid email address')
+        
+        return v.lower()  # Convert to lowercase for consistency
 
 class RegisterResponse(BaseModel):
     message: str
+    access_token: str
+    token_type: str
+    expires_in: int
     user_info: dict
 
 class UpdateTrainerProfileRequest(BaseModel):
@@ -110,7 +146,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
         raise credentials_exception
 
 @router.post("/register", response_model=RegisterResponse)
-async def register(data: RegisterRequest, db: Session = Depends(get_db)):
+async def register(data: RegisterRequest, request: Request, db: Session = Depends(get_db)):
     """Register a new user account"""
     
     # Validate username availability
@@ -130,12 +166,31 @@ async def register(data: RegisterRequest, db: Session = Depends(get_db)):
     # Create new user
     try:
         user = create_user(db, data.username, data.full_name, data.email, data.password)
+        
+        # Create access token (same as login)
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": user.email, "user_id": user.id}, 
+            expires_delta=access_token_expires
+        )
+        
+        # Store token in database (same as login)
+        expires_at = datetime.utcnow() + access_token_expires
+        user_agent = request.headers.get("user-agent", "")
+        ip_address = request.client.host if request.client else ""
+        
+        create_active_session(db, user.id, access_token, expires_at, user_agent, ip_address)
+        
         return {
             "message": "User registered successfully",
+            "access_token": access_token,
+            "token_type": "bearer",
+            "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60,
             "user_info": {
                 "username": user.username,
                 "full_name": user.full_name,
-                "email": user.email
+                "email": user.email,
+                "is_admin": user.is_admin
             }
         }
     except Exception as e:
