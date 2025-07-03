@@ -7,6 +7,7 @@ import SignPageContext, { emptyCredentials, type SignContextType } from "../comp
 import AuthContext from "../components/context/AuthContext";
 import { useSignUp } from "../api/mutations";
 import { useNavigate } from "react-router-dom";
+import type { AxiosError } from "axios";
 
 const SignUpPage = () => {
   const [credentials, setCredentials] = useState<CredentialsData>(emptyCredentials)
@@ -42,7 +43,7 @@ const SignUpPage = () => {
           console.log("Signup succeeded on this call:", data);
           navigate("/signin")
         },
-        onError: (error) => {
+        onError: (error: any) => {
           setIsError(true)
           setErrorMessage(error.response?.data?.detail[0].msg || error.response?.data?.detail)  
           console.error("Signup failed on this call:", error);
