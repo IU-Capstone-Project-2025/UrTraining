@@ -95,6 +95,22 @@ export async function trainingsDataRequest(token: String): Promise<any> {
     }
 }
 
+export async function currentTrainingDataRequest(courseId: String, token: String): Promise<any> {
+    try {
+        const resp = await axios.get<String>(`${endpoint}/trainings/${courseId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        // console.log("бро красава")
+        return resp.data;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
 
 export async function getRecommendations(token: String): Promise<any> {
     const response = await fetch(`${endpoint}/recommendations`, {

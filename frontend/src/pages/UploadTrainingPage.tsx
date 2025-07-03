@@ -20,6 +20,7 @@ const UploadTrainingPage = () => {
     const submitTrainingDataMutation = useSubmitNewTraining(authData.access_token)
 
     const [step, setStep] = useState<"welcome" | "metadata" | "editor" | "end">("welcome");
+    const [createdTrainingId, setCreatedTrainingId] = useState<string | null>(null);
 
     const [savedData, setSavedData] = useState<StepData>({
         activity_type: "",
@@ -51,8 +52,18 @@ const UploadTrainingPage = () => {
     const handleSubmit = () => {
         console.log("Saved data: ", savedData);
         const formattedData = formatTrainingData(savedData, trainerData);
-        submitTrainingDataMutation.mutate(formattedData);
-        setStep("end");
+        
+        submitTrainingDataMutation.mutate(formattedData, {
+            onSuccess: (data) => {
+                console.log("Received data from server:", data);
+                const newTrainingId = data.id;
+                setCreatedTrainingId(newTrainingId);
+                setStep("end");
+            },
+            onError: (error) => {
+                console.error("Error:", error);
+            }
+        });
     };
 
     const nextStep = () => {
@@ -108,7 +119,7 @@ const UploadTrainingPage = () => {
                     <div className="step-title-main">New training plan was succesfully created!</div>
                     <p>You can view it or return to the main page, as you wish.</p>
                     <div className="buttons">
-                        <button className="btn-basic-black"><Link to="/">View plan</Link></button>
+                        <button className="btn-basic-black"><Link to={`/course/${createdTrainingId}`}>View plan</Link></button>
                         <button className="btn-basic-white"><Link to="/">Main menu</Link></button>
                     </div>
                 </div>
