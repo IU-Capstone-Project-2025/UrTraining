@@ -65,6 +65,7 @@ export const useSubmitNewTraining = (token: String) => {
     onSuccess: (data) => {
       console.log(data);
       console.log("New training data submitted successfully!");
+      return data;
     },
     onError: (error) => {
       console.error("Failed to submit new training data: ", error);
