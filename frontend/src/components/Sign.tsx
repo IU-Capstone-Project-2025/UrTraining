@@ -1,5 +1,5 @@
 // import React from 'react'
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import type { SignProps, InputField, SocialLink, CredentialsData } from "./interface/interfaces";
 import '../css/Sing.css'
 import SignInPageContext from "./context/SignPageContext";
@@ -60,13 +60,19 @@ const Sign = (props: SignProps) => {
                             </label> :
                             <></>
                         }
+                        {
+                            credentialsContext.isError &&
+                            <div className="signup__form-area__error">
+                                {credentialsContext.errorMessage}
+                            </div>
+                        }
                         <button
                             className='btn-basic-black'
                             onClick={handleSubmit}
                         >Let's start!</button>
                     </form>
-                    <div className='signup__form-area__divider' style={{display: "none"}}></div>
-                    <div className='signup__form-area__social' style={{display: "none"}}>
+                    <div className='signup__form-area__divider' style={{ display: "none" }}></div>
+                    <div className='signup__form-area__social' style={{ display: "none" }}>
                         {props.social_links.map((social: SocialLink, value: number) => {
                             return (<button key={value} className='btn-basic-white'>
                                 {social.placeholder}

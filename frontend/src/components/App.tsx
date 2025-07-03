@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import { AuthContext, type AuthCredentialsTokens } from './context/AuthContext';
 import RecommendationsPage from '../pages/RecommendationsPage';
 import UploadTrainingPage from '../pages/UploadTrainingPage';
+import ProfilePage from '../pages/ProfilePage';
 
 const queryClient = new QueryClient()
 
@@ -26,27 +27,29 @@ const App = () => {
   const [accessToken, SetAccessToken] = useState<String>("")
 
   useEffect(() => {
-    // It is necessary to use accessToken in any
-    // API Request because in this function should
-    // happen any check of validity of specified token.
-    const token = localStorage.getItem('token')
-
-    // Check if token exist
-    if (token) {
-      const { exp } = jwtDecode(token)
-
-      console.log(exp);
-
-      // Check in expiry is defined
-      if (exp)
-        // Remove token if expired
-        if (exp * 1000 < Date.now())
+    const checkToken = () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return;
+      }
+      try {
+        const { exp }: { exp: number } = jwtDecode(token);
+        if (exp * 1000 < Date.now()) {
           localStorage.removeItem('token');
+          SetAccessToken("");
+        } else {
+          SetAccessToken(token);
+        }
+      } catch {
+        localStorage.removeItem('token');
+        SetAccessToken("");
+      }
+    };
 
-      // Set as access token otherwise
-      SetAccessToken(token)
-    }
-  })
+    checkToken();
+    const id = setInterval(checkToken, 60 * 1000);
+    return () => clearInterval(id);
+  }, []);
 
   const contextValue: AuthCredentialsTokens = {
     access_token: accessToken,
@@ -71,6 +74,7 @@ const App = () => {
               <Route path="course/example-course" element={<ExampleCoursePage />} />
               <Route path="course/:courseId" element={<CoursePage />} />
               <Route path="upload-training" element={<UploadTrainingPage />} />
+              <Route path="profile" element={<ProfilePage />} />
             </Route>
           </Routes>
         </BrowserRouter>

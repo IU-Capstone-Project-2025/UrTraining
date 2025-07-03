@@ -17,34 +17,20 @@ import type { AuthCredentialsTokens } from "../components/context/AuthContext";
 export const useSignUp = () => {
     return useMutation<
         SignUpSuccess,
-        AxiosError<SignUpFailed>,
+        AxiosError,
         CredentialsData
     >({
-        mutationFn: signUpRequest,
-        onSuccess: (data) => {
-            console.log("Register success!", data);
-        },
-        onError: (error) => {
-            console.error("Register failed:", error);
-        },
+        mutationFn: signUpRequest
     });
 };
 
 export const useSignIn = (authData: AuthCredentialsTokens) => {
     return useMutation<
         SignInSuccess,
-        AxiosError<SignInFailed>,
+        AxiosError,
         CredentialsData
     >({
         mutationFn: signInRequest,
-        onSuccess: (data) => {
-            localStorage.setItem("token", data.access_token);
-            authData.setAccessToken(data.access_token);
-            console.log("Logged in!");
-        },
-        onError: (error) => {
-            console.error("Login failed: ", error);
-        },
     });
 };
 

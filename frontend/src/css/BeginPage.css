@@ -5,6 +5,7 @@
 
 .begin__container {
     display: flex;
+    flex: 2 3;
     flex-direction: column;
     gap: 3rem;
 
@@ -34,4 +35,13 @@
 .begin__buttons {
     display: flex;
     gap: 1rem;
+}
+
+.begin__image {
+    flex: 1 3;
+}
+
+.begin__image > img {
+    width: 100%;
+    height: auto;
 }
