@@ -7,7 +7,7 @@ interface BeginProps {
     text: {
         title: string;
         description: string;
-        button_text: string;
+        button_text: string; 
     };
 }
 

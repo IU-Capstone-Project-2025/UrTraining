@@ -22,13 +22,13 @@ const Navbar = (data: UserProp) => {
           <Link to="/" style={{ display: "none" }}>
             Profile
           </Link>
-          <Link to="/catalogue">
+          <Link to={authData.access_token === "" ? "/signin" : "/catalogue"}>
             Catalogue
           </Link>
-          <Link to="/recommendations">
+          <Link to={authData.access_token === "" ? "/signin" : "/recommendations"}>
             Recommendations
           </Link>
-          <Link to="/">
+          <Link to={authData.access_token === "" ? "/signin" : "/upload-training"}>
             Upload
           </Link>
           <Link to="http://t.me/mescudiway">

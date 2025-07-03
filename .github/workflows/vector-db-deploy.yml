@@ -1,0 +1,48 @@
+name: Vector DB Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+    paths: [ "ml/vector-db/**" ]
+  pull_request:
+    types: [closed]
+    branches: [ "main" ]
+    paths: [ "ml/vector-db/**" ]
+
+jobs:
+  deploy:
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to server with flock and logs
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            LOG_FILE=~/deploy-vector-db.log
+            {
+              echo "[$(date)] Starting vector-db deployment"
+
+              flock /tmp/vector-db-deploy.lock -c '
+                set -e
+                cd ~/UrTraining
+                echo "[$(date)] Pulling latest changes..."
+                git pull origin main
+                cd ml/vector-db || exit 1
+
+                echo "[$(date)] Stopping containers..."
+                docker-compose down
+
+                echo "[$(date)] Rebuilding containers..."
+                docker-compose build --no-cache
+
+                echo "[$(date)] Starting containers..."
+                docker-compose up -d
+
+                echo "[$(date)] Deployment finished successfully"
+              '
+            } >> $LOG_FILE 2>&1

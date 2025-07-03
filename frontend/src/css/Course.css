@@ -287,8 +287,8 @@
 }
 
 .course__metadata__fields {
-  display: flex;
-  flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   gap: 3rem;
   font-family: "TT Travels Regular", sans-serif;
   font-size: 1.2rem;
@@ -323,4 +323,11 @@
 .course__array__button {
   height: 3rem;
   padding: 0rem;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
 }

@@ -93,7 +93,7 @@ async def get_user_recommendations(current_user: dict = Depends(get_current_user
         
         search_url = "http://31.129.96.182:1337/search_index"
         payload = {
-            "index_name": "index_v3",
+            "index_name": "bm25_index",
             "query_text": query_text,
             "k": 5,  # Get top 5 recommendations
             "nprobe": 1

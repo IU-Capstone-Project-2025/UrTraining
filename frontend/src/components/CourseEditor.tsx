@@ -12,16 +12,21 @@ interface Exercise {
   description: string;
 }
 
+interface StepData {
+    [key: string]: any;
+}
+
+interface DataProps {
+  savedData: StepData;
+  setSavedData: React.Dispatch<React.SetStateAction<StepData>>;
+  onBack: () => void;
+  onSubmit: () => void;
+}
+
 type ExerciseField = keyof Exercise;
 type EditableField = ExerciseField | 'title';
 
-const TrainingEditor = ({ initialData }: { initialData?: any }) => {
-  const [data, setData] = useState<any>(initialData || {
-    header_badges: {},
-    course_info: { title: "New trainings plan" },
-    training_plan: [],
-    coach_data: {}
-  });
+const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, onSubmit }) => {
 
   const [editing, setEditing] = useState<{
     dayIndex: number | null;
@@ -63,7 +68,7 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
 
   // Функции для управления структурой
   const addTrainingDay = () => {
-    setData((prev: any) => ({
+    setSavedData((prev: any) => ({
       ...prev,
       training_plan: [
         ...prev.training_plan,
@@ -83,7 +88,7 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
   };
 
   const addExercise = (dayIndex: number) => {
-    setData((prev: any) => {
+    setSavedData((prev: any) => {
       const updatedPlan = [...prev.training_plan];
       updatedPlan[dayIndex].exercises.push({
         exercise: "Exercise",
@@ -98,17 +103,17 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
   };
 
   const handleChange = (value: string, dayIndex: number, exerciseIndex: number | null, field: EditableField) => {
-    const updatedPlan = [...data.training_plan];
+    const updatedPlan = [...savedData.training_plan];
     if (exerciseIndex !== null) {
       updatedPlan[dayIndex].exercises[exerciseIndex][field] = value;
     } else {
       updatedPlan[dayIndex].title = value;
     }
-    setData({ ...data, training_plan: updatedPlan });
+    setSavedData({ ...savedData, training_plan: updatedPlan });
   };
 
   const handleDayTitleChange = (dayIndex: number, title: string) => {
-    setData((prev: any) => {
+    setSavedData((prev: any) => {
       const updatedPlan = [...prev.training_plan];
       updatedPlan[dayIndex].title = title;
       return { ...prev, training_plan: updatedPlan };
@@ -118,17 +123,17 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
   return (
     <div className="course basic-page" onDoubleClick={stopEditing}>
       <div className="course__container">
-        {/* Заголовок и метаданные */}
+        <h2 className="step-title">Step 2: Course Plan</h2>
         <div className='course__info'>
           <div className='course__info__title'>
             <div className='course__info__text'>
               <input
                 type="text"
-                value={data.course_info.title}
+                value={savedData.course_title}
                 placeholder='Title...'
-                onChange={(e) => setData((prev: any) => ({
+                onChange={(e) => setSavedData((prev: any) => ({
                   ...prev,
-                  course_info: { ...prev.course_info, title: e.target.value }
+                  course_title: e.target.value
                 }))}
                 className="course-title-input"
               />
@@ -146,7 +151,7 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
           </div>
 
           <div className='course__structure__container' ref={scrollRef}>
-            {data.training_plan.map((day: any, dayIndex: number) => (
+            {savedData.training_plan.map((day: any, dayIndex: number) => (
               <div key={dayIndex} className="course__structure__session">
                 <div className="course__session__table">
                   {editing.dayIndex === dayIndex && editing.exerciseIndex === null ? (
@@ -213,18 +218,15 @@ const TrainingEditor = ({ initialData }: { initialData?: any }) => {
             ))}
           </div>
 
-          <Metadata />
 
         </div>
 
         {/* Кнопка сохранения */}
         <div className="editor-actions">
-          <button
-            onClick={() => console.log("Saved data:", data)}
-            className="btn-basic-black"
-          >
-            Save the course
-          </button>
+          <div className="button-row">
+                <button className="btn-basic-black" onClick={onBack}>Back</button>
+                <button className="btn-basic-black" onClick={onSubmit}>Save the course</button>
+            </div>
         </div>
       </div>
     </div>

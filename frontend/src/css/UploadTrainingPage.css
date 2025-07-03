@@ -1,0 +1,64 @@
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+}
+
+.step-container {
+  background: white;
+  padding: 30px;
+  max-width: 1000px;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.centered-content {
+  margin-top: 10%;
+  text-align: center;
+}
+
+.metadata-content {
+  padding-top: 0%;
+}
+
+.centered-content h1 {
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.centered-content p {
+  font-size: 16px;
+  margin-bottom: 25px;
+  color: #555;
+}
+
+.button-group {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.buttons {
+  margin-top: 5%;
+}
+
+.buttons button:first-child {
+  margin-right: 10px;
+}
+
+.step-title {
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 20px;
+  font-family: "TT Travels Bold", sans-serif;
+}
+
+.step-title-main {
+  text-align: center;
+  font-size: 40px;
+  margin-bottom: 20px;
+  font-family: "TT Travels Bold", sans-serif;
+}

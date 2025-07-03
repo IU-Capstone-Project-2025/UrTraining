@@ -1,0 +1,48 @@
+name: Image2Tracker Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+    paths: [ "ml/image2tracker/**" ]
+  pull_request:
+    types: [closed]
+    branches: [ "main" ]
+    paths: [ "ml/image2tracker/**" ]
+
+jobs:
+  deploy:
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to ml-image2tracker with flock and logs
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            LOG_FILE=~/deploy-image2tracker.log
+            {
+              echo "[$(date)] Starting image2tracker deployment"
+
+              flock /tmp/image2tracker-deploy.lock -c '
+                cd ~/UrTraining
+                echo "[$(date)] Pulling latest changes..."
+                git pull origin main
+                set -e
+                cd ml/image2tracker || exit 1
+
+                echo "[$(date)] Stopping containers..."
+                docker-compose down
+
+                echo "[$(date)] Rebuilding containers..."
+                docker-compose build --no-cache
+
+                echo "[$(date)] Starting containers..."
+                docker-compose up -d
+
+                echo "[$(date)] Deployment finished successfully"
+              '
+            } >> $LOG_FILE 2>&1
