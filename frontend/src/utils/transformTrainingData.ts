@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 type FlatFormData = { [key: string]: any };
 
-export function formatTrainingData(formData: FlatFormData, trainerData: FlatFormData) {
+export function formatTrainingData(formData: FlatFormData, trainerData: FlatFormData, userData: any) {
   const {
     activity_type,
     program_goal,
@@ -51,7 +51,7 @@ export function formatTrainingData(formData: FlatFormData, trainerData: FlatForm
     "Number of Reviews": 0,
     "Certification": trainerData.trainer_profile.certification,
     "Experience": trainerData.trainer_profile.experience,
-    "Trainer Name": "string",
+    "Trainer Name": userData.username,
     "Course Title": course_title,
     "Program Description": program_description,
     "training_plan": training_plan
