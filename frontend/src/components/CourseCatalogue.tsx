@@ -15,11 +15,15 @@ const CourseCatalogue = (data: any) => {
 
         <div className="catalogue__grid">
 
-          {data.courses.map((course: any) => (
+          {data.courses.map((course: any, index: number) => (
             <Link
               to={`/course/${course.id}`} key={course.id}
             >
               <CourseCard {...transformRawCourseData(course)} />
+              {(index % 5 == 0) &&
+                <div style={{ position: "relative" }}>
+                  <div className="assets__background__gradient" style={{ top: "0", left: "0" }}></div>
+                </div>}
             </Link>
           ))}
         </div>

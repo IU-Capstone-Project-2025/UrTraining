@@ -1,6 +1,6 @@
 // import React from 'react'
 import { Link } from "react-router-dom";
-import notebook from '../assets/3dicons-notebook-dynamic-clay 1.png'
+import notebook from '../assets/Side image.png'
 import '../css/Welcome.css'
 
 const Welcome = () => {

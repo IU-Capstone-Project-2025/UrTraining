@@ -52,6 +52,9 @@ const UploadTrainingPage = () => {
 
     return (
         <div className="basic-page">
+            <div style={{ position: "relative" }}>
+                <div className="assets__background__gradient" style={{ top: "0", left: "0" }}></div>
+            </div>
             <div>
                 {step === "welcome" && (
                 <div className="centered-content">
