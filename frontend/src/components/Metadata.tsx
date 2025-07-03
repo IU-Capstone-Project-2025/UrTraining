@@ -1,12 +1,18 @@
 import React, { useState } from 'react'
-
-
+import '../css/Course.css';
 
 interface StepData {
     [key: string]: any;
 }
 
-const Metadata = () => {
+interface MetadataProps {
+  savedData: StepData;
+  setSavedData: React.Dispatch<React.SetStateAction<StepData>>;
+  onNext: () => void;
+  onBack: () => void;
+}
+
+const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, onNext }) => {
     const [goals, setGoals] = useState(1)
     const [environment, setEnvironment] = useState(1)
     const [age, setAge] = useState(1)
@@ -15,8 +21,6 @@ const Metadata = () => {
     const [content, setContent] = useState(1)
     const [feedback, setFeedback] = useState(1)
     const [tags, setTags] = useState(1)
-
-    const [savedData, setSavedData] = useState<StepData>({})
 
     type MetadataFieldType = 'text' | 'number' | 'Array';
     type MetadataKey =
@@ -150,55 +154,61 @@ const Metadata = () => {
     const metadataKeys = Object.keys(metadataDefault) as MetadataKey[]
 
     return (
-        <div className='course__structure__metadata'>
-            <h3>Metadata</h3>
-            <div className='course__metadata__fields'>
-                {metadataKeys.map((key, index) => {
-                    return (
-                        <div className='course__metadata__field' key={index}>
-                            <p className='course__field__name'>{metadataNames[key]}</p>
-                            {(metadataDefault[key] === "text" ||
-                                metadataDefault[key] === "number") &&
-                                <form
-                                    className='course__field__form'
-                                    onChange={handleChange}>
-                                    <input
-                                        className='course__field__input'
-                                        type={metadataDefault[key]}
-                                        name={key}
-                                    />
-                                </form>
-                            }
+        <div className="course__container">
+            <h2 className="step-title">Step 1: Course Metadata</h2>
+            <div className='course__structure__metadata'>
+                <div className='course__metadata__fields'>
+                    {metadataKeys.map((key, index) => {
+                        return (
+                            <div className='course__metadata__field' key={index}>
+                                <p className='course__field__name'>{metadataNames[key]}</p>
+                                {(metadataDefault[key] === "text" ||
+                                    metadataDefault[key] === "number") &&
+                                    <form
+                                        className='course__field__form'
+                                        onChange={handleChange}>
+                                        <input
+                                            className='course__field__input'
+                                            type={metadataDefault[key]}
+                                            name={key}
+                                        />
+                                    </form>
+                                }
 
-                            {metadataDefault[key] === "Array" && (key in metadataState) && (() => {
-                                // Now TS knows key is one of metadataState's keys
-                                const stateKey = key as keyof typeof metadataState;
-                                const { value, setFunction } = metadataState[stateKey];
+                                {metadataDefault[key] === "Array" && (key in metadataState) && (() => {
+                                    // Now TS knows key is one of metadataState's keys
+                                    const stateKey = key as keyof typeof metadataState;
+                                    const { value, setFunction } = metadataState[stateKey];
 
-                                return (
-                                    <div className="course__input__array">
-                                        <form className="course__field__form" onChange={handleChange}>
-                                            {Array.from({ length: value }).map((_, i) => (
-                                                <input
-                                                    key={i}
-                                                    className="course__field__input"
-                                                    type="text"
-                                                    name={key}
-                                                />
-                                            ))}
-                                        </form>
-                                        <button
-                                            className="btn-basic-white course__array__button"
-                                            onClick={() => setFunction(value + 1)}
-                                        >
-                                            Add option
-                                        </button>
-                                    </div>
-                                );
-                            })()}
-                        </div>
-                    )
-                })}
+                                    return (
+                                        <div className="course__input__array">
+                                            <form className="course__field__form" onChange={handleChange}>
+                                                {Array.from({ length: value }).map((_, i) => (
+                                                    <input
+                                                        key={i}
+                                                        className="course__field__input"
+                                                        type="text"
+                                                        name={key}
+                                                    />
+                                                ))}
+                                            </form>
+                                            <button
+                                                className="btn-basic-white course__array__button"
+                                                onClick={() => setFunction(value + 1)}
+                                            >
+                                                Add option
+                                            </button>
+                                        </div>
+                                    );
+                                })()}
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+            <div className="button-row">
+                <button className="btn-basic-black" onClick={onBack}>Back</button>
+                <button className="btn-basic-black" onClick={onNext}>Continue</button>
             </div>
         </div>
     )
