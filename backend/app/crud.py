@@ -1,12 +1,21 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
+from sqlalchemy.exc import IntegrityError
 from app.models.database_models import User, TrainingProfile, ActiveSession, Course, UserCourseProgress, Training
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any
 import uuid
+import psycopg2.errors
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+class DuplicateCourseIdError(Exception):
+    """Исключение для случая дублирования course_id"""
+    def __init__(self, course_id: str):
+        self.course_id = course_id
+        super().__init__(f"Training with course_id '{course_id}' already exists")
 
 
 # User CRUD operations
@@ -337,6 +346,15 @@ def create_training(db: Session, training_data: dict, user_id: int):
         db.commit()
         db.refresh(db_training)
         return db_training
+    except IntegrityError as e:
+        db.rollback()
+        # Проверяем, является ли это ошибкой дублирования course_id
+        if isinstance(e.orig, psycopg2.errors.UniqueViolation):
+            if "ix_trainings_course_id" in str(e.orig):
+                print(f"Duplicate course_id detected: {course_id}")
+                raise DuplicateCourseIdError(course_id)
+        print(f"Integrity error creating training: {e}")
+        raise e
     except Exception as e:
         db.rollback()
         print(f"Error creating training: {e}")
