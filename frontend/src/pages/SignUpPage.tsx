@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
   const [credentials, setCredentials] = useState<CredentialsData>(emptyCredentials)
+  const [isError, setIsError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
   const authData = useContext(AuthContext)
   const signUpMutation = useSignUp()
 
@@ -17,6 +19,8 @@ const SignUpPage = () => {
 
   const contextValue: SignContextType = {
     credentials: credentials,
+    isError: isError,
+    errorMessage: errorMessage,
     submitCredentials: setCredentials
   };
 
@@ -31,11 +35,19 @@ const SignUpPage = () => {
   // After credentials updated inside <Sign />,
   // call POST Mutation function
   useEffect(() => {
-    if (credentials !== emptyCredentials){
-      signUpMutation.mutate(credentials)
-      console.log(credentials);
-      
-      // navigate("/")
+    if (credentials !== emptyCredentials) {
+      signUpMutation.mutate(credentials, {
+        onSuccess: (data) => {
+          setIsError(false)
+          console.log("Signup succeeded on this call:", data);
+          navigate("/signin")
+        },
+        onError: (error) => {
+          setIsError(true)
+          setErrorMessage(error.response?.data?.detail[0].msg || error.response?.data?.detail)  
+          console.error("Signup failed on this call:", error);
+        }
+      })
     }
   }, [credentials]);
 

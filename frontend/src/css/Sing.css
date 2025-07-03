@@ -80,3 +80,7 @@
 .signup__form-area__social > button{
     width: 100%
 }
+
+.signup__form-area__error {
+    color: rgb(226, 72, 72);
+}

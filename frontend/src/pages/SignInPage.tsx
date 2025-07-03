@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom"
 
 const SignInPage = () => {
   const [credentials, setCredentials] = useState<CredentialsData>(emptyCredentials)
+  const [isError, setIsError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
   const authData = useContext(AuthContext)
   const signInMutation = useSignIn(authData)
 
@@ -17,6 +19,8 @@ const SignInPage = () => {
 
   const contextValue: SignContextType = {
     credentials: credentials,
+    isError: isError,
+    errorMessage: errorMessage,
     submitCredentials: setCredentials
   };
 
@@ -31,7 +35,19 @@ const SignInPage = () => {
   // call POST Mutation function
   useEffect(() => {
     if (credentials !== emptyCredentials) {
-      signInMutation.mutate(credentials);
+      signInMutation.mutate(credentials, {
+        onSuccess: (data) => {
+          setIsError(false)
+          localStorage.setItem("token", data.access_token);
+          authData.setAccessToken(data.access_token);
+          console.log("Logged in!");
+        },
+        onError: (error) => {
+          setIsError(true)
+          setErrorMessage(error.response?.data?.detail[0].msg || error.response?.data?.detail)
+          console.error("Login failed: ", error);
+        }
+      });
       navigate("/signin")
     }
   }, [credentials]);
