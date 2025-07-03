@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  streamlit-app:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      - API_ENDPOINT=http://31.129.96.182:1338/image2tracker
+    volumes:
+      - .:/app
+    restart: unless-stopped 
