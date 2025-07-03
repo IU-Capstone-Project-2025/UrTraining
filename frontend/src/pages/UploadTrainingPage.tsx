@@ -1,14 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import TrainingEditor from "../components/CourseEditor";
 import Metadata from "../components/Metadata";
 import "../css/UploadTrainingPage.css";
 import { Link } from "react-router-dom";
+import AuthContext from "../components/context/AuthContext";
+import { useSubmitNewTraining } from "../api/mutations";
+import { formatTrainingData } from "../utils/transformTrainingData";
+import { trainerDataRequest } from "../api/apiRequests";
+import { useQuery } from "@tanstack/react-query";
+
 
 interface StepData {
     [key: string]: any;
 }
 
 const UploadTrainingPage = () => {
+
+    const authData = useContext(AuthContext)
+    const submitTrainingDataMutation = useSubmitNewTraining(authData.access_token)
 
     const [step, setStep] = useState<"welcome" | "metadata" | "editor" | "end">("welcome");
 
@@ -34,9 +43,15 @@ const UploadTrainingPage = () => {
         training_plan: []
     });
 
+    const { data: trainerData = [], isLoading, status } = useQuery<any, Error>({
+        queryKey: ['formPages'],
+        queryFn: () => trainerDataRequest(authData.access_token)
+    })
+
     const handleSubmit = () => {
         console.log("Saved data: ", savedData);
-        // Можно передать savedData в TrainingEditor здесь
+        const formattedData = formatTrainingData(savedData, trainerData);
+        submitTrainingDataMutation.mutate(formattedData);
         setStep("end");
     };
 

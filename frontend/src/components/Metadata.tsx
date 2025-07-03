@@ -35,11 +35,7 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
         | 'gender_orientation'
         | 'physical_limitations'
         | 'required_equipment'
-        | 'course_language'
-        | 'visual_content'
-        | 'trainer_feedback_options'
         | 'tags'
-        | 'trainer_name'
         | 'course_title'
         | 'program_description';
 
@@ -55,11 +51,7 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
         gender_orientation: "text",
         physical_limitations: "Array",
         required_equipment: "Array",
-        course_language: "text",
-        visual_content: "Array",
-        trainer_feedback_options: "Array",
         tags: "Array",
-        trainer_name: "text",
         course_title: "text",
         program_description: "text",
     }
@@ -85,14 +77,6 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
             value: equipment,
             setFunction: setEquipment
         },
-        visual_content: {
-            value: content,
-            setFunction: setContent
-        },
-        trainer_feedback_options: {
-            value: feedback,
-            setFunction: setFeedback
-        },
         tags: {
             value: tags,
             setFunction: setTags
@@ -111,11 +95,7 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
         gender_orientation: "Gender Orientation",
         physical_limitations: "Physical Limitations",
         required_equipment: "Required Equipment",
-        course_language: "Course Language",
-        visual_content: "Visual Content",
-        trainer_feedback_options: "Trainer Feedback Options",
         tags: "Tags",
-        trainer_name: "Trainer Name",
         course_title: "Course Title",
         program_description: "Program Description",
     }

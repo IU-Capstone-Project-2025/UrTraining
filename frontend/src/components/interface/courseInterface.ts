@@ -1,0 +1,1 @@
+type FlatFormData = { [key: string]: any };
