@@ -93,7 +93,7 @@ const Course = (data: any) => {
                                             ))}
                                     </div>
                                     <div className="course__table__body">
-                                        {training.exercises.map((exercise: any, value: number) => (
+                                        {training.exercises.map((exercise: any, index: number) => (
                                             <div key={index} className="course__table__row">
                                                 {Object.entries(exercise).map(([key, value]: any) => (
                                                     <div key={key} className="course__table__cell">
