@@ -7,6 +7,8 @@ from datetime import datetime, timedelta
 from typing import Optional
 from sqlalchemy.orm import Session
 import re
+import uuid
+import time
 
 from app.database import get_db
 from app.crud import (
@@ -99,7 +101,12 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     else:
         expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     
-    to_encode.update({"exp": expire})
+    # Добавляем уникальный идентификатор и микросекунды для уникальности
+    to_encode.update({
+        "exp": expire,
+        "jti": str(uuid.uuid4()),  # Уникальный идентификатор токена
+        "iat": time.time()  # Время создания с микросекундами
+    })
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -307,35 +314,4 @@ async def update_trainer_profile(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to update trainer profile"
-        )
-
-
-@router.delete("/trainer-profile", response_model=TrainerProfileResponse)
-async def delete_trainer_profile(
-    current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """Удалить профиль тренера текущего пользователя"""
-    try:
-        # Удаляем профиль тренера (устанавливаем в None)
-        updated_user = update_user_trainer_profile(db, current_user["id"], None)
-        
-        if not updated_user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
-            )
-        
-        return TrainerProfileResponse(
-            message="Trainer profile deleted successfully",
-            trainer_profile=None
-        )
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        print(f"Error deleting trainer profile: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to delete trainer profile"
         )

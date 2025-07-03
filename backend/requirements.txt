@@ -9,3 +9,4 @@ passlib[bcrypt]
 requests
 pytest
 playwright
+httpx

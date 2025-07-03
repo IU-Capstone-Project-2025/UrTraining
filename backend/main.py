@@ -484,3 +484,9 @@ def update_user_data(
     except Exception as e:
         print(f"Error updating user data: {e}")
         raise HTTPException(status_code=500, detail="Failed to update user data")
+
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "message": "UrTraining Backend is running"}

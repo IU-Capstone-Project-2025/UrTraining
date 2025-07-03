@@ -143,17 +143,45 @@ def update_training_profile(db: Session, user_id: int, profile_data: Dict[str, A
 
 # Active Session CRUD operations
 def create_active_session(db: Session, user_id: int, token: str, expires_at: datetime, user_agent: str = None, ip_address: str = None) -> ActiveSession:
-    db_session = ActiveSession(
-        user_id=user_id,
-        token=token,
-        expires_at=expires_at,
-        user_agent=user_agent,
-        ip_address=ip_address
-    )
-    db.add(db_session)
-    db.commit()
-    db.refresh(db_session)
-    return db_session
+    """Создает новую активную сессию с обработкой дублирования токенов"""
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            db_session = ActiveSession(
+                user_id=user_id,
+                token=token,
+                expires_at=expires_at,
+                user_agent=user_agent,
+                ip_address=ip_address
+            )
+            db.add(db_session)
+            db.commit()
+            db.refresh(db_session)
+            return db_session
+        except IntegrityError as e:
+            db.rollback()
+            if "duplicate key value violates unique constraint" in str(e) and "ix_active_sessions_token" in str(e):
+                # Если это дублирование токена, можно попробовать удалить старую сессию
+                print(f"Token duplication detected, attempt {attempt + 1}/{max_retries}")
+                if attempt < max_retries - 1:
+                    # Попробуем удалить старую сессию и создать новую
+                    try:
+                        old_session = db.query(ActiveSession).filter(ActiveSession.token == token).first()
+                        if old_session:
+                            db.delete(old_session)
+                            db.commit()
+                            continue
+                    except Exception as cleanup_error:
+                        print(f"Error during cleanup: {cleanup_error}")
+                        db.rollback()
+                # Если не удалось решить проблему, пробрасываем исключение
+                raise e
+            else:
+                # Если это другая ошибка целостности, пробрасываем её
+                raise e
+    
+    # Если мы дошли сюда, значит все попытки исчерпаны
+    raise Exception("Failed to create active session after multiple attempts")
 
 
 def get_active_session(db: Session, token: str) -> Optional[ActiveSession]:

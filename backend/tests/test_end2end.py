@@ -2,9 +2,11 @@ import os
 import sys
 import pytest
 import random
+import time
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import OperationalError
 
 # Setting up paths
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -15,17 +17,81 @@ from app.models.database_models import User, TrainingProfile
 from app.database import Base
 from main import app
 
-# Test DATABASE setup
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+# Test DATABASE setup - используем PostgreSQL из контейнера
+SQLALCHEMY_DATABASE_URL = os.getenv(
+    "DATABASE_URL", 
+    "postgresql://uruser:urpassword@db:5432/urtraining"
+)
+
+print(f"🧪 Tests connecting to database: {SQLALCHEMY_DATABASE_URL}")
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Проверяем подключение к базе данных
+try:
+    with engine.connect() as conn:
+        conn.execute(text("SELECT 1"))
+        print("✅ Connected to PostgreSQL database successfully")
+except Exception as e:
+    print(f"❌ Failed to connect to database: {e}")
+    raise
 
 # Fixtures
 @pytest.fixture(scope="module")
 def test_app():
+    # Создаем все таблицы для тестов
     Base.metadata.create_all(bind=engine)
     yield app
-    Base.metadata.drop_all(bind=engine)
+    # Очищаем данные после тестов, но не удаляем таблицы
+    # (так как основное приложение может их использовать)
+
+def clean_database_with_retry(max_retries=3, delay=0.1):
+    """Очищает базу данных с повторными попытками для избежания deadlock"""
+    for attempt in range(max_retries):
+        try:
+            with engine.connect() as conn:
+                # Начинаем транзакцию
+                trans = conn.begin()
+                try:
+                    # Используем DELETE вместо TRUNCATE для избежания deadlock
+                    # Порядок важен для соблюдения внешних ключей
+                    conn.execute(text("DELETE FROM user_course_progress;"))
+                    conn.execute(text("DELETE FROM trainings;"))
+                    conn.execute(text("DELETE FROM active_sessions;"))
+                    conn.execute(text("DELETE FROM training_profiles;"))
+                    conn.execute(text("DELETE FROM courses;"))
+                    conn.execute(text("DELETE FROM users;"))
+                    
+                    # Сбрасываем последовательности для автоинкремента
+                    conn.execute(text("ALTER SEQUENCE users_id_seq RESTART WITH 1;"))
+                    conn.execute(text("ALTER SEQUENCE training_profiles_id_seq RESTART WITH 1;"))
+                    conn.execute(text("ALTER SEQUENCE active_sessions_id_seq RESTART WITH 1;"))
+                    
+                    trans.commit()
+                    return  # Успешно выполнено
+                except Exception as e:
+                    trans.rollback()
+                    raise e
+        except OperationalError as e:
+            if "deadlock detected" in str(e).lower() and attempt < max_retries - 1:
+                print(f"🔄 Deadlock detected, retrying ({attempt + 1}/{max_retries})...")
+                time.sleep(delay * (2 ** attempt))  # Экспоненциальная задержка
+                continue
+            else:
+                raise e
+        except Exception as e:
+            if attempt < max_retries - 1:
+                print(f"🔄 Database error, retrying ({attempt + 1}/{max_retries}): {e}")
+                time.sleep(delay * (2 ** attempt))
+                continue
+            else:
+                raise e
+
+@pytest.fixture(scope="function", autouse=True)
+def clean_db():
+    """Очищает данные в базе данных перед каждым тестом"""
+    clean_database_with_retry()
 
 @pytest.fixture(scope="module")
 def client(test_app):
@@ -122,6 +188,7 @@ class TestUserProfile:
         user_data = response.json()
         assert user_data["full_name"] == "Updated Name"
         assert user_data["training_profile"]["basic_information"]["gender"] == "male"
+        
 class TestTrainingEndpoints:
     def test_training_crud_flow(self, client, auth_headers):
         # Создание тренировки
@@ -197,7 +264,6 @@ class TestTrainingProfile:
         assert response.status_code == 200
         assert "training_profile" in response.json()
         assert response.json()["training_profile"]["training_goals"] == ["improve_flexibility"]
-
 
 class TestEdgeCases:
     def test_min_max_values(self, client):
@@ -288,8 +354,8 @@ class TestTrainingTypes:
         #1. Registration and login
         user_data = {
             "full_name": f"User {interest_level}",
-            "email": f"interest{interest_level}@example.com",
-            "username": f"interest_{interest_level}",
+            "email": f"interest{interest_level}_{random.randint(1000, 9999)}@example.com",
+            "username": f"interest_{interest_level}_{random.randint(1000, 9999)}",
             "password": "Testpass123!"
         }
         client.post("/auth/register", json=user_data)
@@ -391,23 +457,22 @@ class TestPartialUpdates:
         response = client.post("/user-data", json=initial_data, headers=headers)
         assert response.status_code == 200
 
-        # 4. Частичное обновление (только имя)
-        update_data = {"full_name": "Updated Name"}
-        response = client.post("/user-data", json=update_data, headers=headers)
+        # 4. Частичное обновление только имени
+        partial_data = {
+            "full_name": "Updated Name Only"
+        }
+        response = client.post("/user-data", json=partial_data, headers=headers)
         assert response.status_code == 200
 
-        # 5. Проверка результатов
+        # 5. Проверка, что остальные данные сохранились
         get_response = client.get("/user-data", headers=headers)
         assert get_response.status_code == 200
         user_data = get_response.json()
-        
-        # Проверяем обновленное поле
-        assert user_data["full_name"] == "Updated Name"
-        
-        # Проверяем, что другие поля не изменились
+        assert user_data["full_name"] == "Updated Name Only"
         assert user_data["country"] == "us"
         assert user_data["city"] == "New York"
         assert user_data["training_profile"]["basic_information"]["gender"] == "male"
+        assert user_data["training_profile"]["basic_information"]["age"] == 30
 
 # tests/e2e/test_ui.py
 import pytest
