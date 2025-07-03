@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import AuthContext from "../components/context/AuthContext";
 import { useSubmitNewTraining } from "../api/mutations";
 import { formatTrainingData } from "../utils/transformTrainingData";
-import { trainerDataRequest } from "../api/apiRequests";
+import { trainerDataRequest, userInfoRequest } from "../api/apiRequests";
 import { useQuery } from "@tanstack/react-query";
 
 
@@ -44,14 +44,19 @@ const UploadTrainingPage = () => {
         training_plan: []
     });
 
-    const { data: trainerData = [], isLoading, status } = useQuery<any, Error>({
+    const { data: trainerData = [], isLoading: isTrainerLoading, status: trainerStatus } = useQuery<any, Error>({
         queryKey: ['formPages'],
         queryFn: () => trainerDataRequest(authData.access_token)
     })
 
+    const { data: userData = [], isLoading: isUserLoading, status: userStatus } = useQuery<any, Error>({
+        queryKey: ['userData'],
+        queryFn: () => userInfoRequest(authData.access_token)
+    })
+
     const handleSubmit = () => {
         console.log("Saved data: ", savedData);
-        const formattedData = formatTrainingData(savedData, trainerData);
+        const formattedData = formatTrainingData(savedData, trainerData, userData);
         
         submitTrainingDataMutation.mutate(formattedData, {
             onSuccess: (data) => {
