@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import TrainingEditor from "../components/CourseEditor";
 import Metadata from "../components/Metadata";
 import "../css/UploadTrainingPage.css";
 import { Link } from "react-router-dom";
+import AuthContext from "../components/context/AuthContext";
+import { useSubmitNewTraining } from "../api/mutations";
+import { formatTrainingData } from "../utils/transformTrainingData";
+import { trainerDataRequest, userInfoRequest } from "../api/apiRequests";
+import { useQuery } from "@tanstack/react-query";
+
 
 interface StepData {
     [key: string]: any;
@@ -10,7 +16,11 @@ interface StepData {
 
 const UploadTrainingPage = () => {
 
+    const authData = useContext(AuthContext)
+    const submitTrainingDataMutation = useSubmitNewTraining(authData.access_token)
+
     const [step, setStep] = useState<"welcome" | "metadata" | "editor" | "end">("welcome");
+    const [createdTrainingId, setCreatedTrainingId] = useState<string | null>(null);
 
     const [savedData, setSavedData] = useState<StepData>({
         activity_type: "",
@@ -34,10 +44,31 @@ const UploadTrainingPage = () => {
         training_plan: []
     });
 
+    const { data: trainerData = [], isLoading: isTrainerLoading, status: trainerStatus } = useQuery<any, Error>({
+        queryKey: ['formPages'],
+        queryFn: () => trainerDataRequest(authData.access_token)
+    })
+
+    const { data: userData = [], isLoading: isUserLoading, status: userStatus } = useQuery<any, Error>({
+        queryKey: ['userData'],
+        queryFn: () => userInfoRequest(authData.access_token)
+    })
+
     const handleSubmit = () => {
         console.log("Saved data: ", savedData);
-        // Можно передать savedData в TrainingEditor здесь
-        setStep("end");
+        const formattedData = formatTrainingData(savedData, trainerData, userData);
+        
+        submitTrainingDataMutation.mutate(formattedData, {
+            onSuccess: (data) => {
+                console.log("Received data from server:", data);
+                const newTrainingId = data.id;
+                setCreatedTrainingId(newTrainingId);
+                setStep("end");
+            },
+            onError: (error) => {
+                console.error("Error:", error);
+            }
+        });
     };
 
     const nextStep = () => {
@@ -93,7 +124,7 @@ const UploadTrainingPage = () => {
                     <div className="step-title-main">New training plan was succesfully created!</div>
                     <p>You can view it or return to the main page, as you wish.</p>
                     <div className="buttons">
-                        <button className="btn-basic-black"><Link to="/">View plan</Link></button>
+                        <button className="btn-basic-black"><Link to={`/course/${createdTrainingId}`}>View plan</Link></button>
                         <button className="btn-basic-white"><Link to="/">Main menu</Link></button>
                     </div>
                 </div>

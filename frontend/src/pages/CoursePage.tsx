@@ -3,13 +3,21 @@ import { useParams } from 'react-router-dom';
 import Course from "../components/Course"
 import kanye from '../assets/kanye.jpg'
 import { transformRawCourseData } from "../utils/transformRawCouseData"
-import courses from "../components/data/selected_courses_with_ids_plus_plan.json"
+import { currentTrainingDataRequest } from "../api/apiRequests";
+import AuthContext from "../components/context/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { useContext } from "react";
 
 const CoursePage = () => {
 
     const { courseId } = useParams();
+    const authData = useContext(AuthContext)
 
-    const courseData = courses.find(course => course.id === courseId);
+    const { data: courseData = [], isLoading, status } = useQuery<any, Error>({
+        queryKey: ['formTraining'],
+        queryFn: () => currentTrainingDataRequest(courseId as String, authData.access_token)
+    })
+
     const training_data = transformRawCourseData(courseData);
 
     return (

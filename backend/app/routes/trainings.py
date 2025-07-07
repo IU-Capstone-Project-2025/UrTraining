@@ -13,7 +13,8 @@ from app.crud import (
     delete_training,
     search_trainings,
     get_training_with_trainer_info,
-    get_user_by_id
+    get_user_by_id,
+    DuplicateCourseIdError
 )
 from app.models.training import (
     TrainingResponse, 
@@ -331,6 +332,15 @@ async def create_training_programs_bulk(
                 
                 created_trainings.append(TrainingResponse(**response_dict))
                 
+            except DuplicateCourseIdError as e:
+                print(f"Duplicate course_id error for training {i}: {e}")
+                failed_trainings.append({
+                    "index": i,
+                    "error": f"Тренировочная программа с ID '{e.course_id}' уже существует",
+                    "course_title": getattr(training_data, 'course_title', 'Unknown'),
+                    "duplicate_id": e.course_id
+                })
+                continue
             except Exception as e:
                 print(f"Error creating training {i}: {e}")
                 failed_trainings.append({
@@ -444,6 +454,12 @@ async def create_training_program(
         
         return TrainingResponse(**response_dict)
         
+    except DuplicateCourseIdError as e:
+        print(f"Duplicate course_id error: {e}")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Тренировочная программа с ID '{e.course_id}' уже существует. Пожалуйста, используйте другой ID или оставьте поле пустым для автоматической генерации."
+        )
     except Exception as e:
         print(f"Error creating training: {e}")
         raise HTTPException(
@@ -625,6 +641,102 @@ async def get_my_trainings(
         raise HTTPException(
             status_code=500,
             detail="Не удалось загрузить ваши тренировки"
+        )
+
+
+@router.get("/user/{user_id}", response_model=List[TrainingResponse])
+async def get_user_trainings(
+    user_id: int,
+    skip: int = Query(0, ge=0, description="Количество записей для пропуска"),
+    limit: int = Query(10, ge=1, le=100, description="Максимальное количество записей"),
+    current_user: dict = Depends(get_current_user),  # Требуем авторизации для безопасности
+    db: Session = Depends(get_db)
+):
+    """
+    Получить список тренировочных программ конкретного пользователя по его ID с полной информацией.
+    
+    Этот эндпоинт требует авторизации и возвращает полную информацию о тренировках указанного пользователя,
+    включая план тренировок и данные тренера.
+    """
+    try:
+        # Проверяем, существует ли пользователь с указанным ID
+        user = get_user_by_id(db, user_id)
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Пользователь с ID {user_id} не найден"
+            )
+        
+        # Получаем тренировки пользователя
+        trainings = get_trainings_by_user(db, user_id, skip, limit)
+        
+        # Helper function to create response dict from db training (same as in GET /trainings)
+        def create_response_dict(db_training):
+            # Handle None values for certification and experience
+            certification = db_training.certification
+            if certification is None:
+                certification = {
+                    "Type": "",
+                    "Level": "",
+                    "Specialization": ""
+                }
+            
+            experience = db_training.experience
+            if experience is None:
+                experience = {
+                    "Years": 0,
+                    "Specialization": "",
+                    "Courses": 0,
+                    "Rating": 0.0
+                }
+            
+            return {
+                "activity_type": db_training.activity_type,
+                "program_goal": db_training.program_goal,
+                "training_environment": db_training.training_environment,
+                "difficulty_level": db_training.difficulty_level,
+                "course_duration_weeks": db_training.course_duration_weeks,
+                "weekly_training_frequency": db_training.weekly_training_frequency,
+                "average_workout_duration": db_training.average_workout_duration,
+                "age_group": db_training.age_group,
+                "gender_orientation": db_training.gender_orientation,
+                "physical_limitations": db_training.physical_limitations,
+                "required_equipment": db_training.required_equipment,
+                "course_language": db_training.course_language,
+                "visual_content": db_training.visual_content,
+                "trainer_feedback_options": db_training.trainer_feedback_options,
+                "tags": db_training.tags,
+                "average_course_rating": db_training.average_course_rating,
+                "active_participants": db_training.active_participants,
+                "number_of_reviews": db_training.number_of_reviews,
+                "certification": certification,
+                "experience": experience,
+                "trainer_name": db_training.trainer_name,
+                "course_title": db_training.course_title,
+                "program_description": db_training.program_description,
+                "training_plan": db_training.training_plan,
+                "id": db_training.course_id,
+                "db_id": db_training.id,
+                "user_id": db_training.user_id,
+                "created_at": db_training.created_at.isoformat() if db_training.created_at else None,
+                "updated_at": db_training.updated_at.isoformat() if db_training.updated_at else None
+            }
+        
+        # Преобразуем в полный формат TrainingResponse
+        training_responses = []
+        for training in trainings:
+            training_dict = create_response_dict(training)
+            training_responses.append(TrainingResponse(**training_dict))
+        
+        return training_responses
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error fetching user trainings: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Не удалось загрузить тренировки пользователя"
         )
 
 

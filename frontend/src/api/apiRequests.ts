@@ -9,6 +9,8 @@ import type {
 import type { SurveyProp } from "../components/interface/surveyInterface";
 import type { UserProp } from "../components/interface/userInterface";
 
+type FlatFormData = { [key: string]: any };
+
 const endpoint = import.meta.env.VITE_API_URL;
 
 export async function userInfoRequest(token: String): Promise<UserProp> {
@@ -20,6 +22,23 @@ export async function userInfoRequest(token: String): Promise<UserProp> {
         });
         return resp.data as unknown as UserProp;
     } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function trainerDataRequest(token: String): Promise<FlatFormData> {
+    try {
+        const resp = await axios.get(`${endpoint}/auth/trainer-profile`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        console.log("бро красава")
+        return resp.data;
+    } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             throw error;
         }
@@ -76,6 +95,22 @@ export async function trainingsDataRequest(token: String): Promise<any> {
     }
 }
 
+export async function currentTrainingDataRequest(courseId: String, token: String): Promise<any> {
+    try {
+        const resp = await axios.get<String>(`${endpoint}/trainings/${courseId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        // console.log("бро красава")
+        return resp.data;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
 
 export async function getRecommendations(token: String): Promise<any> {
     const response = await fetch(`${endpoint}/recommendations`, {
@@ -151,6 +186,24 @@ export async function submitCoachDataRequest(token: String, data: any) {
         console.log(data);
 
         const resp = await axios.put(`${endpoint}/auth/trainer-profile`, data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function submitNewTrainingRequest(token: String, data: any) {
+    try {
+
+        const resp = await axios.post(`${endpoint}/trainings`, data, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
