@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, JSON, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, JSON, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
@@ -169,4 +169,51 @@ class Training(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Связь с пользователем
-    user = relationship("User", back_populates="trainings") 
+    user = relationship("User", back_populates="trainings")
+
+
+class SavedProgram(Base):
+    """
+    SQLAlchemy модель для сохраненных программ тренировок
+    """
+    __tablename__ = "saved_programs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    training_id = Column(Integer, ForeignKey("trainings.id"), nullable=False)
+    saved_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Связи
+    user = relationship("User")
+    training = relationship("Training")
+    
+    # Уникальная комбинация пользователя и тренировки
+    __table_args__ = (
+        UniqueConstraint('user_id', 'training_id', name='unique_user_training'),
+    )
+
+
+class TrainingProgress(Base):
+    """
+    SQLAlchemy модель для прогресса пользователей по тренировкам
+    """
+    __tablename__ = "training_progress"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    training_id = Column(Integer, ForeignKey("trainings.id"), nullable=False)
+    completed_items = Column(JSON, default=list)  # Список номеров выполненных items [0, 1, 3, ...]
+    total_items = Column(Integer, default=0)  # Общее количество items в training_plan
+    progress_percentage = Column(Float, default=0.0)  # Процент прогресса (0.0 - 100.0)
+    last_completed_item = Column(Integer, nullable=True)  # Номер последнего выполненного item
+    started_at = Column(DateTime, default=datetime.utcnow)
+    last_updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Связи
+    user = relationship("User")
+    training = relationship("Training")
+    
+    # Уникальная комбинация пользователя и тренировки
+    __table_args__ = (
+        UniqueConstraint('user_id', 'training_id', name='unique_user_training_progress'),
+    ) 
