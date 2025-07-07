@@ -30,7 +30,9 @@ export interface SignInFailed {
 }
 
 export interface SignUpSuccess {
-    message: string;
+    access_token: string;
+    token_type: string;
+    expires_in: number;
     user_info: {
         additionalProp1: {};
     };
