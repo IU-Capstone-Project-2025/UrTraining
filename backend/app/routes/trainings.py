@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.database import get_db
 from app.crud import (
@@ -746,19 +746,12 @@ async def can_create_training(
     db: Session = Depends(get_db)
 ):
     """
-    Проверить, может ли пользователь создавать тренировочные программы.
+    Проверить, может ли пользователь создавать тренировки.
     
-    В новом формате любой авторизованный пользователь может создавать тренировки.
+    Пока что все авторизованные пользователи могут создавать тренировки.
+    В будущем здесь может быть более сложная логика проверки прав.
     """
-    try:
-        return {
-            "can_create": True,
-            "reason": "Авторизованный пользователь может создавать тренировки"
-        }
-        
-    except Exception as e:
-        print(f"Error checking create permission: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail="Не удалось проверить права создания"
-        ) 
+    return {
+        "can_create": True,
+        "message": "Пользователь может создавать тренировки"
+    } 
