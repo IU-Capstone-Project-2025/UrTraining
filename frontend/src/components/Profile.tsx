@@ -3,10 +3,14 @@ import kanye from '../assets/kanye.jpg'
 import arrow from '../assets/arrow.svg'
 import '../css/Profile.css'
 
-const Profile = () => {
+const Profile = (data: any) => {
+    const grid_template = "'" + data.grid_template.join("' '") + "'"
+
     return (
         <div className='profile basic-page'>
-            <div className='profile__container'>
+            <div className='profile__container' style={{
+                gridTemplateAreas: `${grid_template}`
+            }}>
                 <div className='profile__frame profile__info'>
                     <div className='profile__info__header'>
                         <button className='btn-basic-white profile__header__logout'>
@@ -14,11 +18,11 @@ const Profile = () => {
                         </button>
                     </div>
                     <div className='profile__info__avatar'>
-                        <img src={kanye} alt="kanye" />
+                        <img src={data.picture} alt="kanye" />
                     </div>
                     <div className='profile__info__desc'>
-                        <h3>trainerOne</h3>
-                        <p>trainer</p>
+                        <h3>{data.username}</h3>
+                        <p>{data.user_type}</p>
                     </div>
                 </div>
                 <div className='profile__frame profile__personal'>
@@ -36,7 +40,7 @@ const Profile = () => {
                                 <h3>E-mail</h3>
                             </div>
                             <div className='profile__field__value'>
-                                <p>y.ye@mail.ru</p>
+                                <p>{data.email}</p>
                             </div>
                         </div>
                         <div className='profile__personal__field'>
@@ -44,7 +48,7 @@ const Profile = () => {
                                 <h3>Gender</h3>
                             </div>
                             <div className='profile__field__value'>
-                                <p>Male</p>
+                                <p>{data.gender}</p>
                             </div>
                         </div>
                         <div className='profile__personal__field'>
@@ -52,7 +56,7 @@ const Profile = () => {
                                 <h3>Age</h3>
                             </div>
                             <div className='profile__field__value'>
-                                <p>40</p>
+                                <p>{data.age}</p>
                             </div>
                         </div>
                         <div className='profile__personal__field'>
@@ -60,37 +64,41 @@ const Profile = () => {
                                 <h3>Tags</h3>
                             </div>
                             <div className='profile__field__value'>
-                                <p>Cardio, HIIT, Yoga, Functional
-                                    trainings, Stretching</p>
+                                <p>{data.tags.map((tag: string, index: number) => {
+                                    return tag + (index === data.tags.length - 1 ? "" : ", ")
+                                })}</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className='profile__frame profile__calendar'>
                     <div className='profile__calendar__date'>
-                        <h3>Today is 11 September 2001</h3>
+                        <h3>Today is {data.date}</h3>
                     </div>
                     <div className='profile__calendar__option'>
-                        <p>Ready to lead the way today? Your athletes are waiting!</p>
-                        <button className='btn-basic-white'>See the statistics</button>
+                        <p>{data.calendar_text.text_top}</p>
+                        <button className='btn-basic-white'>{data.calendar_text.text_button_top}</button>
                     </div>
                     <div className='profile__calendar__option'>
-                        <p>You can discover the programs of other trainers or create your own:</p>
-                        <button className='btn-basic-black'>View all plans</button>
+                        <p>{data.calendar_text.text_bottom}</p>
+                        <button className='btn-basic-black'>{data.calendar_text.text_button_bottom}</button>
                     </div>
                 </div>
                 <div className='profile__frame profile__trainings'>
                     <div className='profile__trainings__header'>
-                        <p>Have some new ideas on paper?</p>
-                        
+                        <p>{data.trainings_text.text_top}</p>
+                        <img src={arrow} alt="" />
                     </div>
                     <div className='profile__trainings__footer'>
-                        <h3>Upload new training plan now</h3>
+                        <h3>{data.trainings_text.text_bottom}</h3>
                     </div>
                 </div>
                 <div className='profile__frame profile__upload'>
+                    <div className='profile__upload__text'>
+                        <p>{}</p>
+                    </div>
                     <div className='profile__upload__button'>
-                        <button className='btn-basic-black'>View my trainings</button>
+                        <button className='btn-basic-black'>{data.upload_text.text_button}</button>
                     </div>
                 </div>
             </div>
