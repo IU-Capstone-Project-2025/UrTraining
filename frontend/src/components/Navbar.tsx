@@ -55,7 +55,7 @@ const Navbar = (data: UserProp) => {
             className='navbar__user__data'
             style={authData.access_token === "" ? { display: "none" } : {}}
           >
-            <h2>Hello, {data?.full_name ?? "none"}</h2>
+            <h2>Hello, {data?.username ?? "none"}</h2>
           </div>
         </div>
       </div>
