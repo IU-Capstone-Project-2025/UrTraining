@@ -21,7 +21,7 @@ const TraineeBeginPage = () => {
 
     const componentProps = {
         css_style: "begin__right",
-        button_link: authData.access_token === "" ? "/signup" : "/survey",
+        button_link: authData.access_token === "" ? "/signup?role=trainee" : "/survey",
         text: textProps,
     }
 

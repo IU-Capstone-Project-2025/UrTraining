@@ -16,9 +16,7 @@ Our AI-based system matches users with training programs created by verified coa
 
 ### Frontend
 - **React** – Component-based UI development
-- **TailwindCSS** – Utility-first styling
 - **shadcn/ui** – Reusable UI components
-- **Framer Motion** – Smooth animations and transitions
 
 ### Backend
 - **FastAPI** – High-performance Python backend
@@ -69,13 +67,31 @@ Our AI-based system matches users with training programs created by verified coa
 | Egor Chernobrovkin   | Machine Learning   | @lolyhop            |
 | Alexandra Starikova  | Machine Learning   | @lexandrinnn_t      |
 | Ilona Dziurava       | PM / Frontend      | @a_b_r_i_c_o_s      |
-| Anisya Kochetkova    | Backend            | @anis1305           |
+| Anisya Kochetkova    | Backend, Testing   | @anis1305           |
 
 ---
 
 ## 📈 Progress
 
 **Week 1:** We’ve completed foundational planning, divided responsibilities, and selected our tech stack. Interface design and early implementation of core features (questionnaire, catalog, recommendation engine) are underway.
+
+**Week 2:** Transformed initial ideas into concrete requirements, established foundational designs, and set up project structures across the frontend and backend.
+
+**Week 3:** Delivered the first working version of the Minimum Viable Product (MVP). This includes a fully functional end-to-end user journey, with integrated frontend and backend components, persistent data storage, and a basic authentication flow. Additionally, the ML team delivered the first model iteration, integrated via a backend API for early testing and validation.
+
+**Week 4:** By the end of Week 4, we had a stable, tested, and deployed version of our application in a staging environment, complete with CI/CD automation. This allows for updates and reliable testing going forward. Additionally, the trainer user flow was successfully implemented.
+
+**Week 5:** Gathering real user feedback, analyzing it, and iterating on our MVP to improve usability and stability. Usability testing sessions were conducted with external testers, allowing us to uncover both critical bugs and areas for UX enhancement.
+
+---
+
+## Deploy
+
+Fronted part is deployed [HERE](http://31.129.96.182/).
+
+Backend part is deployed [HERE](http://31.129.96.182:8000/).
+
+ML part is deployed [HERE](http://31.129.96.182:1337/).
 
 ---
 

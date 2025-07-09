@@ -5,8 +5,8 @@ import { example_signup_data } from "../components/data/example_json_data"
 import type { CredentialsData } from "../components/interface/interfaces";
 import SignPageContext, { emptyCredentials, type SignContextType } from "../components/context/SignPageContext";
 import AuthContext from "../components/context/AuthContext";
-import { useSignUp } from "../api/mutations";
-import { useNavigate } from "react-router-dom";
+import { useSignUp, useSignIn } from "../api/mutations";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import type { AxiosError } from "axios";
 
 const SignUpPage = () => {
@@ -15,8 +15,12 @@ const SignUpPage = () => {
   const [errorMessage, setErrorMessage] = useState("")
   const authData = useContext(AuthContext)
   const signUpMutation = useSignUp()
+  const signInMutation = useSignIn(authData)
 
   const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const role = searchParams.get("role");
 
   const contextValue: SignContextType = {
     credentials: credentials,
@@ -30,7 +34,13 @@ const SignUpPage = () => {
 
   useEffect(() => {
     if (authData.access_token !== "")
-      navigate("/")
+      if (role === "trainer") {
+            navigate("/trainer-registration");
+          } else if (role === "trainee") {
+            navigate("/survey");
+          } else {
+            navigate("/"); // fallback
+          }
   }, [authData])
 
   // After credentials updated inside <Sign />,
@@ -41,14 +51,26 @@ const SignUpPage = () => {
         onSuccess: (data) => {
           setIsError(false)
           console.log("Signup succeeded on this call:", data);
-          navigate("/signin")
+
+          localStorage.setItem("token", data.access_token);
+          authData.setAccessToken(data.access_token);
+
+          console.log(role)
+          
+          if (role === "trainer") {
+            navigate("/trainer-registration");
+          } else if (role === "trainee") {
+            navigate("/survey");
+          } else {
+            navigate("/"); // fallback
+          }
         },
         onError: (error: any) => {
           setIsError(true)
           setErrorMessage(error.response?.data?.detail[0].msg || error.response?.data?.detail)  
           console.error("Signup failed on this call:", error);
         }
-      })
+      });
     }
   }, [credentials]);
 
