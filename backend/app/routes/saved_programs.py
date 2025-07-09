@@ -8,7 +8,8 @@ from app.crud import (
     save_program_for_user,
     unsave_program_for_user,
     get_saved_programs_for_user,
-    get_training_by_course_id
+    get_training_by_course_id,
+    is_program_saved_by_user
 )
 from app.models.training import TrainingResponse
 from app.routes.auth import get_current_user
@@ -23,9 +24,12 @@ class SaveProgramResponse(BaseModel):
     message: str
     saved: bool
 
-@router.post("/", response_model=SaveProgramResponse)
+class ProgramSavedStatusResponse(BaseModel):
+    saved: bool    
+
+@router.post("/{course_id}", response_model=SaveProgramResponse)
 async def save_program(
-    request: SaveProgramRequest,
+    course_id: str,
     current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -34,11 +38,11 @@ async def save_program(
     """
     try:
         # Найти тренировку по course_id
-        training = get_training_by_course_id(db, request.course_id)
+        training = get_training_by_course_id(db, course_id)
         if not training:
             raise HTTPException(
                 status_code=404,
-                detail=f"Программа тренировок с ID {request.course_id} не найдена"
+                detail=f"Программа тренировок с ID {course_id} не найдена"
             )
         
         # Сохранить программу для пользователя
@@ -186,3 +190,29 @@ async def get_saved_programs(
             status_code=500,
             detail="Не удалось загрузить сохраненные программы"
         ) 
+    
+@router.get("/{course_id}/status", response_model=ProgramSavedStatusResponse)
+async def check_program_saved_status(
+    course_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Проверка, сохранена ли программа тренировок пользователем
+    """
+    try:
+        training = get_training_by_course_id(db, course_id)
+        if not training:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Программа с ID {course_id} не найдена"
+            )
+        
+        is_saved = is_program_saved_by_user(db, current_user["id"], training.id)
+        return ProgramSavedStatusResponse(saved=is_saved)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error when checking the saved status: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")

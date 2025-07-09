@@ -28,12 +28,15 @@ async def get_user_recommendations(current_user: dict = Depends(get_current_user
     """Get the recommendations for user considering all the training profile information"""
     try:
         # Get training profile
+        print("ye")
+
         profile = get_training_profile(db, current_user["id"])
+        print(profile)
         if not profile:
             raise HTTPException(
                 status_code=404,
                 detail="Training profile not found"
-            )
+            )   
         
         # Prepare structured query with interest scores
         query_parts = []
@@ -141,5 +144,5 @@ async def get_user_recommendations(current_user: dict = Depends(get_current_user
         print(f"Error in recommendations: {e}")
         raise HTTPException(
             status_code=500,
-            detail="Failed to generate recommendations"
+            detail="Failed to generate the recommendations"
         )
