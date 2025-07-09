@@ -3,6 +3,7 @@ from typing import List, Dict, Any
 
 import fastapi
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 from openai.types.chat.chat_completion import ChatCompletion
 
@@ -14,6 +15,13 @@ MODEL_ID = os.getenv("MODEL_ID", "google/gemma-3-27b-it")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 app = fastapi.FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
@@ -29,10 +37,7 @@ def postprocess_response(response: str) -> str:
 @app.post("/image2tracker")
 async def image2tracker(request: Image2TrackerRequest) -> Image2TrackerResponse:
     try:
-        client = OpenAI(
-            api_key=OPENAI_API_KEY, 
-            base_url="https://api.kluster.ai/v1"
-        )
+        client = OpenAI(api_key=OPENAI_API_KEY, base_url="https://api.kluster.ai/v1")
         image_base64 = request.image
 
         messages: List[Dict[str, Any]] = [
@@ -63,7 +68,7 @@ async def image2tracker(request: Image2TrackerRequest) -> Image2TrackerResponse:
         answer: str = postprocess_response(response.choices[0].message.content)
 
         return Image2TrackerResponse(response=answer)
-    
+
     except Exception as e:
         print(f"Error in image2tracker: {str(e)}")
         return Image2TrackerResponse(response=f"Error processing request: {str(e)}")
