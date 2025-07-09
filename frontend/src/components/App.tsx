@@ -1,9 +1,9 @@
 // import React from 'react';
 import '../css/App.css';
 import './Navbar';
-import { jwtDecode } from "jwt-decode";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import TokenChecker from './TokenChecker';
 import NavbarPage from '../pages/NavbarPage';
 import HomePage from '../pages/HomePage';
 import SignInPage from '../pages/SignInPage';
@@ -26,31 +26,6 @@ const queryClient = new QueryClient()
 const App = () => {
   const [accessToken, SetAccessToken] = useState<String>("")
 
-  useEffect(() => {
-    const checkToken = () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        return;
-      }
-      try {
-        const { exp }: { exp: number } = jwtDecode(token);
-        if (exp * 1000 < Date.now()) {
-          localStorage.removeItem('token');
-          SetAccessToken("");
-        } else {
-          SetAccessToken(token);
-        }
-      } catch {
-        localStorage.removeItem('token');
-        SetAccessToken("");
-      }
-    };
-
-    checkToken();
-    const id = setInterval(checkToken, 60 * 1000);
-    return () => clearInterval(id);
-  }, []);
-
   const contextValue: AuthCredentialsTokens = {
     access_token: accessToken,
     setAccessToken: SetAccessToken
@@ -60,6 +35,7 @@ const App = () => {
     <AuthContext value={contextValue}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
+          <TokenChecker />
           <Routes>
             <Route path="/" element={<NavbarPage />}>
               <Route index element={<HomePage />} />
