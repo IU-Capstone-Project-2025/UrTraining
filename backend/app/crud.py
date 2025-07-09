@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.attributes import flag_modified
 from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
-from app.models.database_models import User, TrainingProfile, ActiveSession, Course, UserCourseProgress, Training
+from app.models.database_models import User, TrainingProfile, ActiveSession, Course, UserCourseProgress, Training, SavedProgram, TrainingProgress
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any
@@ -407,5 +408,220 @@ def search_trainings(db: Session, query: str, skip: int = 0, limit: int = 100) -
 
 
 def get_training_with_trainer_info(db: Session, training_id: str) -> Optional[Training]:
-    """Получить тренировку по course_id (в новом формате уже содержит всю информацию о тренере)"""
-    return get_training_by_id(db, training_id) 
+    """Получить тренировку с информацией о тренере по course_id"""
+    return db.query(Training).filter(Training.course_id == training_id).first()
+
+
+# Saved Programs CRUD operations
+def save_program_for_user(db: Session, user_id: int, training_id: int) -> Optional[SavedProgram]:
+    """Сохранить программу для пользователя"""
+    # Проверяем, существует ли уже такая запись
+    existing = db.query(SavedProgram).filter(
+        and_(SavedProgram.user_id == user_id, SavedProgram.training_id == training_id)
+    ).first()
+    
+    if existing:
+        return existing  # Уже сохранена
+    
+    # Проверяем, существует ли тренировка
+    training = db.query(Training).filter(Training.id == training_id).first()
+    if not training:
+        return None
+    
+    try:
+        saved_program = SavedProgram(user_id=user_id, training_id=training_id)
+        db.add(saved_program)
+        db.commit()
+        db.refresh(saved_program)
+        return saved_program
+    except IntegrityError:
+        db.rollback()
+        return None
+
+
+def unsave_program_for_user(db: Session, user_id: int, training_id: int) -> bool:
+    """Удалить программу из сохраненных для пользователя"""
+    saved_program = db.query(SavedProgram).filter(
+        and_(SavedProgram.user_id == user_id, SavedProgram.training_id == training_id)
+    ).first()
+    
+    if saved_program:
+        db.delete(saved_program)
+        db.commit()
+        return True
+    return False
+
+
+def get_saved_programs_for_user(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[Training]:
+    """Получить все сохраненные программы для пользователя"""
+    saved_programs = db.query(SavedProgram).filter(SavedProgram.user_id == user_id).offset(skip).limit(limit).all()
+    training_ids = [sp.training_id for sp in saved_programs]
+    
+    if not training_ids:
+        return []
+    
+    trainings = db.query(Training).filter(Training.id.in_(training_ids)).all()
+    return trainings
+
+
+def is_program_saved_by_user(db: Session, user_id: int, training_id: int) -> bool:
+    """Проверить, сохранена ли программа пользователем"""
+    saved_program = db.query(SavedProgram).filter(
+        and_(SavedProgram.user_id == user_id, SavedProgram.training_id == training_id)
+    ).first()
+    return saved_program is not None
+
+
+def get_training_by_course_id(db: Session, course_id: str) -> Optional[Training]:
+    """Получить тренировку по course_id"""
+    return db.query(Training).filter(Training.course_id == course_id).first()
+
+
+# Training Progress CRUD operations
+def get_or_create_training_progress(db: Session, user_id: int, training_id: int) -> TrainingProgress:
+    """Получить или создать прогресс пользователя по тренировке"""
+    # Сначала проверяем существующий прогресс
+    progress = db.query(TrainingProgress).filter(
+        and_(TrainingProgress.user_id == user_id, TrainingProgress.training_id == training_id)
+    ).first()
+    
+    if progress:
+        print(f"📋 Found existing progress: user {user_id}, training {training_id}, {progress.progress_percentage:.1f}%")
+        return progress
+    
+    # Если прогресса нет, создаем новый
+    training = db.query(Training).filter(Training.id == training_id).first()
+    if not training:
+        raise ValueError(f"Training with id {training_id} not found")
+    
+    # Подсчитываем общее количество items в training_plan
+    total_items = len(training.training_plan) if training.training_plan else 0
+    
+    progress = TrainingProgress(
+        user_id=user_id,
+        training_id=training_id,
+        completed_items=[],
+        total_items=total_items,
+        progress_percentage=0.0
+    )
+    
+    try:
+        db.add(progress)
+        db.commit()
+        db.refresh(progress)
+        print(f"🆕 Created new progress: user {user_id}, training {training_id}, total_items: {total_items}")
+        return progress
+    except IntegrityError as e:
+        db.rollback()
+        print(f"⚠️ Integrity error creating progress, fetching existing: {e}")
+        # Если уже существует, получаем его
+        existing_progress = db.query(TrainingProgress).filter(
+            and_(TrainingProgress.user_id == user_id, TrainingProgress.training_id == training_id)
+        ).first()
+        if existing_progress:
+            return existing_progress
+        else:
+            raise ValueError(f"Failed to create or find progress for user {user_id}, training {training_id}")
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Unexpected error creating progress: {e}")
+        raise
+
+
+def update_training_progress(db: Session, user_id: int, training_id: int, item_number: int) -> Optional[TrainingProgress]:
+    """Обновить прогресс пользователя - пометить item как выполненный"""
+    # Получаем тренировку для валидации номера item
+    training = db.query(Training).filter(Training.id == training_id).first()
+    if not training:
+        raise ValueError(f"Training with id {training_id} not found")
+    
+    total_items = len(training.training_plan) if training.training_plan else 0
+    
+    # Валидация номера item (items нумеруются с 0)
+    if item_number < 0 or item_number >= total_items:
+        raise ValueError(f"Item number {item_number} is invalid. Must be between 0 and {total_items - 1}")
+    
+    # Получаем или создаем прогресс
+    progress = get_or_create_training_progress(db, user_id, training_id)
+    
+    # Добавляем item в список выполненных, если его там еще нет
+    completed_items = list(progress.completed_items) if progress.completed_items else []
+    
+    if item_number not in completed_items:
+        completed_items.append(item_number)
+        completed_items.sort()  # Сортируем для удобства
+        
+        # ВАЖНО: Создаем новый список для корректного обновления JSON поля
+        progress.completed_items = completed_items[:]  # Создаем копию списка
+        progress.last_completed_item = item_number
+        progress.total_items = total_items
+        progress.progress_percentage = (len(completed_items) / total_items) * 100.0 if total_items > 0 else 0.0
+        progress.last_updated = datetime.utcnow()
+        
+        # Принудительно отмечаем поле как измененное
+        flag_modified(progress, "completed_items")
+        
+        try:
+            db.commit()
+            db.refresh(progress)
+            print(f"✅ Progress updated: user {user_id}, training {training_id}, item {item_number}, progress: {progress.progress_percentage:.1f}%")
+        except Exception as e:
+            db.rollback()
+            print(f"❌ Error saving progress: {e}")
+            raise
+    else:
+        print(f"ℹ️ Item {item_number} already completed for user {user_id}, training {training_id}")
+    
+    return progress
+
+
+def get_training_progress(db: Session, user_id: int, training_id: int) -> Optional[TrainingProgress]:
+    """Получить прогресс пользователя по конкретной тренировке"""
+    return db.query(TrainingProgress).filter(
+        and_(TrainingProgress.user_id == user_id, TrainingProgress.training_id == training_id)
+    ).first()
+
+
+def get_user_training_progresses(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> List[TrainingProgress]:
+    """Получить все прогрессы пользователя по тренировкам"""
+    return db.query(TrainingProgress).filter(
+        TrainingProgress.user_id == user_id
+    ).offset(skip).limit(limit).all()
+
+
+def reset_training_progress(db: Session, user_id: int, training_id: int) -> bool:
+    """Сбросить прогресс пользователя по тренировке"""
+    progress = db.query(TrainingProgress).filter(
+        and_(TrainingProgress.user_id == user_id, TrainingProgress.training_id == training_id)
+    ).first()
+    
+    if progress:
+        # Создаем новый пустой список для корректного обновления JSON поля
+        progress.completed_items = []
+        progress.progress_percentage = 0.0
+        progress.last_completed_item = None
+        progress.last_updated = datetime.utcnow()
+        
+        # Принудительно отмечаем поле как измененное
+        flag_modified(progress, "completed_items")
+        
+        try:
+            db.commit()
+            print(f"🔄 Progress reset: user {user_id}, training {training_id}")
+            return True
+        except Exception as e:
+            db.rollback()
+            print(f"❌ Error resetting progress: {e}")
+            raise
+    else:
+        print(f"❓ No progress found to reset: user {user_id}, training {training_id}")
+        return False
+
+
+def get_training_progress_by_course_id(db: Session, user_id: int, course_id: str) -> Optional[TrainingProgress]:
+    """Получить прогресс пользователя по course_id тренировки"""
+    training = get_training_by_course_id(db, course_id)
+    if not training:
+        return None
+    
+    return get_training_progress(db, user_id, training.id) 
