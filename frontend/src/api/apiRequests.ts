@@ -218,15 +218,15 @@ export async function submitNewTrainingRequest(token: String, data: any) {
         throw error;
     }
 }
-
-export async function uploadFilesForAI(token: String, files: FormData): Promise<any> {
+export async function uploadFilesForAI(imageBase64: string): Promise<any> {
     try {
-        const resp = await axios.post(`${ai_endpoint}/image2tracker`, files, {
+        const requestData = {
+            image: imageBase64,
+        };
+
+        const resp = await axios.post(`${ai_endpoint}/image2tracker`, requestData, {
             headers: {
-                Authorization: `Bearer ${token}`,
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                'Content-Type': 'application/json',
             },
         });
         return resp.data;

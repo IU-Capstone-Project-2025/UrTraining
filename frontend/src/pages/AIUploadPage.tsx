@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../components/context/AuthContext";
-import { uploadFilesForAI } from "../api/apiRequests";
+import { uploadFilesForAI, submitNewTrainingRequest } from "../api/apiRequests";
 import "../css/AIUploadPage.css";
 
 interface UploadedFile {
@@ -15,6 +15,8 @@ const AIUploadPage = () => {
   const [dragActive, setDragActive] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [generatedCourseId, setGeneratedCourseId] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const allowedTypes = [
@@ -93,6 +95,31 @@ const AIUploadPage = () => {
     setUploadedFiles((prev) => prev.filter((file) => file.id !== id));
   };
 
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        if (reader.result) {
+          // Remove the data:image/jpeg;base64, prefix
+          const base64 = (reader.result as string).split(',')[1];
+          resolve(base64);
+        } else {
+          reject(new Error('Failed to convert file to base64'));
+        }
+      };
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const transformAIResponseToBackendFormat = (aiResponse: any) => {
+    return {
+      "Course Title": aiResponse.course_title,
+      "Program Description": aiResponse.program_description,
+      training_plan: aiResponse.training_plan
+    };
+  };
+
   const handleUpload = async () => {
     if (uploadedFiles.length === 0) {
       alert("Please select files to upload.");
@@ -102,20 +129,38 @@ const AIUploadPage = () => {
     setIsUploading(true);
 
     try {
-      const formData = new FormData();
-      uploadedFiles.forEach((fileData, index) => {
-        formData.append(`files`, fileData.file);
-      });
+      const firstImageFile = uploadedFiles.find(f => f.file.type.startsWith('image/'));
+      
+      if (!firstImageFile) {
+        alert("Please upload at least one image file for AI processing.");
+        setIsUploading(false);
+        return;
+      }
 
-      const result = await uploadFilesForAI(authData.access_token, formData);
-      console.log("Upload successful:", result);
+      const imageBase64 = await convertFileToBase64(firstImageFile.file);
+      const aiResult = await uploadFilesForAI(imageBase64);
+      
+      console.log("AI processing successful:", aiResult);
 
-      // TODO: Handle successful upload (redirect to generated course, show success message, etc.)
-      alert(
-        "Files uploaded successfully! AI is processing your training materials and will generate a course shortly."
-      );
+      let aiData;
+      try {
+        aiData = typeof aiResult.response === 'string' 
+          ? JSON.parse(aiResult.response) 
+          : aiResult.response;
+      } catch (parseError) {
+        console.error("Failed to parse AI response:", parseError);
+        alert("AI response could not be parsed. Please try again.");
+        setIsUploading(false);
+        return;
+      }
 
-      // Clear uploaded files after successful upload
+      const backendData = transformAIResponseToBackendFormat(aiData);
+      
+      const backendResult = await submitNewTrainingRequest(authData.access_token, backendData);
+      console.log("Backend upload successful:", backendResult);
+
+      setGeneratedCourseId(backendResult.id || null);
+      setShowSuccessModal(true);
       setUploadedFiles([]);
     } catch (error) {
       console.error("Upload error:", error);
@@ -141,6 +186,40 @@ const AIUploadPage = () => {
       <Link to="/upload-training" className="back-link">
         <span className="back-arrow">←</span> Back to Creator
       </Link>
+      
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="modal-overlay" onClick={() => setShowSuccessModal(false)}>
+          <div className="success-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>🎉 Course Generated Successfully!</h2>
+              <button 
+                className="modal-close"
+                onClick={() => setShowSuccessModal(false)}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="modal-content">
+              <p>Your AI-generated training course has been created and uploaded successfully!</p>
+              <div className="modal-actions">
+                {generatedCourseId && (
+                  <Link to={`/course/${generatedCourseId}`} className="btn-basic-black">
+                    View Course
+                  </Link>
+                )}
+                <button 
+                  className="btn-basic-white"
+                  onClick={() => setShowSuccessModal(false)}
+                >
+                  Continue
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="ai-upload-container">
         <div className="ai-upload-header">
           <div className="ai-upload-title">
