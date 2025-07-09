@@ -12,6 +12,7 @@ import type { UserProp } from "../components/interface/userInterface";
 type FlatFormData = { [key: string]: any };
 
 const endpoint = import.meta.env.VITE_API_URL;
+const ai_endpoint = import.meta.env.VITE_IMAGE2TRACKER_API_URL;
 
 export async function userInfoRequest(token: String): Promise<UserProp> {
     try {
@@ -207,6 +208,25 @@ export async function submitNewTrainingRequest(token: String, data: any) {
             headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
+            },
+        });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function uploadFilesForAI(token: String, files: FormData): Promise<any> {
+    try {
+        const resp = await axios.post(`${ai_endpoint}/image2tracker`, files, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             },
         });
         return resp.data;
