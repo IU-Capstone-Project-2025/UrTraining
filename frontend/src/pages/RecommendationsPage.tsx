@@ -42,7 +42,7 @@ const RecommendationsPage = () => {
       navigate("/signin")
   })
 
-  if (userDataIsLoading || recsIsLoading || !recommendations) {
+  if (userDataIsLoading || recsIsLoading) {
     return <div className="loading-spinner">Recommendation loading...</div>;
   }
 
