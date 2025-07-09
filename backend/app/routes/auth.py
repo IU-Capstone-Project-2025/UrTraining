@@ -21,7 +21,7 @@ router = APIRouter()
 # JWT Configuration
 SECRET_KEY = "your-secret-key-change-in-production"  # Change this in production!
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 1440  # 24 hours = 24 * 60 minutes
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -339,3 +339,463 @@ async def delete_trainer_profile(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to delete trainer profile"
         )
+
+
+@router.get("/validation/trainer-profile")
+async def get_trainer_profile_validation():
+    """Получить информацию о валидационных ограничениях для профиля тренера"""
+    
+    # Импортируем enums для получения допустимых значений
+    from app.models.training import CertificationType, CertificationLevel, TrainerSpecialization
+    
+    validation_rules = {
+        "profile_picture": {
+            "type": "string",
+            "required": False,
+            "nullable": True,
+            "max_length": 500,
+            "format": "url",
+            "supported_protocols": ["http", "https"],
+            "supported_formats": ["jpg", "jpeg", "png", "webp", "gif"],
+            "pattern": r"^https?://[^\s/$.?#].[^\s]*$",
+            "description": "URL ссылка на фото профиля тренера",
+            "example": "https://example.com/trainer-photo.jpg"
+        },
+        
+        "certification": {
+            "type": "object",
+            "required": True,
+            "properties": {
+                "Type": {
+                    "type": "enum",
+                    "required": True,
+                    "allowed_values": [cert_type.value for cert_type in CertificationType],
+                    "description": "Тип сертификации тренера"
+                },
+                "Level": {
+                    "type": "enum", 
+                    "required": True,
+                    "allowed_values": [level.value for level in CertificationLevel],
+                    "description": "Уровень сертификации"
+                }
+            },
+            "description": "Информация о сертификации тренера"
+        },
+        
+        "experience": {
+            "type": "object",
+            "required": True,
+            "properties": {
+                "Years": {
+                    "type": "integer",
+                    "required": True,
+                    "min_value": 0,
+                    "max_value": 50,
+                    "description": "Количество лет опыта в тренерской деятельности"
+                },
+                "Specialization": {
+                    "type": "string",
+                    "required": True,
+                    "min_length": 2,
+                    "max_length": 200,
+                    "max_specializations": 5,
+                    "allowed_values": [spec.value for spec in TrainerSpecialization],
+                    "format": "comma_separated",
+                    "pattern": r"^[a-zA-Zа-яА-Я0-9\s\-,\.]+$",
+                    "description": "Специализация тренера (можно указать до 5 через запятую)",
+                    "example": "Strength Training, Functional Training"
+                },
+                "Courses": {
+                    "type": "integer",
+                    "required": True,
+                    "min_value": 0,
+                    "max_value": 10000,
+                    "description": "Количество созданных/проведенных курсов"
+                },
+                "Rating": {
+                    "type": "float",
+                    "required": True,
+                    "min_value": 0.0,
+                    "max_value": 5.0,
+                    "decimal_places": 1,
+                    "description": "Рейтинг тренера по 5-балльной шкале",
+                    "cross_validation": {
+                        "rule": "Если Years < 1, то Rating не должен быть > 3.0",
+                        "message": "Новички не могут иметь рейтинг выше 3.0"
+                    }
+                }
+            },
+            "description": "Информация об опыте тренера"
+        },
+        
+        "badges": {
+            "type": "array",
+            "required": False,
+            "max_items": 20,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string",
+                        "required": True,
+                        "min_length": 1,
+                        "max_length": 50,
+                        "description": "Текст значка"
+                    },
+                    "color": {
+                        "type": "string",
+                        "required": True,
+                        "format": "hex_color",
+                        "pattern": r"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+                        "description": "Цвет значка в hex формате",
+                        "example": "#FF5733"
+                    }
+                }
+            },
+            "unique_items": True,
+            "uniqueness_field": "text",
+            "description": "Массив значков тренера (максимум 20, без дубликатов)"
+        },
+        
+        "reviews_count": {
+            "type": "integer",
+            "required": False,
+            "default": 0,
+            "min_value": 0,
+            "max_value": 100000,
+            "read_only": True,
+            "description": "Количество отзывов о тренере (устанавливается системой)"
+        },
+        
+        "bio": {
+            "type": "string",
+            "required": False,
+            "nullable": True,
+            "min_length": 10,
+            "max_length": 1000,
+            "content_filter": True,
+            "blocked_words": ["spam", "fake", "scam"],
+            "pattern": r"^[^\x00-\x1f\x7f-\x9f]*$",
+            "description": "Биография тренера (краткое описание опыта и подхода)",
+            "example": "Опытный тренер с 5-летним стажем, специализируюсь на силовых тренировках и функциональном тренинге."
+        }
+    }
+    
+    return {
+        "message": "Validation rules for trainer profile",
+        "model": "TrainerProfile",
+        "validation_rules": validation_rules,
+        "general_rules": {
+            "encoding": "UTF-8",
+            "case_sensitivity": "case_insensitive_enums",
+            "cross_field_validations": [
+                {
+                    "fields": ["experience.Years", "experience.Rating"],
+                    "rule": "Years < 1 AND Rating > 3.0 = Invalid",
+                    "message": "Новички не могут иметь рейтинг выше 3.0"
+                },
+                {
+                    "fields": ["experience.Years", "experience.Courses"], 
+                    "rule": "Courses > Years * 10 = Warning",
+                    "message": "Количество курсов кажется несоответствующим опыту"
+                }
+            ],
+            "notes": [
+                "Все enum значения проверяются регистронезависимо",
+                "Специализации можно указывать через запятую",
+                "URL изображений должны содержать поддерживаемые расширения",
+                "Значки должны быть уникальными по тексту"
+            ]
+        }
+    }
+
+
+@router.get("/validation/user-profile")
+async def get_user_profile_validation():
+    """Получить информацию о валидационных ограничениях для профиля тренирующегося"""
+    
+    # Импортируем enums для получения допустимых значений
+    from app.models.user import (
+        Country, City, Gender, TrainingLevel, FrequencyLastThreeMonths,
+        TrainingLocation, LocationDetails, SessionDuration, TrainingGoal,
+        CITY_COUNTRY_MAP
+    )
+    
+    validation_rules = {
+        "personal_data": {
+            "type": "object",
+            "required": True,
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "required": True,
+                    "min_length": 3,
+                    "max_length": 50,
+                    "pattern": r"^[a-zA-Z0-9_-]+$",
+                    "description": "Уникальное имя пользователя",
+                    "example": "fitness_user123"
+                },
+                "full_name": {
+                    "type": "string",
+                    "required": True,
+                    "min_length": 2,
+                    "max_length": 100,
+                    "pattern": r"^[a-zA-Zа-яА-Я\s\-']+$",
+                    "description": "Полное имя пользователя",
+                    "example": "Иван Петров"
+                },
+                "country": {
+                    "type": "enum",
+                    "required": False,
+                    "nullable": True,
+                    "allowed_values": [country.value for country in Country],
+                    "description": "Страна проживания"
+                },
+                "city": {
+                    "type": "enum",
+                    "required": False,
+                    "nullable": True,
+                    "allowed_values": [city.value for city in City],
+                    "description": "Город проживания",
+                    "cross_validation": {
+                        "rule": "Город должен соответствовать выбранной стране",
+                        "mapping": CITY_COUNTRY_MAP
+                    }
+                }
+            },
+            "description": "Персональные данные пользователя"
+        },
+        
+        "basic_information": {
+            "type": "object",
+            "required": True,
+            "properties": {
+                "gender": {
+                    "type": "enum",
+                    "required": True,
+                    "allowed_values": [gender.value for gender in Gender],
+                    "description": "Пол пользователя"
+                },
+                "age": {
+                    "type": "integer",
+                    "required": True,
+                    "min_value": 13,
+                    "max_value": 100,
+                    "description": "Возраст в годах"
+                },
+                "height_cm": {
+                    "type": "integer",
+                    "required": True,
+                    "min_value": 100,
+                    "max_value": 250,
+                    "description": "Рост в сантиметрах"
+                },
+                "weight_kg": {
+                    "type": "float",
+                    "required": True,
+                    "min_value": 30.0,
+                    "max_value": 300.0,
+                    "decimal_places": 1,
+                    "description": "Вес в килограммах"
+                }
+            },
+            "description": "Базовая физическая информация"
+        },
+        
+        "training_goals": {
+            "type": "array",
+            "required": True,
+            "min_items": 1,
+            "max_items": 5,
+            "items": {
+                "type": "enum",
+                "allowed_values": [goal.value for goal in TrainingGoal],
+                "description": "Цель тренировок"
+            },
+            "unique_items": True,
+            "description": "Цели тренировок (от 1 до 5)",
+            "examples": ["weight_loss", "muscle_gain", "improve_endurance"]
+        },
+        
+        "training_experience": {
+            "type": "object",
+            "required": True,
+            "properties": {
+                "level": {
+                    "type": "enum",
+                    "required": True,
+                    "allowed_values": [level.value for level in TrainingLevel],
+                    "description": "Уровень подготовки"
+                },
+                "frequency_last_3_months": {
+                    "type": "enum",
+                    "required": True,
+                    "allowed_values": [freq.value for freq in FrequencyLastThreeMonths],
+                    "description": "Частота тренировок за последние 3 месяца"
+                }
+            },
+            "description": "Опыт и частота тренировок"
+        },
+        
+        "preferences": {
+            "type": "object",
+            "required": True,
+            "properties": {
+                "training_location": {
+                    "type": "enum",
+                    "required": True,
+                    "allowed_values": [loc.value for loc in TrainingLocation],
+                    "description": "Предпочитаемое место тренировок"
+                },
+                "location_details": {
+                    "type": "enum",
+                    "required": True,
+                    "allowed_values": [detail.value for detail in LocationDetails],
+                    "description": "Детали места тренировок"
+                },
+                "session_duration": {
+                    "type": "enum",
+                    "required": True,
+                    "allowed_values": [duration.value for duration in SessionDuration],
+                    "description": "Предпочитаемая продолжительность тренировки"
+                }
+            },
+            "description": "Предпочтения по тренировкам"
+        },
+        
+        "health": {
+            "type": "object",
+            "required": True,
+            "properties": {
+                "joint_back_problems": {
+                    "type": "boolean",
+                    "required": True,
+                    "description": "Наличие проблем с суставами или спиной"
+                },
+                "chronic_conditions": {
+                    "type": "boolean",
+                    "required": True,
+                    "description": "Наличие хронических заболеваний"
+                },
+                "health_details": {
+                    "type": "string",
+                    "required": False,
+                    "nullable": True,
+                    "max_length": 500,
+                    "description": "Дополнительная информация о здоровье",
+                    "example": "Проблемы с коленным суставом после травмы"
+                }
+            },
+            "description": "Информация о здоровье и ограничениях"
+        },
+        
+        "training_types": {
+            "type": "object",
+            "required": True,
+            "properties": {
+                "strength_training": {
+                    "type": "integer",
+                    "required": True,
+                    "min_value": 1,
+                    "max_value": 5,
+                    "description": "Интерес к силовым тренировкам (1-5)"
+                },
+                "cardio": {
+                    "type": "integer",
+                    "required": True,
+                    "min_value": 1,
+                    "max_value": 5,
+                    "description": "Интерес к кардио тренировкам (1-5)"
+                },
+                "hiit": {
+                    "type": "integer",
+                    "required": True,
+                    "min_value": 1,
+                    "max_value": 5,
+                    "description": "Интерес к HIIT тренировкам (1-5)"
+                },
+                "yoga_pilates": {
+                    "type": "integer",
+                    "required": True,
+                    "min_value": 1,
+                    "max_value": 5,
+                    "description": "Интерес к йоге/пилатесу (1-5)"
+                },
+                "functional_training": {
+                    "type": "integer",
+                    "required": True,
+                    "min_value": 1,
+                    "max_value": 5,
+                    "description": "Интерес к функциональным тренировкам (1-5)"
+                },
+                "stretching": {
+                    "type": "integer",
+                    "required": True,
+                    "min_value": 1,
+                    "max_value": 5,
+                    "description": "Интерес к растяжке (1-5)"
+                }
+            },
+            "description": "Уровень интереса к различным типам тренировок"
+        },
+        
+        "trainer_profile": {
+            "type": "object",
+            "required": False,
+            "nullable": True,
+            "description": "Профиль тренера (если пользователь является тренером)",
+            "properties": {
+                "message": "Для валидации профиля тренера используйте GET /auth/validation/trainer-profile"
+            }
+        }
+    }
+    
+    return {
+        "message": "Validation rules for user profile",
+        "model": "User",
+        "validation_rules": validation_rules,
+        "general_rules": {
+            "encoding": "UTF-8",
+            "case_sensitivity": "case_insensitive_enums",
+            "cross_field_validations": [
+                {
+                    "fields": ["personal_data.city", "personal_data.country"],
+                    "rule": "Город должен соответствовать стране",
+                    "message": "Выберите город из указанной страны или измените страну"
+                },
+                {
+                    "fields": ["basic_information.age", "basic_information.weight_kg", "basic_information.height_cm"],
+                    "rule": "BMI = weight_kg / (height_cm/100)^2 должен быть в разумных пределах",
+                    "message": "Проверьте корректность введенных данных о росте и весе"
+                },
+                {
+                    "fields": ["training_experience.level", "training_experience.frequency_last_3_months"],
+                    "rule": "Продвинутый уровень должен соответствовать регулярным тренировкам",
+                    "message": "Уровень подготовки должен соответствовать частоте тренировок"
+                }
+            ],
+            "validation_order": [
+                "personal_data",
+                "basic_information", 
+                "training_goals",
+                "training_experience",
+                "preferences",
+                "health",
+                "training_types",
+                "trainer_profile"
+            ],
+            "required_for_recommendations": [
+                "basic_information.gender",
+                "basic_information.age", 
+                "training_experience.level",
+                "training_types"
+            ],
+            "notes": [
+                "Все enum значения проверяются регистронезависимо",
+                "Цели тренировок могут быть выбраны в количестве от 1 до 5",
+                "Город автоматически валидируется на соответствие стране",
+                "Типы тренировок оцениваются по шкале от 1 до 5",
+                "Профиль тренера опционален и валидируется отдельно"
+            ]
+        }
+    }

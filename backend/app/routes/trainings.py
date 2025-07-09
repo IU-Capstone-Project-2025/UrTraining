@@ -128,6 +128,51 @@ async def get_trainings_catalog(
         )
 
 
+@router.get("/can-create", response_model=dict)
+async def can_create_training(
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Проверить, может ли пользователь создавать тренировки.
+    
+    Пользователь может создавать тренировки, если у него есть профиль тренера (trainer_profile).
+    """
+    try:
+        # Получаем полную информацию о пользователе
+        user = get_user_by_id(db, current_user["id"])
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail="Пользователь не найден"
+            )
+        
+        # Проверяем наличие trainer_profile
+        has_trainer_profile = user.trainer_profile is not None and user.trainer_profile != {}
+        
+        if has_trainer_profile:
+            return {
+                "can_create": True,
+                "message": "Пользователь может создавать тренировки",
+                "reason": "Пользователь имеет профиль тренера"
+            }
+        else:
+            return {
+                "can_create": False,
+                "message": "Пользователь не может создавать тренировки",
+                "reason": "Для создания тренировок необходимо заполнить профиль тренера"
+            }
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error checking can create training for user {current_user['id']}: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Не удалось проверить права на создание тренировок"
+        )
+
+
 @router.get("/{training_id}", response_model=TrainingResponse)
 async def get_training_details(
     training_id: str,
@@ -740,18 +785,4 @@ async def get_user_trainings(
         )
 
 
-@router.get("/can-create", response_model=dict)
-async def can_create_training(
-    current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """
-    Проверить, может ли пользователь создавать тренировки.
-    
-    Пока что все авторизованные пользователи могут создавать тренировки.
-    В будущем здесь может быть более сложная логика проверки прав.
-    """
-    return {
-        "can_create": True,
-        "message": "Пользователь может создавать тренировки"
-    } 
+ 
