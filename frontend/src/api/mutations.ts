@@ -7,7 +7,10 @@ import type {
     SignUpSuccess,
 } from "../components/interface/interfaces";
 import type { AxiosError } from "axios";
-import { signInRequest, signUpRequest, submitSurveyRequest, submitCoachDataRequest, submitNewTrainingRequest } from "./apiRequests";
+import { 
+  signInRequest, signUpRequest, submitSurveyRequest, submitCoachDataRequest, 
+  submitNewTrainingRequest, saveProgram, deleteFromSavedPrograms, deleteTrainingData
+} from "./apiRequests";
 import { useNavigate } from "react-router-dom";
 import type { AuthCredentialsTokens } from "../components/context/AuthContext";
 
@@ -69,6 +72,48 @@ export const useSubmitNewTraining = (token: String) => {
     },
     onError: (error) => {
       console.error("Failed to submit new training data: ", error);
+    }
+  })
+};
+
+export const useDeleteTrainingData = (token: String) => {
+  return useMutation({
+    mutationFn: (courseId: any) => deleteTrainingData(courseId, token),
+    onSuccess: (data) => {
+      console.log(data);
+      console.log("Training was deleted successfully!");
+      return data;
+    },
+    onError: (error) => {
+      console.error("Failed to delete the training: ", error);
+    }
+  })
+};
+
+export const useSaveProgram = (token: String) => {
+  return useMutation({
+    mutationFn: (courseId: any) => saveProgram(courseId, token),
+    onSuccess: (data) => {
+      console.log(data);
+      console.log("Program was saved successfully!");
+      return data;
+    },
+    onError: (error) => {
+      console.error("Failed to save the program: ", error);
+    }
+  })
+};
+
+export const useDeleteFromSavedPrograms = (token: String) => {
+  return useMutation({
+    mutationFn: (courseId: any) => deleteFromSavedPrograms(courseId, token),
+    onSuccess: (data) => {
+      console.log(data);
+      console.log("Program was deleted from saved successfully!");
+      return data;
+    },
+    onError: (error) => {
+      console.error("Failed to delete the program from saved: ", error);
     }
   })
 };
