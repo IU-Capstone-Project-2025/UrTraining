@@ -4,7 +4,7 @@ import Course from "../components/Course"
 import kanye from '../assets/kanye.jpg'
 import { transformRawCourseData } from "../utils/transformRawCouseData"
 import { useSaveProgram, useDeleteFromSavedPrograms, useDeleteTrainingData } from "../api/mutations";
-import { currentTrainingDataRequest, isTrainingSaved } from "../api/apiRequests";
+import { currentTrainingDataRequest, isTrainingSaved, isTrainingCreatedByUser } from "../api/apiRequests";
 import AuthContext from "../components/context/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
@@ -32,7 +32,7 @@ const CoursePage = () => {
 
     const { data: isCreated, isLoading: isLoading, status: isCreatedStatus } = useQuery({
         queryKey: ['is-created'],
-        queryFn: () => isTrainingSaved(courseId as String, authData.access_token),
+        queryFn: () => isTrainingCreatedByUser(courseId as String, authData.access_token),
         enabled: !!authData?.access_token && !!courseId,
     });
 
@@ -49,6 +49,7 @@ const CoursePage = () => {
         if (isCreatedStatus === 'success') {
             setCreatedStatus(isCreated);
         }
+        console.log(isCreated)
     }, [isCreated, isCreatedStatus]);
 
     const handleAddToSaved = () => {
