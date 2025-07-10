@@ -38,11 +38,11 @@ const CoursesCataloguePage = () => {
       navigate("/signin")
   })
 
-
+  const title = {title_top: "All trainings", title_bottom: "in one place"}
 
   return (
     <>
-      <CourseCatalogue courses={trainingsData} />
+      <CourseCatalogue courses={trainingsData} title={title} />
     </>
   );
 };

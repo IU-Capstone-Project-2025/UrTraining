@@ -1,10 +1,29 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import kanye from '../assets/kanye.jpg'
 import arrow from '../assets/arrow.svg'
 import '../css/Profile.css'
+import { logOutRequest } from '../api/apiRequests'
+import { Link, useNavigate } from 'react-router-dom'
+import AuthContext from './context/AuthContext'
 
 const TrainerProfile = (data: any) => {
+
+    const authData = useContext(AuthContext)
+    const navigate = useNavigate();
+
     const grid_template = "'" + data.grid_template.join("' '") + "'"
+
+    const handleLogout = async () => {
+        try {
+            await logOutRequest(authData.access_token);
+            
+            localStorage.removeItem('token');
+            
+            navigate("/signin");
+        } catch (error) {
+            console.error('Ошибка при выходе:', error);
+        }
+    }
 
     return (
         <div className='profile basic-page'>
@@ -13,7 +32,7 @@ const TrainerProfile = (data: any) => {
             }}>
                 <div className='profile__frame profile__info'>
                     <div className='profile__info__header'>
-                        <button className='btn-basic-white profile__header__logout'>
+                        <button className='btn-basic-white profile__header__logout' onClick={() => handleLogout()}>
                             Log out
                         </button>
                     </div>
@@ -81,10 +100,10 @@ const TrainerProfile = (data: any) => {
                     </div>
                     <div className='profile__calendar__option'>
                         <p>{data.calendar_text.text_bottom}</p>
-                        <button className='btn-basic-white'>{data.calendar_text.text_button_bottom}</button>
+                        <button className='btn-basic-white' onClick={() => navigate("/catalogue")}>{data.calendar_text.text_button_bottom}</button>
                     </div>
                 </div>
-                <div className='profile__frame profile__trainings'>
+                <div className='profile__frame profile__trainings' onClick={() => navigate("/upload-training")}>
                     <div className='profile__trainings__header'>
                         <p>{data.trainings_text.text_top}</p>
                         <img src={arrow} alt="" />
@@ -98,7 +117,7 @@ const TrainerProfile = (data: any) => {
                         <p>{data.upload_text.text_top}</p>
                     </div>
                     <div className='profile__upload__button'>
-                        <button className='btn-basic-black'>{data.upload_text.text_button}</button>
+                        <button className='btn-basic-black' onClick={() => navigate("/my-trainings")}>{data.upload_text.text_button}</button>
                     </div>
                 </div>
             </div>
