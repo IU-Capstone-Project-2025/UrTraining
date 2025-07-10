@@ -1,6 +1,7 @@
 import React from 'react'
 import Profile from '../components/Profile'
 import {  } from '../api/apiRequests';
+import TraineeProfile from '../components/TraineeProfile';
 
 const ProfilePage = () => {
 
@@ -48,7 +49,7 @@ const ProfilePage = () => {
 
 
   return (
-    <Profile {...data_trainee} />
+    <TraineeProfile {...data_trainee} />
   )
 }
 

@@ -37,7 +37,7 @@
 .profile__info {
     gap: 1rem;
     grid-area: info;
-    width: 85%;
+    width: 100%;
 }
 
 .profile__info__header {
@@ -110,7 +110,7 @@
 .profile__calendar {
     justify-content: center;
     gap: 2rem;
-    width: 70%;
+    width: 100%;
     grid-area: calendar;
 }
 
@@ -154,7 +154,7 @@
 .profile__upload {
     justify-content: center;
     gap: 2rem;
-    width: 70%;
+    width: 100%;
     grid-area: upload;
     height: 120%;
 }

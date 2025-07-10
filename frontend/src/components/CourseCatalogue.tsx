@@ -4,19 +4,27 @@ import "../css/CoursesCatalogue.css";
 import { Link } from 'react-router-dom';
 import { transformRawCourseData } from '../utils/transformRawCouseData';
 
-const CourseCatalogue = (courses: any) => {
-  console.log(courses)
+type CourseCatalogueProps = {
+  courses: any[];
+  title: {
+    title_top: string;
+    title_bottom: string;
+  };
+};
+
+const CourseCatalogue = ({ courses, title }: CourseCatalogueProps) => {
+  
   return (
     <div className="catalogue basic-page">
       <div className='catalogue__container'>
         <h1 className="catalogue__title">
-          <span style={{ display: 'block' }}>All trainings</span>
-          <span style={{ display: 'block' }}>in one place</span>
+          <span style={{ display: 'block' }}>{title.title_top}</span>
+          <span style={{ display: 'block', marginBottom: '20px'}}>{title.title_bottom}</span>
         </h1>
 
         <div className="catalogue__grid">
 
-          {courses.courses.map((course: any, index: number) => (
+          {courses.map((course: any, index: number) => (
             <Link
               to={`/course/${course.id}`} key={course.id}
             >

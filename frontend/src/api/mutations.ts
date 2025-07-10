@@ -9,7 +9,7 @@ import type {
 import type { AxiosError } from "axios";
 import { 
   signInRequest, signUpRequest, submitSurveyRequest, submitCoachDataRequest, 
-  submitNewTrainingRequest, saveProgram, deleteFromSavedPrograms, deleteTrainingData
+  submitNewTrainingRequest, saveProgram, deleteFromSavedPrograms, deleteTrainingData, logOutRequest
 } from "./apiRequests";
 import { useNavigate } from "react-router-dom";
 import type { AuthCredentialsTokens } from "../components/context/AuthContext";
