@@ -1,5 +1,6 @@
 .btn-basic-black, 
 .btn-basic-white,
+.btn-basic-red,
 .btn-basic-blur {
   font-family: TT Travels Regular;
   font-size: 18px;
@@ -26,6 +27,13 @@
   background-color: #ffffff;
   background-color: transparent;
   color: #000;
+}
+
+.btn-basic-red {
+  border: none;
+  box-shadow:inset 0px 0px 0px 1.5px #ce2929;
+
+  color: #cc1616;
 }
 
 .btn-basic-blur {

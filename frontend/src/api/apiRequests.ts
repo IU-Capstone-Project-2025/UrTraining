@@ -96,6 +96,78 @@ export async function trainingsDataRequest(token: String): Promise<any> {
     }
 }
 
+export async function getSavedCourses(token: String): Promise<any> {
+    try {
+        const resp = await axios.get<String>(`${endpoint}/saved-programs`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return resp.data;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function isTrainingSaved(courseId: String, token: String): Promise<boolean> {
+    try {
+        const resp = await axios.get<{ saved: boolean }>(`${endpoint}/saved-programs/${courseId}/status`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return resp.data.saved;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function saveProgram(courseId: any, token: String) {
+    try {
+
+        const resp = await axios.post(
+            `${endpoint}/saved-programs/${courseId}`,
+            {},
+            {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                },
+            }
+        );
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function deleteFromSavedPrograms(courseId: any, token: String) {
+    try {
+
+        const resp = await axios.delete(`${endpoint}/saved-programs/${courseId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
 export async function currentTrainingDataRequest(courseId: String, token: String): Promise<any> {
     try {
         const resp = await axios.get<String>(`${endpoint}/trainings/${courseId}`, {
@@ -105,6 +177,22 @@ export async function currentTrainingDataRequest(courseId: String, token: String
         });
         // console.log("бро красава")
         return resp.data;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function isTrainingCreatedByUser(courseId: String, token: String): Promise<boolean> {
+    try {
+        const resp = await axios.get<{ belongs: boolean }>(`${endpoint}/trainings/${courseId}/status`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return resp.data.belongs;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             throw error;
@@ -218,15 +306,14 @@ export async function submitNewTrainingRequest(token: String, data: any) {
         throw error;
     }
 }
-export async function uploadFilesForAI(imageBase64: string): Promise<any> {
-    try {
-        const requestData = {
-            image: imageBase64,
-        };
 
-        const resp = await axios.post(`${ai_endpoint}/image2tracker`, requestData, {
+export async function deleteTrainingData(courseId: any, token: String) {
+    try {
+      
+        const resp = await axios.delete(`${endpoint}/trainings/${courseId}`, {
             headers: {
-                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
             },
         });
         return resp.data;
