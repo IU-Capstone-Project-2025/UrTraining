@@ -19,6 +19,7 @@ import { AuthContext, type AuthCredentialsTokens } from './context/AuthContext';
 import RecommendationsPage from '../pages/RecommendationsPage';
 import UploadTrainingPage from '../pages/UploadTrainingPage';
 import ProfilePage from '../pages/ProfilePage';
+import MyCoursesPage from '../pages/MyCoursesPage';
 
 const queryClient = new QueryClient()
 
@@ -45,6 +46,7 @@ const App = () => {
               <Route path="survey" element={<SurveyPage />} />
               <Route path="trainer-registration" element={<AdvancedRegistrationPage />} />
               <Route path="catalogue" element={<CoursesCataloguePage />} />
+              <Route path="my-trainings" element={<MyCoursesPage />} />
               <Route path="recommendations" element={<RecommendationsPage />} />
               <Route path="course/:courseId" element={<CoursePage />} />
               <Route path="upload-training" element={<UploadTrainingPage />} />

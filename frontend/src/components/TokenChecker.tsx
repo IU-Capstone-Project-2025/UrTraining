@@ -8,12 +8,9 @@ export const TokenChecker = () => {
     const location = useLocation();
 
     useEffect(() => {
-        console.log("App useEffect debug");
 
         const checkToken = () => {
             const token = localStorage.getItem('token');
-            console.log("Token: ", token);
-            console.log("Access Token: ", authData.access_token);
             if (!token && authData.access_token != "") {
                 window.location.reload()
                 return;
