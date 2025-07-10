@@ -1,90 +1,90 @@
-.btn-basic-black, 
+.btn-basic-black,
 .btn-basic-white,
 .btn-basic-red,
 .btn-basic-blur {
-  font-family: TT Travels Regular;
-  font-size: 18px;
+    font-family: TT Travels Regular;
+    font-size: 18px;
 
-  min-width: 96px;
-  height: auto;
-  padding: 16px 40px;
+    min-width: 96px;
+    height: auto;
+    padding: 16px 40px;
 
-  border-radius: 64px;
-  cursor: pointer;
+    border-radius: 64px;
+    cursor: pointer;
 }
 
 .btn-basic-black {
-  border: none;
+    border: none;
 
-  background-color: #000000;
-  color: #F3F3F3;
+    background-color: #000000;
+    color: #f3f3f3;
 }
 
 .btn-basic-white {
-  border: none;
-  box-shadow:inset 0px 0px 0px 1.5px #000;
+    border: none;
+    box-shadow: inset 0px 0px 0px 1.5px #000;
 
-  background-color: #ffffff;
-  background-color: transparent;
-  color: #000;
+    background-color: #ffffff;
+    background-color: transparent;
+    color: #000;
 }
 
 .btn-basic-red {
-  border: none;
-  box-shadow:inset 0px 0px 0px 1.5px #ce2929;
+    border: none;
+    box-shadow: inset 0px 0px 0px 1.5px #ce2929;
 
-  color: #cc1616;
+    color: #cc1616;
 }
 
 .btn-basic-blur {
-  border: none;
-  box-shadow:inset 0px 0px 0px 1.5px #000;
+    border: none;
+    box-shadow: inset 0px 0px 0px 1.5px #000;
 
-  background-color: #00000000;
-  color: #000;
+    background-color: #00000000;
+    color: #000;
 }
 
 .radio-basic-black {
-  display: flex;
-  border: none;
-  border-radius: 0.5rem;
+    display: flex;
+    border: none;
+    border-radius: 0.5rem;
 
-  gap: 0.5rem;
-  padding: 0.5rem;
+    gap: 0.5rem;
+    padding: 0.5rem;
 
-  background-color: #000000;
-  color: #F3F3F3;
+    background-color: #000000;
+    color: #f3f3f3;
 }
 
 .form-basic-white {
-  border: 2px solid #00000054;
-  border-radius: 8px;
-  font-family: TT Travels Regular;
+    border: 2px solid #00000054;
+    border-radius: 8px;
+    font-family: TT Travels Regular;
 
-  padding: 8px;
+    padding: 8px;
 
-  color: #000;
-  background-color: #F3F3F3;
-  height: 2rem;
+    color: #000;
+    background-color: #f3f3f3;
+    height: 2.5rem;
 }
 
 .tag-basic-gray {
-  font-family: TT Travels Regular;
-  font-size: 1rem;
+    font-family: TT Travels Regular;
+    font-size: 1rem;
 
-  padding: 0.2rem 0.8rem;
+    padding: 0.2rem 0.8rem;
 
-  border: none;
-  border-radius: 64px;
-  box-shadow:inset 0px 0px 0px 1.5px #474747;
+    border: none;
+    border-radius: 64px;
+    box-shadow: inset 0px 0px 0px 1.5px #474747;
 
-  background-color: #F3F3F3;
-  color: #474747;
+    background-color: #f3f3f3;
+    color: #474747;
 }
 
 .checkbox-basic-white:before {
-  border: none;
-  width: 100px;
+    border: none;
+    width: 100px;
 }
 
 .assets__background__gradient {
@@ -96,8 +96,8 @@
     background: #e42ee8;
     background: linear-gradient(
         45deg,
-        rgba(229, 46, 232, 0.20) 0%,
-        rgba(32, 228, 193, 0.20) 100%
+        rgba(229, 46, 232, 0.2) 0%,
+        rgba(32, 228, 193, 0.2) 100%
     );
     border-radius: 999rem;
     filter: blur(6rem);
@@ -109,13 +109,13 @@
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
-  white-space: nowrap;
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
 }
 
 p {
-  font-family: "TT Travels Regular", sans-serif;
+    font-family: "TT Travels Regular", sans-serif;
 }
 
 .basic-page {
@@ -127,4 +127,52 @@ p {
 
     /* Navbar Top */
     padding-top: 136px;
+}
+
+::-webkit-scrollbar {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* No background track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Remove all scrollbar buttons (arrows) */
+::-webkit-scrollbar-button:vertical:start:increment,
+::-webkit-scrollbar-button:vertical:end:decrement,
+::-webkit-scrollbar-button:horizontal:start:increment,
+::-webkit-scrollbar-button:horizontal:end:decrement {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Thumb styling: rounded & transparent background */
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Hover effect */
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 100, 100, 0.7);
+}
+
+/* Always show scrollbar gutter */
+html {
+  scrollbar-gutter: stable;
+}
+
+::-moz-scrollbar-button, ::-webkit-scrollbar-button {
+  width: 0px;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: inherit;
+  scrollbar-color: rgba(100, 100, 100, 0.5) transparent;
 }

@@ -69,18 +69,18 @@ const Course: React.FC<CourseProps> = ({
     
 
     // Function for horizontal scroll
-    useEffect(() => {
-        const scrollElement = scrollRef.current;
-        if (!scrollElement) return;
+    // useEffect(() => {
+    //     const scrollElement = scrollRef.current;
+    //     if (!scrollElement) return;
 
-        const onWheel = (e: WheelEvent) => {
-            e.preventDefault();              // Prevent vertical page scroll
-            scrollElement.scrollLeft += e.deltaY * 4;      // Scroll horizontally instead
-        };
+    //     const onWheel = (e: WheelEvent) => {
+    //         e.preventDefault();              // Prevent vertical page scroll
+    //         scrollElement.scrollLeft += e.deltaY;      // Scroll horizontally instead
+    //     };
 
-        scrollElement.addEventListener('wheel', onWheel, { passive: false });
-        return () => scrollElement.removeEventListener('wheel', onWheel);
-    }, []);
+    //     scrollElement.addEventListener('wheel', onWheel, { passive: false });
+    //     return () => scrollElement.removeEventListener('wheel', onWheel);
+    // }, []);
 
     return (
         <div className="course basic-page">
@@ -133,10 +133,10 @@ const Course: React.FC<CourseProps> = ({
                 <div className='course__structure'>
                     <div className='course__structure__header'>
                         <h3>Course Structure</h3>
-                        <div className='course__structure__options'>
+                        {/* <div className='course__structure__options'>
                             <p>Option 1</p>
                             <p>Option 2</p>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className='course__structure__container' ref={scrollRef}>

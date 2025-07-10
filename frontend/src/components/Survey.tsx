@@ -35,7 +35,7 @@ const Survey = (props: SurveyStep) => {
     const handleBack = () => {
         stepContext.updateStep(stepContext.currentStep - 1)
     }
-    
+
     const handleSubmit = () => {
         setIsSubmitting(true);
         console.log(savedData);
@@ -46,73 +46,75 @@ const Survey = (props: SurveyStep) => {
 
     return (
         <div className="survey basic-page">
-            <div className="survey__navbar">
-                {props.steps_total.map((step: StepsTotal, value: number) => {
-                    return (
-                        <h3 key={value} className={step.value === props.step_current ? "survey__navbar__selected" : ""}>
-                            {step.placeholder}
-                        </h3>
-                    )
-                })}
-            </div>
-
-            <div className="survey__container">
-                <div className="survey__options">
-                    <div className="survey__title">
-                        {props.title}
-                    </div>
-                    {props.options.map((options_page: SurveyOption, value: number) => {
+            <div className="survey__box">
+                <div className="survey__navbar">
+                    {props.steps_total.map((step: StepsTotal, value: number) => {
                         return (
-                            <div key={value} className="survey__options__section">
-                                <p>
-                                    {options_page.subtitle}
-                                </p>
-                                <div className="survey__section__forms">
-                                    <form onChange={handleChange}>
-                                        {options_page.inputs.map((input_option: InputField, value: number) => {
-                                            return (
-                                                <InputTemplates key={value} {...input_option} />
-                                            )
-                                        })}
-                                    </form>
-                                </div>
+                            <div key={value} className={step.value === props.step_current ? "survey__navbar__element survey__navbar__selected" : "survey__navbar__element"}>
+                                <h3>{step.placeholder}</h3>
                             </div>
                         )
                     })}
                 </div>
 
-                <div className="survey__info">
-                    <div className="survey__info__description">
+                <div className="survey__container">
+                    <div className="survey__options">
                         <div className="survey__title">
-                            <h2>
-                                {props.information.title}
-                            </h2>
+                            {props.title}
                         </div>
-                        <p>
-                            {props.information.description}
-                        </p>
+                        {props.options.map((options_page: SurveyOption, value: number) => {
+                            return (
+                                <div key={value} className="survey__options__section">
+                                    <p>
+                                        {options_page.subtitle}
+                                    </p>
+                                    <div className="survey__section__forms">
+                                        <form onChange={handleChange}>
+                                            {options_page.inputs.map((input_option: InputField, value: number) => {
+                                                return (
+                                                    <InputTemplates key={value} {...input_option} />
+                                                )
+                                            })}
+                                        </form>
+                                    </div>
+                                </div>
+                            )
+                        })}
                     </div>
-                    <div className="survey__info__button">
-                        {
-                            props.step_current !== first_step ?
-                                <button className="btn-basic-black" onClick={handleBack}>
-                                    Back
-                                </button> : ""
-                        }
 
-                        {
-                            props.step_current !== last_step ?
-                                <button className="btn-basic-black" onClick={handleContinue}>
-                                    Continue
-                                </button> : ""
-                        }
+                    <div className="survey__info">
+                        <div className="survey__info__description">
+                            <div className="survey__title">
+                                <h2>
+                                    {props.information.title}
+                                </h2>
+                            </div>
+                            <p>
+                                {props.information.description}
+                            </p>
+                        </div>
+                        <div className="survey__info__button">
+                            {
+                                props.step_current !== first_step ?
+                                    <button className="btn-basic-black" onClick={handleBack}>
+                                        Back
+                                    </button> : ""
+                            }
 
-                        {
-                            props.step_current === last_step ?
-                                <button className="btn-basic-black" onClick={handleSubmit}>
-                                    Submit
-                                </button> : ""
-                        }
+                            {
+                                props.step_current !== last_step ?
+                                    <button className="btn-basic-black" onClick={handleContinue}>
+                                        Continue
+                                    </button> : ""
+                            }
+
+                            {
+                                props.step_current === last_step ?
+                                    <button className="btn-basic-black" onClick={handleSubmit}>
+                                        Submit
+                                    </button> : ""
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

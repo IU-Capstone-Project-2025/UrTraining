@@ -1,6 +1,11 @@
 .survey {
     display: flex;
-    flex-direction: column;
+}
+
+.survey__box {
+    background-color: rgba(166, 147, 147, 0.1);
+    border-radius: 2rem;
+    overflow: hidden;
 }
 
 .survey__navbar {
@@ -21,6 +26,10 @@
     flex: 1 4;
     text-align: center;
     height: 100%;
+}
+
+.survey__navbar__element {
+    height: 4rem;
 }
 
 .survey__navbar__selected {
@@ -61,11 +70,11 @@
 }
 
 .survey__section__forms > form {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     width: 100%;
     gap: 2rem;
 }
-
 
 .survey__section__forms form > * {
     flex: 1 2;
