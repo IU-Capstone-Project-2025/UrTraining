@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from sqlalchemy.orm import Session
 import re
+import uuid
 
 from app.database import get_db
 from app.crud import (
@@ -99,7 +100,12 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     else:
         expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     
-    to_encode.update({"exp": expire})
+    # Добавляем случайный UUID и микросекунды для обеспечения уникальности токена
+    to_encode.update({
+        "exp": expire,
+        "iat": datetime.utcnow().timestamp(),  # Время создания с микросекундами
+        "jti": str(uuid.uuid4())  # Уникальный идентификатор токена
+    })
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -167,6 +173,10 @@ async def register(data: RegisterRequest, request: Request, db: Session = Depend
     try:
         user = create_user(db, data.username, data.full_name, data.email, data.password)
         
+        # Очищаем возможные старые сессии (для безопасности)
+        from app.crud import revoke_user_sessions
+        revoke_user_sessions(db, user.id)
+        
         # Create access token (same as login)
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
@@ -209,6 +219,10 @@ async def login(data: LoginRequest, request: Request, db: Session = Depends(get_
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
         )
+    
+    # Очищаем старые активные сессии пользователя
+    from app.crud import revoke_user_sessions
+    revoke_user_sessions(db, user.id)
     
     # Create access token
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
