@@ -33,7 +33,7 @@ const TrainerProfilePage = (data: any) => {
     email: userData?.email,
     gender: "prefer not to specify",
     age: "prefer not to specify",
-    profile: data.data.Specialization,
+    profile: data.data?.experience.Specialization,
     date: formattedDate,
     grid_template: [
       "info info",

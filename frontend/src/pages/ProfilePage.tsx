@@ -20,12 +20,12 @@ const ProfilePage = () => {
                             <div className="step-title-main">Loading...</div>
                         </div>
 
-  if (status=="success") { console.log(trainerData.trainer_profile.experience) }                      
+  if (status=="success" && trainerData.trainer_profile !== null) { console.log(trainerData.trainer_profile) }                      
 
   return (
     <>
       {trainerData.trainer_profile !== null ? (
-        <TrainerProfilePage data={trainerData.trainer_profile.experience}/>
+        <TrainerProfilePage data={trainerData.trainer_profile}/>
       ) : (
         <TraineeProfilePage />
       )}

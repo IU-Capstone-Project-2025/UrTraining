@@ -36,11 +36,18 @@ const Survey = (props: SurveyStep) => {
         stepContext.updateStep(stepContext.currentStep - 1)
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         setIsSubmitting(true);
         console.log(savedData);
         console.log("Handle submit call");
-        stepContext.submitSurvey(savedData);
+        try {
+            await stepContext.submitSurvey(savedData);
+            navigate('/recommendations');
+        } catch (err) {
+            console.error("Ошибка отправки:", err);
+        } finally {
+            setIsSubmitting(false);
+        }
         navigate('/recommendations');
     }
 

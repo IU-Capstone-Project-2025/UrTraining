@@ -42,10 +42,17 @@ const SurveyPage = () => {
     submitSurvey: (data) => submitSurveyHandler(data)
   };
 
-  function submitSurveyHandler(data: any){
+  function submitSurveyHandler(data: any): Promise<any>{
     const formattedData = transformToApiPayload(data)
+
     console.log(formattedData);
-    submitSurveyMutation.mutate(formattedData)
+
+    return new Promise((resolve, reject) => {
+      submitSurveyMutation.mutate(formattedData, {
+        onSuccess: () => resolve(true),
+        onError: (err) => reject(err)
+      });
+    });
   }
 
   // Receive an array of survey pages from API
