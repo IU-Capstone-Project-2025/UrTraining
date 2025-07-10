@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import '../css/Course.css';
-import Metadata from './Metadata';
-import star from '../assets/star.svg';
+import { useNavigate } from 'react-router-dom';
 
 interface Exercise {
   exercise: string;
@@ -13,7 +12,7 @@ interface Exercise {
 }
 
 interface StepData {
-    [key: string]: any;
+  [key: string]: any;
 }
 
 interface DataProps {
@@ -27,6 +26,8 @@ type ExerciseField = keyof Exercise;
 type EditableField = ExerciseField | 'title';
 
 const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, onSubmit }) => {
+
+  const navigate = useNavigate()
 
   const [editing, setEditing] = useState<{
     dayIndex: number | null;
@@ -122,6 +123,11 @@ const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, 
 
   return (
     <div className="course basic-page" onDoubleClick={stopEditing}>
+      <button className="btn-ai-generate" onClick={() => navigate('/ai-upload')}>
+        <span className="ai-icon">✨</span>
+        Generate with AI
+        <span className="ai-sparkle">⚡</span>
+      </button>
       <div className="course__container">
         <h2 className="step-title">Step 2: Course Plan</h2>
         <div className='course__info'>
@@ -224,9 +230,9 @@ const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, 
         {/* Кнопка сохранения */}
         <div className="editor-actions">
           <div className="button-row">
-                <button className="btn-basic-black" onClick={onBack}>Back</button>
-                <button className="btn-basic-black" onClick={onSubmit}>Save the course</button>
-            </div>
+            <button className="btn-basic-black" onClick={onBack}>Back</button>
+            <button className="btn-basic-black" onClick={onSubmit}>Save the course</button>
+          </div>
         </div>
       </div>
     </div>

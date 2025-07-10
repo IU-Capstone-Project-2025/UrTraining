@@ -1,8 +1,9 @@
 import React, { useState, useRef, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../components/context/AuthContext";
-import { uploadFilesForAI, submitNewTrainingRequest } from "../api/apiRequests";
+import { uploadFilesForAI, submitNewTrainingRequest, userInfoRequest } from "../api/apiRequests";
 import "../css/AIUploadPage.css";
+import MetadataContext from "../components/context/MetadataContext";
 
 interface UploadedFile {
   file: File;
@@ -12,6 +13,8 @@ interface UploadedFile {
 
 const AIUploadPage = () => {
   const authData = useContext(AuthContext);
+  const metadataContext = useContext(MetadataContext)
+
   const [dragActive, setDragActive] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -38,6 +41,8 @@ const AIUploadPage = () => {
       setDragActive(false);
     }
   };
+
+  console.log(metadataContext.savedData);
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -112,11 +117,12 @@ const AIUploadPage = () => {
     });
   };
 
-  const transformAIResponseToBackendFormat = (aiResponse: any) => {
+  const transformAIResponseToBackendFormat = (aiResponse: any, metadata: any) => {
     return {
       "Course Title": aiResponse.course_title,
       "Program Description": aiResponse.program_description,
-      training_plan: aiResponse.training_plan
+      training_plan: aiResponse.training_plan,
+      ...metadata,
     };
   };
 
@@ -130,7 +136,7 @@ const AIUploadPage = () => {
 
     try {
       const firstImageFile = uploadedFiles.find(f => f.file.type.startsWith('image/'));
-      
+
       if (!firstImageFile) {
         alert("Please upload at least one image file for AI processing.");
         setIsUploading(false);
@@ -139,13 +145,13 @@ const AIUploadPage = () => {
 
       const imageBase64 = await convertFileToBase64(firstImageFile.file);
       const aiResult = await uploadFilesForAI(imageBase64);
-      
+
       console.log("AI processing successful:", aiResult);
 
       let aiData;
       try {
-        aiData = typeof aiResult.response === 'string' 
-          ? JSON.parse(aiResult.response) 
+        aiData = typeof aiResult.response === 'string'
+          ? JSON.parse(aiResult.response)
           : aiResult.response;
       } catch (parseError) {
         console.error("Failed to parse AI response:", parseError);
@@ -153,10 +159,10 @@ const AIUploadPage = () => {
         setIsUploading(false);
         return;
       }
-
-      const backendData = transformAIResponseToBackendFormat(aiData);
       
-      const backendResult = await submitNewTrainingRequest(authData.access_token, backendData);
+      const aiFormatted = transformAIResponseToBackendFormat(aiData, metadataContext.savedData);
+
+      const backendResult = await submitNewTrainingRequest(authData.access_token, aiFormatted);
       console.log("Backend upload successful:", backendResult);
 
       setGeneratedCourseId(backendResult.id || null);
@@ -186,14 +192,14 @@ const AIUploadPage = () => {
       <Link to="/upload-training" className="back-link">
         <span className="back-arrow">←</span> Back to Creator
       </Link>
-      
+
       {/* Success Modal */}
       {showSuccessModal && (
         <div className="modal-overlay" onClick={() => setShowSuccessModal(false)}>
           <div className="success-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>🎉 Course Generated Successfully!</h2>
-              <button 
+              <button
                 className="modal-close"
                 onClick={() => setShowSuccessModal(false)}
               >
@@ -208,7 +214,7 @@ const AIUploadPage = () => {
                     View Course
                   </Link>
                 )}
-                <button 
+                <button
                   className="btn-basic-white"
                   onClick={() => setShowSuccessModal(false)}
                 >

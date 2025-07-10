@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import TrainingEditor from "../components/CourseEditor";
 import Metadata from "../components/Metadata";
 import "../css/UploadTrainingPage.css";
@@ -8,6 +8,7 @@ import { useSubmitNewTraining } from "../api/mutations";
 import { formatTrainingData } from "../utils/transformTrainingData";
 import { trainerDataRequest, userInfoRequest } from "../api/apiRequests";
 import { useQuery } from "@tanstack/react-query";
+import MetadataContext from "../components/context/MetadataContext";
 
 
 interface StepData {
@@ -17,8 +18,13 @@ interface StepData {
 const UploadTrainingPage = () => {
 
     const authData = useContext(AuthContext)
-    const navigate = useNavigate()
     const submitTrainingDataMutation = useSubmitNewTraining(authData.access_token)
+
+    const { data: meData, isLoading: isMeLoading } = useQuery({
+        queryKey: ['me'],
+        queryFn: () => userInfoRequest(authData.access_token),
+        enabled: authData.access_token !== ""
+    })
 
     const [step, setStep] = useState<"welcome" | "metadata" | "editor" | "end">("welcome");
     const [createdTrainingId, setCreatedTrainingId] = useState<string | null>(null);
@@ -45,6 +51,15 @@ const UploadTrainingPage = () => {
         training_plan: []
     });
 
+    useEffect(() => {
+        if (meData?.username) {
+            setSavedData(prev => ({
+                ...prev,
+                trainer_name: meData.username
+            }));
+        }
+    }, [meData]);
+
     const { data: trainerData = [], isLoading: isTrainerLoading, status: trainerStatus } = useQuery<any, Error>({
         queryKey: ['formPages'],
         queryFn: () => trainerDataRequest(authData.access_token)
@@ -58,7 +73,7 @@ const UploadTrainingPage = () => {
     const handleSubmit = () => {
         console.log("Saved data: ", savedData);
         const formattedData = formatTrainingData(savedData, trainerData, userData);
-        
+
         submitTrainingDataMutation.mutate(formattedData, {
             onSuccess: (data) => {
                 console.log("Received data from server:", data);
@@ -89,53 +104,48 @@ const UploadTrainingPage = () => {
             </div>
             <div>
                 {step === "welcome" && (
-                <div className="centered-content">
+                    <div className="centered-content">
 
-                    <div className="step-title-main">Welcome to the Training Course Creator</div>
-                    <p>Let's help you design a personalized fitness program from scratch.</p>
-                    <div className="button-group-welcome">
-                        <button className="btn-basic-black" onClick={nextStep}>Get Started</button>
-                        <button className="btn-ai-generate" onClick={() => navigate('/ai-upload')}>
-                            <span className="ai-icon">✨</span>
-                            Generate with AI
-                            <span className="ai-sparkle">⚡</span>
-                        </button>
+                        <div className="step-title-main">Welcome to the Training Course Creator</div>
+                        <p>Let's help you design a personalized fitness program from scratch.</p>
+                        <div className="button-group-welcome">
+                            <button className="btn-basic-black" onClick={nextStep}>Get Started</button>
+                        </div>
                     </div>
-                </div>
                 )}
 
                 {step === "metadata" && (
-                <div className="metadata-content">
-                    <Metadata 
-                        savedData={savedData} 
-                        setSavedData={setSavedData}
-                        onNext={nextStep}
-                        onBack={prevStep} 
-                    />
-                </div>
+                    <div className="metadata-content">
+                        <Metadata
+                            savedData={savedData}
+                            setSavedData={setSavedData}
+                            onNext={nextStep}
+                            onBack={prevStep}
+                        />
+                    </div>
                 )}
 
                 {step === "editor" && (
-                <>
-                
-                    <TrainingEditor 
-                    savedData={savedData} 
-                    setSavedData={setSavedData}
-                    onBack={prevStep}
-                    onSubmit={handleSubmit}
-                    />
-                </>
+                    <>
+
+                        <TrainingEditor
+                            savedData={savedData}
+                            setSavedData={setSavedData}
+                            onBack={prevStep}
+                            onSubmit={handleSubmit}
+                        />
+                    </>
                 )}
 
                 {step === "end" && (
-                <div className="centered-content">
-                    <div className="step-title-main">New training plan was succesfully created!</div>
-                    <p>You can view it or return to the main page, as you wish.</p>
-                    <div className="buttons">
-                        <button className="btn-basic-black"><Link to={`/course/${createdTrainingId}`}>View plan</Link></button>
-                        <button className="btn-basic-white"><Link to="/">Main menu</Link></button>
+                    <div className="centered-content">
+                        <div className="step-title-main">New training plan was succesfully created!</div>
+                        <p>You can view it or return to the main page, as you wish.</p>
+                        <div className="buttons">
+                            <button className="btn-basic-black"><Link to={`/course/${createdTrainingId}`}>View plan</Link></button>
+                            <button className="btn-basic-white"><Link to="/">Main menu</Link></button>
+                        </div>
                     </div>
-                </div>
                 )}
             </div>
         </div>

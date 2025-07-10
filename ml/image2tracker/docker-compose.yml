@@ -9,6 +9,6 @@ services:
     ports:
       - "1338:8000"
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_KEY=885a33a9-169b-498f-942a-549f7a80dd02
       - MODEL_ID=google/gemma-3-27b-it
     restart: unless-stopped

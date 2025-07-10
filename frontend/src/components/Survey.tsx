@@ -53,6 +53,9 @@ const Survey = (props: SurveyStep) => {
 
     return (
         <div className="survey basic-page">
+            <div style={{ position: "relative" }}>
+                <div className="assets__background__gradient" style={{ bottom: "0", left: "0" }}></div>
+            </div>
             <div className="survey__box">
                 <div className="survey__navbar">
                     {props.steps_total.map((step: StepsTotal, value: number) => {

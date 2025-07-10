@@ -326,7 +326,7 @@ export async function submitNewTrainingRequest(token: String, data: any) {
     try {
 
         const resp = await axios.post(`${endpoint}/trainings`, data, {
-            headers: {
+            headers: { 
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },

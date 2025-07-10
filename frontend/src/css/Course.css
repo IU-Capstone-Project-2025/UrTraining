@@ -1,3 +1,9 @@
+.course {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .course__container {
     width: 100%;
     min-height: 540px;
