@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../components/context/AuthContext";
-import { uploadFilesForAI, submitNewTrainingRequest } from "../api/apiRequests";
+import { uploadFilesForAI, submitNewTrainingRequest, userInfoRequest } from "../api/apiRequests";
 import "../css/AIUploadPage.css";
 import MetadataContext from "../components/context/MetadataContext";
 
@@ -122,7 +122,7 @@ const AIUploadPage = () => {
       "Course Title": aiResponse.course_title,
       "Program Description": aiResponse.program_description,
       training_plan: aiResponse.training_plan,
-      ...metadata
+      ...metadata,
     };
   };
 
@@ -161,9 +161,6 @@ const AIUploadPage = () => {
       }
       
       const aiFormatted = transformAIResponseToBackendFormat(aiData, metadataContext.savedData);
-
-      console.log("Submitted data: ");
-      console.log(aiFormatted);
 
       const backendResult = await submitNewTrainingRequest(authData.access_token, aiFormatted);
       console.log("Backend upload successful:", backendResult);

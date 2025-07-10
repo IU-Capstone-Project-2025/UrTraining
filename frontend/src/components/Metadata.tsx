@@ -1,6 +1,9 @@
 import React, { useContext, useState } from 'react'
 import '../css/Course.css';
 import MetadataContext from './context/MetadataContext';
+import { userInfoRequest } from '../api/apiRequests';
+import { useQuery } from '@tanstack/react-query';
+import AuthContext from './context/AuthContext';
 
 interface StepData {
     [key: string]: any;
@@ -15,6 +18,7 @@ interface MetadataProps {
 
 const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, onNext }) => {
     const metadataContext = useContext(MetadataContext)
+    
     const [goals, setGoals] = useState(1)
     const [environment, setEnvironment] = useState(1)
     const [age, setAge] = useState(1)
