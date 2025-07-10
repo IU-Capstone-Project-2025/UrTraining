@@ -72,25 +72,21 @@ def update_user_profile(db: Session, user_id: int, username: Optional[str] = Non
     if not user:
         return None
     
-    try:
-        if username:
-            user.username = username
-        if full_name:
-            user.full_name = full_name
-        if email:
-            user.email = email
-        if country is not None:
-            user.country = country
-        if city is not None:
-            user.city = city
-        
-        user.updated_at = datetime.utcnow()
-        # Note: Commit is handled by the calling transaction context
-        db.flush()  # Flush changes to detect constraint violations
-        return user
-    except IntegrityError:
-        db.rollback()
-        raise  # Re-raise to be handled at higher level
+    if username:
+        user.username = username
+    if full_name:
+        user.full_name = full_name
+    if email:
+        user.email = email
+    if country is not None:
+        user.country = country
+    if city is not None:
+        user.city = city
+    
+    user.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(user)
+    return user
 
 
 def change_user_password(db: Session, user_id: int, new_password: str) -> bool:
@@ -125,7 +121,8 @@ def get_training_profile(db: Session, user_id: int) -> Optional[TrainingProfile]
 def create_training_profile(db: Session, user_id: int) -> TrainingProfile:
     db_profile = TrainingProfile(user_id=user_id)
     db.add(db_profile)
-    db.flush()  # Flush to get the ID without committing
+    db.commit()
+    db.refresh(db_profile)
     return db_profile
 
 
@@ -140,8 +137,8 @@ def update_training_profile(db: Session, user_id: int, profile_data: Dict[str, A
             setattr(profile, field, value)
     
     profile.updated_at = datetime.utcnow()
-    # Note: Commit is handled by the calling transaction context
-    db.flush()  # Flush changes to detect any issues
+    db.commit()
+    db.refresh(profile)
     return profile
 
 
