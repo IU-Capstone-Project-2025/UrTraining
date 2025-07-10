@@ -57,6 +57,14 @@ const TraineeProfile = (data: any) => {
                     <div className='profile__personal__fields'>
                         <div className='profile__personal__field'>
                             <div className='profile__field__name'>
+                                <h3>Full name</h3>
+                            </div>
+                            <div className='profile__field__value'>
+                                <p>{data.full_name}</p>
+                            </div>
+                        </div>
+                        <div className='profile__personal__field'>
+                            <div className='profile__field__name'>
                                 <h3>E-mail</h3>
                             </div>
                             <div className='profile__field__value'>
