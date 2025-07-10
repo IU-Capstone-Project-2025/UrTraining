@@ -1,26 +1,40 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Profile from '../components/Profile'
-import {  } from '../api/apiRequests';
+import { userInfoRequest } from '../api/apiRequests';
 import TrainerProfile from '../components/TrainerProfile';
+import AuthContext from '../components/context/AuthContext';
+import { useQuery } from '@tanstack/react-query';
 
-const ProfilePage = () => {
+const TrainerProfilePage = (data: any) => {
 
-  
+  const authData = useContext(AuthContext);
+  const today = new Date();
+
+  const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long'};
+  const formattedDate = today.toLocaleDateString('en-GB', options);
+
+  const { data: userData, isLoading: userDataIsLoading, status: userDataStatus } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => userInfoRequest(authData.access_token),
+    enabled: authData.access_token !== ""
+  })
+
+
+
+  if (userDataStatus == "success") {
+    console.log(userData)
+  }
+
+  console.log(data.data)
 
   const data_trainer = {
-    username: "trainerOne",
+    username: userData?.username,
     user_type: "trainer",
-    email: "y.ye@mail.ru",
-    gender: "male",
-    age: 40,
-    tags: [
-      "Cardio",
-      "HIIT",
-      "Yoga",
-      "Functional trainings",
-      "Stretching"
-    ],
-    date: "11 September 2001",
+    email: userData?.email,
+    gender: "prefer not to specify",
+    age: "prefer not to specify",
+    profile: data.data.Specialization,
+    date: formattedDate,
     grid_template: [
       "info info",
       "info info",
@@ -50,4 +64,4 @@ const ProfilePage = () => {
   )
 }
 
-export default ProfilePage
+export default TrainerProfilePage

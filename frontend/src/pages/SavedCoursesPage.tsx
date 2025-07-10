@@ -39,7 +39,7 @@ const SavedCoursesPage = () => {
   if (isLoading) return <div className="centered-content">
                             <div className="step-title-main">Loading...</div>
                             <p>It may take a while to upload the data</p>
-                        </div>
+                        </div>                      
 
   return (
     <>

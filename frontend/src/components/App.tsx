@@ -56,7 +56,7 @@ const App = () => {
               <Route path="course/:courseId" element={<CoursePage />} />
               <Route path="upload-training" element={<UploadTrainingPage />} />
               <Route path="ai-upload" element={<AIUploadPage />} />
-              <Route path="profile" element={<TraineeProfilePage />} />
+              <Route path="profile" element={<ProfilePage />} />
             </Route>
           </Routes>
         </BrowserRouter>

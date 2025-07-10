@@ -80,12 +80,10 @@ const TrainerProfile = (data: any) => {
                         </div>
                         <div className='profile__personal__field'>
                             <div className='profile__field__name'>
-                                <h3>Tags</h3>
+                                <h3>Profile</h3>
                             </div>
                             <div className='profile__field__value'>
-                                <p>{data.tags.map((tag: string, index: number) => {
-                                    return tag + (index === data.tags.length - 1 ? "" : ", ")
-                                })}</p>
+                                <p>{data.profile}</p>
                             </div>
                         </div>
                     </div>
