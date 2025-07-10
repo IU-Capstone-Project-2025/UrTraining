@@ -96,7 +96,7 @@ export async function trainingsDataRequest(token: String): Promise<any> {
     }
 }
 
-export async function getSavedCourses(token: String): Promise<any> {
+export async function getSavedCoursesRequest(token: String): Promise<any> {
     try {
         const resp = await axios.get<String>(`${endpoint}/saved-programs`, {
             headers: {
@@ -161,6 +161,22 @@ export async function deleteFromSavedPrograms(courseId: any, token: String) {
         });
         return resp.data;
     } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function getMyTrainingsRequest(token: String, userId: number): Promise<any> {
+    try {
+        const resp = await axios.get<any>(`${endpoint}/trainings/user/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return resp.data;
+    } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
             throw error;
         }
@@ -246,6 +262,23 @@ export async function signInRequest(
     } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
             throw error as AxiosError<SignInFailed>;
+        }
+        throw error;
+    }
+}
+
+export async function logOutRequest(token: String): Promise<any> {
+    try {
+        const resp = await axios.post<any>(`${endpoint}/auth/logout`, {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+            },    
+        });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error as AxiosError<any>;
         }
         throw error;
     }
