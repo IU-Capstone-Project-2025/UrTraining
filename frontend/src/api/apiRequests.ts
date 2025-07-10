@@ -340,3 +340,23 @@ export async function deleteTrainingData(courseId: any, token: String) {
         throw error;
     }
 }
+
+export async function uploadFilesForAI(imageBase64: String) {
+    try {
+        const requestData = {
+            image: imageBase64,
+        };
+
+        const resp = await axios.post(`${ai_endpoint}/image2tracker`, requestData, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}

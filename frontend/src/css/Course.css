@@ -83,14 +83,13 @@
     width: auto;
     flex-direction: row;
     gap: 2rem;
-    overflow-x: auto;
     overflow-x: scroll;
     scroll-behavior: smooth;
 }
 
-.course__structure__container::-webkit-scrollbar { 
+/* .course__structure__container::-webkit-scrollbar { 
 	display: none; 
-}
+} */
 
 .course__structure__session {
     min-width: 880px;
@@ -99,6 +98,8 @@
 .course__session__table {
     display: flex;
     flex-direction: column;
+    max-height: 768px;
+    overflow-y: scroll;
 
     border-radius: 2rem;
     padding: 0 2rem;
