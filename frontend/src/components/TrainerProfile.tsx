@@ -3,7 +3,7 @@ import kanye from '../assets/kanye.jpg'
 import arrow from '../assets/arrow.svg'
 import '../css/Profile.css'
 
-const Profile = (data: any) => {
+const TrainerProfile = (data: any) => {
     const grid_template = "'" + data.grid_template.join("' '") + "'"
 
     return (
@@ -106,4 +106,4 @@ const Profile = (data: any) => {
     )
 }
 
-export default Profile
+export default TrainerProfile

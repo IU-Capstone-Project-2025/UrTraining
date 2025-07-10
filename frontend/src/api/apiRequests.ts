@@ -168,6 +168,22 @@ export async function deleteFromSavedPrograms(courseId: any, token: String) {
     }
 }
 
+export async function getMyTrainingsRequest(token: String, userId: number): Promise<any> {
+    try {
+        const resp = await axios.get<any>(`${endpoint}/trainings/user/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return resp.data;
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
 export async function currentTrainingDataRequest(courseId: String, token: String): Promise<any> {
     try {
         const resp = await axios.get<String>(`${endpoint}/trainings/${courseId}`, {

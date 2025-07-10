@@ -4,7 +4,8 @@ import "../css/CoursesCatalogue.css";
 import { Link } from 'react-router-dom';
 import { transformRawCourseData } from '../utils/transformRawCouseData';
 
-const CourseCatalogue = (data: any) => {
+const CourseCatalogue = (courses: any) => {
+  console.log(courses)
   return (
     <div className="catalogue basic-page">
       <div className='catalogue__container'>
@@ -15,7 +16,7 @@ const CourseCatalogue = (data: any) => {
 
         <div className="catalogue__grid">
 
-          {data.courses.map((course: any, index: number) => (
+          {courses.courses.map((course: any, index: number) => (
             <Link
               to={`/course/${course.id}`} key={course.id}
             >

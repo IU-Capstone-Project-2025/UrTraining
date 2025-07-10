@@ -19,7 +19,7 @@ const Navbar = (data: UserProp) => {
           </div>
         </Link>
         <div className='navbar__links'>
-          <Link to="/" style={{ display: "none" }}>
+          <Link to={authData.access_token === "" ? "/signin" : "/profile"}>
             Profile
           </Link>
           <Link to={authData.access_token === "" ? "/signin" : "/catalogue"}>

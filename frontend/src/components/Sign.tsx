@@ -7,6 +7,9 @@ import { emptyCredentials } from "./context/SignPageContext";
 
 const Sign = (props: SignProps) => {
     const [savedData, setSavedData] = useState<CredentialsData>(emptyCredentials);
+    const [agreementChecked, setAgreementChecked] = useState(false);
+    const [showAgreementError, setShowAgreementError] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const credentialsContext = useContext(SignInPageContext)
 
@@ -17,6 +20,11 @@ const Sign = (props: SignProps) => {
     }
 
     const handleSubmit = () => {
+        if (!agreementChecked && !props.user_exists) {
+            setShowAgreementError(true);
+            return;
+        }
+
         credentialsContext.submitCredentials(savedData)
     }
 
@@ -33,14 +41,31 @@ const Sign = (props: SignProps) => {
                     <form className='signup__form-area__options' onChange={handleChange} onSubmit={(e) => e.preventDefault()}>
                         {props.input_fields.map((input: InputField, value: number) => {
                             return (
-                                <input
-                                    type={input.input_type}
+                                <>
+                                    <input
+                                    key={input.id}
+                                    type={input.name === "password" && showPassword ? "text" : input.input_type}
                                     id={input.id}
-                                    key={value}
                                     name={input.name}
                                     className='form-basic-white'
                                     placeholder={input.placeholder}
-                                />
+                                    />
+                                    {input.name === "password" && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(prev => !prev)}
+                                        style={{
+                                        marginLeft: "8px",
+                                        background: "none",
+                                        border: "none",
+                                        color: "gray",
+                                        cursor: "pointer",
+                                        }}
+                                    >
+                                        {showPassword ? "Hide password" : "Show password"}
+                                    </button>
+                                    )}
+                                </>
                             );
                         })}
                         {!props.user_exists ?
@@ -53,6 +78,11 @@ const Sign = (props: SignProps) => {
                                     name="agreement"
                                     className='checkbox-basic-white'
                                     value="Boat"
+                                    checked={agreementChecked}
+                                    onChange={(e) => {
+                                        setAgreementChecked(e.target.checked);
+                                        setShowAgreementError(false);
+                                    }}
                                 ></input>
                                 <p style={{ marginLeft: "8px" }}>
                                     You agree with our Terms of Service
@@ -60,6 +90,11 @@ const Sign = (props: SignProps) => {
                             </label> :
                             <></>
                         }
+                        {showAgreementError && (
+                        <div className="signup__form-area__error">
+                            Please, confirm the Terms of Use
+                        </div>
+                        )}
                         {
                             credentialsContext.isError &&
                             <div className="signup__form-area__error">
