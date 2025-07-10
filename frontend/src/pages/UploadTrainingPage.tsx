@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import TrainingEditor from "../components/CourseEditor";
 import Metadata from "../components/Metadata";
 import "../css/UploadTrainingPage.css";
@@ -8,6 +8,7 @@ import { useSubmitNewTraining } from "../api/mutations";
 import { formatTrainingData } from "../utils/transformTrainingData";
 import { trainerDataRequest, userInfoRequest } from "../api/apiRequests";
 import { useQuery } from "@tanstack/react-query";
+import MetadataContext from "../components/context/MetadataContext";
 
 
 interface StepData {
@@ -17,7 +18,6 @@ interface StepData {
 const UploadTrainingPage = () => {
 
     const authData = useContext(AuthContext)
-    const navigate = useNavigate()
     const submitTrainingDataMutation = useSubmitNewTraining(authData.access_token)
 
     const [step, setStep] = useState<"welcome" | "metadata" | "editor" | "end">("welcome");
@@ -95,11 +95,6 @@ const UploadTrainingPage = () => {
                     <p>Let's help you design a personalized fitness program from scratch.</p>
                     <div className="button-group-welcome">
                         <button className="btn-basic-black" onClick={nextStep}>Get Started</button>
-                        <button className="btn-ai-generate" onClick={() => navigate('/ai-upload')}>
-                            <span className="ai-icon">✨</span>
-                            Generate with AI
-                            <span className="ai-sparkle">⚡</span>
-                        </button>
                     </div>
                 </div>
                 )}

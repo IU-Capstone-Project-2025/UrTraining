@@ -20,6 +20,7 @@ import RecommendationsPage from '../pages/RecommendationsPage';
 import UploadTrainingPage from '../pages/UploadTrainingPage';
 import ProfilePage from '../pages/ProfilePage';
 import AIUploadPage from '../pages/AIUploadPage';
+import MetadataContext from './context/MetadataContext';
 
 const queryClient = new QueryClient()
 
@@ -31,30 +32,38 @@ const App = () => {
     setAccessToken: SetAccessToken
   }
 
+  const metadataContextValue: any = {
+    access_token: "",
+    setAccessToken: () => { }
+  }
+
   return (
     <AuthContext value={contextValue}>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <TokenChecker />
-          <Routes>
-            <Route path="/" element={<NavbarPage />}>
-              <Route index element={<HomePage />} />
-              <Route path="signup" element={<SignUpPage />} />
-              <Route path="signin" element={<SignInPage />} />
-              <Route path="trainee-begin" element={<TraineeBeginPage />} />
-              <Route path="trainer-begin" element={<TrainerBeginPage />} />
-              <Route path="survey" element={<SurveyPage />} />
-              <Route path="trainer-registration" element={<AdvancedRegistrationPage />} />
-              <Route path="catalogue" element={<CoursesCataloguePage />} />
-              <Route path="recommendations" element={<RecommendationsPage />} />
-              <Route path="course/:courseId" element={<CoursePage />} />
-              <Route path="upload-training" element={<UploadTrainingPage />} />
-              <Route path="ai-upload" element={<AIUploadPage />} />
-              <Route path="profile" element={<ProfilePage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </QueryClientProvider>
+      <MetadataContext value={metadataContextValue}>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <TokenChecker />
+            <Routes>
+              <Route path="/" element={<NavbarPage />}>
+                <Route index element={<HomePage />} />
+                <Route path="signup" element={<SignUpPage />} />
+                <Route path="signin" element={<SignInPage />} />
+                <Route path="trainee-begin" element={<TraineeBeginPage />} />
+                <Route path="trainer-begin" element={<TrainerBeginPage />} />
+                <Route path="survey" element={<SurveyPage />} />
+                <Route path="trainer-registration" element={<AdvancedRegistrationPage />} />
+                <Route path="catalogue" element={<CoursesCataloguePage />} />
+                <Route path="recommendations" element={<RecommendationsPage />} />
+                <Route path="course/:courseId" element={<CoursePage />} />
+
+                <Route path="upload-training" element={<UploadTrainingPage />} />
+                <Route path="ai-upload" element={<AIUploadPage />} />
+                <Route path="profile" element={<ProfilePage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </MetadataContext>
     </AuthContext>
   );
 };

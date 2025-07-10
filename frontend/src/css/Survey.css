@@ -3,7 +3,8 @@
 }
 
 .survey__box {
-    background-color: rgba(166, 147, 147, 0.1);
+    background-color: rgba(166, 147, 147, 0.075);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 2rem;
     overflow: hidden;
 }

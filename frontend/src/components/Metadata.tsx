@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import '../css/Course.css';
+import MetadataContext from './context/MetadataContext';
 
 interface StepData {
     [key: string]: any;
@@ -13,6 +14,7 @@ interface MetadataProps {
 }
 
 const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, onNext }) => {
+    const metadataContext = useContext(MetadataContext)
     const [goals, setGoals] = useState(1)
     const [environment, setEnvironment] = useState(1)
     const [age, setAge] = useState(1)
@@ -39,7 +41,7 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
 
     const metadataDefault: Record<MetadataKey, MetadataFieldType> = {
         activity_type: "text",
-        program_goal: "Array", 
+        program_goal: "Array",
         training_environment: "Array",
         difficulty_level: "text",
         course_duration: "number",
@@ -150,6 +152,8 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
                 [name]: value
             }));
         }
+
+        metadataContext.savedData = savedData
 
         console.log(savedData);
 
