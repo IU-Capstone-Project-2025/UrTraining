@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import TrainingEditor from "../components/CourseEditor";
 import Metadata from "../components/Metadata";
 import "../css/UploadTrainingPage.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../components/context/AuthContext";
 import { useSubmitNewTraining } from "../api/mutations";
 import { formatTrainingData } from "../utils/transformTrainingData";
@@ -17,6 +17,7 @@ interface StepData {
 const UploadTrainingPage = () => {
 
     const authData = useContext(AuthContext)
+    const navigate = useNavigate()
     const submitTrainingDataMutation = useSubmitNewTraining(authData.access_token)
 
     const [step, setStep] = useState<"welcome" | "metadata" | "editor" | "end">("welcome");
@@ -91,8 +92,15 @@ const UploadTrainingPage = () => {
                 <div className="centered-content">
 
                     <div className="step-title-main">Welcome to the Training Course Creator</div>
-                    <p>Let’s help you design a personalized fitness program from scratch.</p>
-                    <button className="btn-basic-black" onClick={nextStep}>Get Started</button>
+                    <p>Let's help you design a personalized fitness program from scratch.</p>
+                    <div className="button-group-welcome">
+                        <button className="btn-basic-black" onClick={nextStep}>Get Started</button>
+                        <button className="btn-ai-generate" onClick={() => navigate('/ai-upload')}>
+                            <span className="ai-icon">✨</span>
+                            Generate with AI
+                            <span className="ai-sparkle">⚡</span>
+                        </button>
+                    </div>
                 </div>
                 )}
 

@@ -12,6 +12,7 @@ import type { UserProp } from "../components/interface/userInterface";
 type FlatFormData = { [key: string]: any };
 
 const endpoint = import.meta.env.VITE_API_URL;
+const ai_endpoint = import.meta.env.VITE_IMAGE2TRACKER_API_URL;
 
 export async function userInfoRequest(token: String): Promise<UserProp> {
     try {
@@ -324,7 +325,7 @@ export async function submitNewTrainingRequest(token: String, data: any) {
 
 export async function deleteTrainingData(courseId: any, token: String) {
     try {
-
+      
         const resp = await axios.delete(`${endpoint}/trainings/${courseId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
