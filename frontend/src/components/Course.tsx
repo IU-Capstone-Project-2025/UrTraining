@@ -1,10 +1,72 @@
 // import React from 'react'
 import '../css/Course.css'
 import star from '../assets/star.svg'
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { saveProgram } from '../api/apiRequests';
 
-const Course = (data: any) => {
+interface Badge {
+  badge_text: string;
+  badge_color: string;
+}
+
+interface Exercise {
+  exercise: string;
+  repeats: string;
+  sets: string;
+  duration: string;
+  rest: string;
+  description: string;
+}
+
+interface TrainingDay {
+  title: string;
+  exercises: Exercise[];
+}
+
+interface CoachData {
+  username: string;
+  profile_picture: string;
+  rating: number;
+  reviews: number;
+}
+
+interface TrainingData {
+  header_badges: {
+    training_type: Badge[];
+    training_info: Badge[];
+    training_equipment: Badge[];
+  };
+  course_info: {
+    title: string;
+    author: string;
+    description: string;
+    rating: number;
+    reviews: number;
+  };
+  training_plan: TrainingDay[];
+  coach_data: CoachData;
+  id: any;
+}
+
+type CourseProps = TrainingData & {
+  savedStatus?: boolean;
+  isCreated?: boolean;
+  handleAddToSaved: () => void;
+  handleDeleteFromSaved: () => void;
+  handleDeleteTraining: () => void;
+};
+
+const Course: React.FC<CourseProps> = ({
+  savedStatus,
+  isCreated,
+  handleAddToSaved,
+  handleDeleteFromSaved,
+  handleDeleteTraining,
+  ...data
+}) => {
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    
 
     // Function for horizontal scroll
     useEffect(() => {
@@ -139,6 +201,23 @@ const Course = (data: any) => {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div className='centered__content'>
+                    <button className="btn-basic-black"  onClick={() => {
+                        if (savedStatus) {
+                            handleDeleteFromSaved();
+                        } else {
+                            handleAddToSaved();
+                        }
+                        }}>
+                        {savedStatus ? "Delete from saved" : "Save training"}
+                    </button>
+                    {isCreated === true && (
+                        <button className="btn-basic-red" onClick={() => handleDeleteTraining()}>
+                            Delete the training
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
