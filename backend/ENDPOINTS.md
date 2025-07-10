@@ -1236,4 +1236,569 @@ This endpoint automatically fills the following fields from the authenticated us
 }
 ```
 
+---
+
+# GET /auth/validation/trainer-profile - Get Trainer Profile Validation Rules
+
+### 🎯 Purpose
+The endpoint `GET /auth/validation/trainer-profile` returns **comprehensive validation rules** for the trainer profile, including:
+
+1. **Field-level validation**:
+   - Data types, required fields, length constraints
+   - Format requirements (URLs, patterns, enums)
+   - Min/max values for numeric fields
+
+2. **Cross-field validation**:
+   - Business logic rules between related fields
+   - Consistency checks (e.g., rating vs experience)
+
+3. **Dynamic validation data**:
+   - Current enum values (certification types, specializations)
+   - Supported formats and protocols
+
+### 🌐 HTTP Method and URL
+**Method:** `GET`  
+**Endpoint:** `/auth/validation/trainer-profile`
+
+### 🔐 Authentication Requirements
+- **Access:** Public (no authentication required)  
+- **Authorization:** Not required  
+- **Security:** No sensitive data exposed  
+- **Purpose**: For frontend form validation and UI generation
+
+### 📝 Parameters
+None
+
+### 📤 Example Request
+```http
+GET /auth/validation/trainer-profile HTTP/1.1
+Host: api.example.com
+Accept: application/json
+```
+
+### ✅ Successful Response (200 OK)
+```json
+{
+  "message": "Validation rules for trainer profile",
+  "model": "TrainerProfile",
+  "validation_rules": {
+    "profile_picture": {
+      "type": "string",
+      "required": false,
+      "nullable": true,
+      "max_length": 500,
+      "format": "url",
+      "supported_protocols": ["http", "https"],
+      "supported_formats": ["jpg", "jpeg", "png", "webp", "gif"],
+      "pattern": "^https?://[^\\s/$.?#].[^\\s]*$",
+      "description": "URL ссылка на фото профиля тренера",
+      "example": "https://example.com/trainer-photo.jpg"
+    },
+    "certification": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "Type": {
+          "type": "enum",
+          "required": true,
+          "allowed_values": ["ISSA", "ACE", "NASM", "ACSM", "NSCA", "CSCS", "PTA Global", "Other"],
+          "description": "Тип сертификации тренера"
+        },
+        "Level": {
+          "type": "enum",
+          "required": true,
+          "allowed_values": ["Basic", "Intermediate", "Advanced", "Master", "Expert"],
+          "description": "Уровень сертификации"
+        }
+      },
+      "description": "Информация о сертификации тренера"
+    },
+    "experience": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "Years": {
+          "type": "integer",
+          "required": true,
+          "min_value": 0,
+          "max_value": 50,
+          "description": "Количество лет опыта в тренерской деятельности"
+        },
+        "Specialization": {
+          "type": "string",
+          "required": true,
+          "min_length": 2,
+          "max_length": 200,
+          "max_specializations": 5,
+          "allowed_values": [
+            "Strength Training", "Cardio Training", "HIIT", "Yoga", "Pilates",
+            "Functional Training", "CrossFit", "Bodybuilding", "Powerlifting",
+            "Olympic Weightlifting", "Sports Performance", "Rehabilitation",
+            "Nutrition Coaching", "Group Fitness", "Personal Training",
+            "Martial Arts", "Swimming", "Running/Endurance", "Flexibility/Stretching",
+            "Weight Loss", "Muscle Gain", "Senior Fitness", "Youth Fitness",
+            "Pre/Postnatal Fitness", "Other"
+          ],
+          "format": "comma_separated",
+          "pattern": "^[a-zA-Zа-яА-Я0-9\\s\\-,\\.]+$",
+          "description": "Специализация тренера (можно указать до 5 через запятую)",
+          "example": "Strength Training, Functional Training"
+        },
+        "Courses": {
+          "type": "integer",
+          "required": true,
+          "min_value": 0,
+          "max_value": 10000,
+          "description": "Количество созданных/проведенных курсов"
+        },
+        "Rating": {
+          "type": "float",
+          "required": true,
+          "min_value": 0.0,
+          "max_value": 5.0,
+          "decimal_places": 1,
+          "description": "Рейтинг тренера по 5-балльной шкале",
+          "cross_validation": {
+            "rule": "Если Years < 1, то Rating не должен быть > 3.0",
+            "message": "Новички не могут иметь рейтинг выше 3.0"
+          }
+        }
+      },
+      "description": "Информация об опыте тренера"
+    },
+    "badges": {
+      "type": "array",
+      "required": false,
+      "max_items": 20,
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "required": true,
+            "min_length": 1,
+            "max_length": 50,
+            "description": "Текст значка"
+          },
+          "color": {
+            "type": "string",
+            "required": true,
+            "format": "hex_color",
+            "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+            "description": "Цвет значка в hex формате",
+            "example": "#FF5733"
+          }
+        }
+      },
+      "unique_items": true,
+      "uniqueness_field": "text",
+      "description": "Массив значков тренера (максимум 20, без дубликатов)"
+    },
+    "reviews_count": {
+      "type": "integer",
+      "required": false,
+      "default": 0,
+      "min_value": 0,
+      "max_value": 100000,
+      "read_only": true,
+      "description": "Количество отзывов о тренере (устанавливается системой)"
+    },
+    "bio": {
+      "type": "string",
+      "required": false,
+      "nullable": true,
+      "min_length": 10,
+      "max_length": 1000,
+      "content_filter": true,
+      "blocked_words": ["spam", "fake", "scam"],
+      "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f]*$",
+      "description": "Биография тренера (краткое описание опыта и подхода)",
+      "example": "Опытный тренер с 5-летним стажем, специализируюсь на силовых тренировках и функциональном тренинге."
+    }
+  },
+  "general_rules": {
+    "encoding": "UTF-8",
+    "case_sensitivity": "case_insensitive_enums",
+    "cross_field_validations": [
+      {
+        "fields": ["experience.Years", "experience.Rating"],
+        "rule": "Years < 1 AND Rating > 3.0 = Invalid",
+        "message": "Новички не могут иметь рейтинг выше 3.0"
+      },
+      {
+        "fields": ["experience.Years", "experience.Courses"],
+        "rule": "Courses > Years * 10 = Warning",
+        "message": "Количество курсов кажется несоответствующим опыту"
+      }
+    ],
+    "notes": [
+      "Все enum значения проверяются регистронезависимо",
+      "Специализации можно указывать через запятую",
+      "URL изображений должны содержать поддерживаемые расширения",
+      "Значки должны быть уникальными по тексту"
+    ]
+  }
+}
+```
+
+### ⚠️ Possible Error Responses
+
+| Status Code | Error Type    | Description                      | Resolution                |
+|-------------|---------------|----------------------------------|---------------------------|
+| `500`       | Server Error  | Failed to load validation rules  | Contact support          |
+
+### 💡 Usage Notes
+
+1. **Frontend Integration**: Use this endpoint to dynamically generate form validation and UI constraints
+2. **Real-time Validation**: Validate user input against these rules before submitting
+3. **Error Messages**: Use the provided descriptions and messages for user-friendly validation feedback
+4. **Dynamic Data**: Enum values are fetched from the current system configuration
+5. **Cross-field Rules**: Implement business logic validation using the cross_field_validations section
+
+---
+
+# GET /auth/validation/user-profile - Get User Profile Validation Rules
+
+### 🎯 Purpose
+The endpoint `GET /auth/validation/user-profile` returns **comprehensive validation rules** for the user (trainee) profile, including:
+
+1. **Field-level validation**:
+   - Data types, required fields, length constraints
+   - Format requirements (patterns, enums, numeric ranges)
+   - Min/max values for physical measurements and ratings
+
+2. **Cross-field validation**:
+   - Business logic rules between related fields
+   - Consistency checks (e.g., city-country matching, BMI validation)
+   - Training level vs frequency validation
+
+3. **Dynamic validation data**:
+   - Current enum values for locations, goals, training types
+   - Supported countries and cities mapping
+
+### 🌐 HTTP Method and URL
+**Method:** `GET`  
+**Endpoint:** `/auth/validation/user-profile`
+
+### 🔐 Authentication Requirements
+- **Access:** Public (no authentication required)  
+- **Authorization:** Not required  
+- **Security:** No sensitive data exposed  
+- **Purpose**: For frontend form validation and UI generation
+
+### 📝 Parameters
+None
+
+### 📤 Example Request
+```http
+GET /auth/validation/user-profile HTTP/1.1
+Host: api.example.com
+Accept: application/json
+```
+
+### ✅ Successful Response (200 OK)
+```json
+{
+  "message": "Validation rules for user profile",
+  "model": "User",
+  "validation_rules": {
+    "personal_data": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "username": {
+          "type": "string",
+          "required": true,
+          "min_length": 3,
+          "max_length": 50,
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "description": "Уникальное имя пользователя",
+          "example": "fitness_user123"
+        },
+        "full_name": {
+          "type": "string",
+          "required": true,
+          "min_length": 2,
+          "max_length": 100,
+          "pattern": "^[a-zA-Zа-яА-Я\\s\\-']+$",
+          "description": "Полное имя пользователя",
+          "example": "Иван Петров"
+        },
+        "country": {
+          "type": "enum",
+          "required": false,
+          "nullable": true,
+          "allowed_values": ["kz", "ru", "us"],
+          "description": "Страна проживания"
+        },
+        "city": {
+          "type": "enum",
+          "required": false,
+          "nullable": true,
+          "allowed_values": ["Almaty", "Nur-Sultan", "Shymkent", "Moscow", "Saint Petersburg", "New York", "Los Angeles", "..."],
+          "description": "Город проживания",
+          "cross_validation": {
+            "rule": "Город должен соответствовать выбранной стране",
+            "mapping": "CITY_COUNTRY_MAP"
+          }
+        }
+      },
+      "description": "Персональные данные пользователя"
+    },
+    "basic_information": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "gender": {
+          "type": "enum",
+          "required": true,
+          "allowed_values": ["male", "female"],
+          "description": "Пол пользователя"
+        },
+        "age": {
+          "type": "integer",
+          "required": true,
+          "min_value": 13,
+          "max_value": 100,
+          "description": "Возраст в годах"
+        },
+        "height_cm": {
+          "type": "integer",
+          "required": true,
+          "min_value": 100,
+          "max_value": 250,
+          "description": "Рост в сантиметрах"
+        },
+        "weight_kg": {
+          "type": "float",
+          "required": true,
+          "min_value": 30.0,
+          "max_value": 300.0,
+          "decimal_places": 1,
+          "description": "Вес в килограммах"
+        }
+      },
+      "description": "Базовая физическая информация"
+    },
+    "training_goals": {
+      "type": "array",
+      "required": true,
+      "min_items": 1,
+      "max_items": 5,
+      "items": {
+        "type": "enum",
+        "allowed_values": [
+          "weight_loss", "muscle_gain", "maintain_fitness", 
+          "improve_endurance", "improve_flexibility", 
+          "competition_preparation", "strength_building", "rehabilitation"
+        ],
+        "description": "Цель тренировок"
+      },
+      "unique_items": true,
+      "description": "Цели тренировок (от 1 до 5)",
+      "examples": ["weight_loss", "muscle_gain", "improve_endurance"]
+    },
+    "training_experience": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "level": {
+          "type": "enum",
+          "required": true,
+          "allowed_values": ["beginner", "intermediate", "advanced"],
+          "description": "Уровень подготовки"
+        },
+        "frequency_last_3_months": {
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "not_trained", "1_2_times_week", "3_4_times_week", 
+            "5_6_times_week", "daily"
+          ],
+          "description": "Частота тренировок за последние 3 месяца"
+        }
+      },
+      "description": "Опыт и частота тренировок"
+    },
+    "preferences": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "training_location": {
+          "type": "enum",
+          "required": true,
+          "allowed_values": ["gym", "home", "outdoor", "mixed"],
+          "description": "Предпочитаемое место тренировок"
+        },
+        "location_details": {
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "full_fitness_center", "basic_gym", "home_equipment", 
+            "no_equipment", "park_outdoor"
+          ],
+          "description": "Детали места тренировок"
+        },
+        "session_duration": {
+          "type": "enum",
+          "required": true,
+          "allowed_values": [
+            "15_30_min", "30_45_min", "45_60_min", 
+            "60_90_min", "90+_min"
+          ],
+          "description": "Предпочитаемая продолжительность тренировки"
+        }
+      },
+      "description": "Предпочтения по тренировкам"
+    },
+    "health": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "joint_back_problems": {
+          "type": "boolean",
+          "required": true,
+          "description": "Наличие проблем с суставами или спиной"
+        },
+        "chronic_conditions": {
+          "type": "boolean",
+          "required": true,
+          "description": "Наличие хронических заболеваний"
+        },
+        "health_details": {
+          "type": "string",
+          "required": false,
+          "nullable": true,
+          "max_length": 500,
+          "description": "Дополнительная информация о здоровье",
+          "example": "Проблемы с коленным суставом после травмы"
+        }
+      },
+      "description": "Информация о здоровье и ограничениях"
+    },
+    "training_types": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "strength_training": {
+          "type": "integer",
+          "required": true,
+          "min_value": 1,
+          "max_value": 5,
+          "description": "Интерес к силовым тренировкам (1-5)"
+        },
+        "cardio": {
+          "type": "integer",
+          "required": true,
+          "min_value": 1,
+          "max_value": 5,
+          "description": "Интерес к кардио тренировкам (1-5)"
+        },
+        "hiit": {
+          "type": "integer",
+          "required": true,
+          "min_value": 1,
+          "max_value": 5,
+          "description": "Интерес к HIIT тренировкам (1-5)"
+        },
+        "yoga_pilates": {
+          "type": "integer",
+          "required": true,
+          "min_value": 1,
+          "max_value": 5,
+          "description": "Интерес к йоге/пилатесу (1-5)"
+        },
+        "functional_training": {
+          "type": "integer",
+          "required": true,
+          "min_value": 1,
+          "max_value": 5,
+          "description": "Интерес к функциональным тренировкам (1-5)"
+        },
+        "stretching": {
+          "type": "integer",
+          "required": true,
+          "min_value": 1,
+          "max_value": 5,
+          "description": "Интерес к растяжке (1-5)"
+        }
+      },
+      "description": "Уровень интереса к различным типам тренировок"
+    },
+    "trainer_profile": {
+      "type": "object",
+      "required": false,
+      "nullable": true,
+      "description": "Профиль тренера (если пользователь является тренером)",
+      "properties": {
+        "message": "Для валидации профиля тренера используйте GET /auth/validation/trainer-profile"
+      }
+    }
+  },
+  "general_rules": {
+    "encoding": "UTF-8",
+    "case_sensitivity": "case_insensitive_enums",
+    "cross_field_validations": [
+      {
+        "fields": ["personal_data.city", "personal_data.country"],
+        "rule": "Город должен соответствовать стране",
+        "message": "Выберите город из указанной страны или измените страну"
+      },
+      {
+        "fields": ["basic_information.age", "basic_information.weight_kg", "basic_information.height_cm"],
+        "rule": "BMI = weight_kg / (height_cm/100)^2 должен быть в разумных пределах",
+        "message": "Проверьте корректность введенных данных о росте и весе"
+      },
+      {
+        "fields": ["training_experience.level", "training_experience.frequency_last_3_months"],
+        "rule": "Продвинутый уровень должен соответствовать регулярным тренировкам",
+        "message": "Уровень подготовки должен соответствовать частоте тренировок"
+      }
+    ],
+    "validation_order": [
+      "personal_data",
+      "basic_information", 
+      "training_goals",
+      "training_experience",
+      "preferences",
+      "health",
+      "training_types",
+      "trainer_profile"
+    ],
+    "required_for_recommendations": [
+      "basic_information.gender",
+      "basic_information.age", 
+      "training_experience.level",
+      "training_types"
+    ],
+    "notes": [
+      "Все enum значения проверяются регистронезависимо",
+      "Цели тренировок могут быть выбраны в количестве от 1 до 5",
+      "Город автоматически валидируется на соответствие стране",
+      "Типы тренировок оцениваются по шкале от 1 до 5",
+      "Профиль тренера опционален и валидируется отдельно"
+    ]
+  }
+}
+```
+
+### ⚠️ Possible Error Responses
+
+| Status Code | Error Type    | Description                      | Resolution                |
+|-------------|---------------|----------------------------------|---------------------------|
+| `500`       | Server Error  | Failed to load validation rules  | Contact support          |
+
+### 💡 Usage Notes
+
+1. **Frontend Integration**: Use this endpoint to dynamically generate form validation and UI constraints for user registration/profile editing
+2. **Real-time Validation**: Validate user input against these rules before submitting profile data
+3. **Error Messages**: Use the provided descriptions and messages for user-friendly validation feedback
+4. **Dynamic Data**: Enum values and city-country mappings are fetched from the current system configuration
+5. **Cross-field Rules**: Implement business logic validation using the cross_field_validations section
+6. **Training Recommendations**: Fields marked in `required_for_recommendations` are essential for generating personalized training programs
+7. **City-Country Validation**: Automatically validate city selection against the chosen country using the provided mapping
+8. **BMI Validation**: Implement reasonable BMI checks to catch potential data entry errors
+
+---
+
 
