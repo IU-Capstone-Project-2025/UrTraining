@@ -14,6 +14,9 @@ from app.crud import (
     search_trainings,
     get_training_with_trainer_info,
     get_user_by_id,
+    is_training_belong_to_user,
+    is_program_saved_by_user,
+    get_training_by_course_id,
     DuplicateCourseIdError
 )
 from app.models.training import (
@@ -39,6 +42,9 @@ class TrainingSummary(BaseModel):
     
     class Config:
         from_attributes = True
+
+class ProgramBelongsStatusResponse(BaseModel):
+    belongs: bool    
 
 
 @router.get("/", response_model=List[TrainingResponse])
@@ -784,5 +790,31 @@ async def get_user_trainings(
             detail="Не удалось загрузить тренировки пользователя"
         )
 
+@router.get("/{course_id}/status", response_model=ProgramBelongsStatusResponse)
+async def check_program_belongs_to_user_status(
+    course_id: str,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Проверка, принадлежит ли программа тренировок пользователю
+    """
+    try:
+        training = get_training_by_course_id(db, course_id)
+        if not training:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Программа с ID {course_id} не найдена"
+            )
+        
+        is_saved = current_user["id"] == training.user_id
+        return ProgramBelongsStatusResponse(belongs=is_saved)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error when checking the saved status: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+    
 
  

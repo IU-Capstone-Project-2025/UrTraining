@@ -56,28 +56,14 @@ async def get_user_recommendations(current_user: dict = Depends(get_current_user
     """Get the recommendations for user considering all the training profile information"""
     try:
         # Get training profile
+        print("ye")
+
         profile = get_training_profile(db, current_user["id"])
+        print(profile)
         if not profile:
             raise HTTPException(
-                status_code=400,
-                detail="Training profile not found. Please complete your profile first to get recommendations."
-            )
-        
-        # Validate profile completeness
-        missing_critical_fields = _validate_profile_completeness(profile)
-        if missing_critical_fields:
-            field_messages = {
-                'gender': 'gender (male/female)',
-                'age': 'age',
-                'training_level': 'training level (beginner/intermediate/advanced)',
-                'training_type_preferences': 'at least one training type preference (strength, cardio, HIIT, yoga/pilates, functional, stretching)'
-            }
-            
-            readable_fields = [field_messages.get(field, field) for field in missing_critical_fields]
-            
-            raise HTTPException(
-                status_code=400,
-                detail=f"Profile incomplete. Please fill in the following required fields: {', '.join(readable_fields)}. Complete your profile to get personalized recommendations."
+                status_code=404,
+                detail="Training profile not found"
             )
         
         # Prepare structured query with interest scores
@@ -212,5 +198,5 @@ async def get_user_recommendations(current_user: dict = Depends(get_current_user
         print(f"Unexpected error in recommendations for user {current_user['id']}: {type(e).__name__}: {e}")
         raise HTTPException(
             status_code=500,
-            detail="Failed to generate recommendations. Please ensure your profile is complete and try again."
+            detail="Failed to generate the recommendations"
         )

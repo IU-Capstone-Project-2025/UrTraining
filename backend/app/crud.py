@@ -273,6 +273,13 @@ def get_trainings_by_user(db: Session, user_id: int, skip: int = 0, limit: int =
         Training.user_id == user_id
     ).offset(skip).limit(limit).all()
 
+def is_training_belong_to_user(db: Session, user_id: int, training_id: int) -> bool:
+    """Проверить, создана ли программа пользователем"""
+    some_program = db.query(Training).filter(
+        and_(Training.user_id == user_id, Training.training_id == training_id)
+    ).first()
+    return some_program is not None
+
 
 def create_training(db: Session, training_data: dict, user_id: int):
     """
