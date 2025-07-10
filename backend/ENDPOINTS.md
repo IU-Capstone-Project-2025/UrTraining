@@ -237,6 +237,169 @@ Content-Type: application/json
 |-------------|----------------------|----------------------------------|---------------------------------|
 | `500`       | Server Error         | Internal server error            | Contact support                 |
 
+# PUT /user-data - Update User Data (Preferred Method)
+
+###  🎯 Purpose
+The endpoint `PUT /user-data` allows authenticated users to **update their complete profile information** using proper HTTP semantics for resource updates, including:
+
+1. **Personal details**:
+   - Username, full name, email
+   - Country and city information
+
+2. **Training profile**:
+   - Basic information (gender, age, height, weight)
+   - Training goals and experience level
+   - Preferences and health information
+   - Training types interest levels (1-5 scale)
+
+3. **Partial updates**:
+   - Update only the fields you need to change
+   - Other fields remain unchanged
+
+###  🌐 HTTP Method and URL
+**Method:** `PUT`  
+**Endpoint:** `/user-data`  
+
+###  🔐 Authentication Requirements
+- **Access:** Private (requires authentication)  
+- **Authorization:** Bearer token required  
+- **Security Level:** High (contains sensitive operations)  
+- **Permissions:** Only owner can update their data 
+
+###  📝 Request Body Schema
+All fields are optional - include only the fields you want to update:
+
+```json
+{
+  "username": "string (3-50 chars, optional)",
+  "full_name": "string (2-100 chars, optional)",
+  "email": "string (valid email, optional)",
+  "country": "enum ['kz', 'ru', 'us'] (optional)",
+  "city": "enum [valid cities for selected country] (optional)",
+  "training_profile": {
+    "basic_information": {
+      "gender": "enum ['male', 'female'] (optional)",
+      "age": "integer (13-100, optional)",
+      "height_cm": "integer (100-250, optional)",
+      "weight_kg": "float (30-300, optional)"
+    },
+    "training_goals": ["array of enums (max 2 items, optional)"],
+    "training_experience": {
+      "level": "enum ['beginner', 'intermediate', 'advanced'] (optional)",
+      "frequency_last_3_months": "enum (optional)"
+    },
+    "preferences": {
+      "training_location": "enum ['gym', 'home', 'outdoor', 'mixed'] (optional)",
+      "location_details": "enum (optional)",
+      "session_duration": "enum (optional)"
+    },
+    "health": {
+      "joint_back_problems": "boolean (optional)",
+      "chronic_conditions": "boolean (optional)",
+      "health_details": "string (max 1000 chars, optional)"
+    },
+    "training_types": {
+      "strength_training": "integer (1-5, optional)",
+      "cardio": "integer (1-5, optional)",
+      "hiit": "integer (1-5, optional)",
+      "yoga_pilates": "integer (1-5, optional)",
+      "functional_training": "integer (1-5, optional)",
+      "stretching": "integer (1-5, optional)"
+    }
+  }
+}
+```
+
+###  📤 Example Request - Update only username and age
+```http
+PUT /user-data HTTP/1.1
+Host: api.example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "username": "new_username_123",
+  "training_profile": {
+    "basic_information": {
+      "age": 28
+    }
+  }
+}
+```
+
+###  📤 Example Request - Update training goals and preferences
+```http
+PUT /user-data HTTP/1.1
+Host: api.example.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "training_profile": {
+    "training_goals": ["weight_loss", "improve_endurance"],
+    "preferences": {
+      "training_location": "gym",
+      "session_duration": "45_60_min"
+    },
+    "training_types": {
+      "cardio": 5,
+      "strength_training": 3
+    }
+  }
+}
+```
+
+###  ✅ Successful Response (200 OK)
+```json
+{
+  "message": "User data updated successfully",
+  "updated_fields": {
+    "user_profile": true,
+    "training_profile": true
+  }
+}
+```
+
+### ⚠️ Error Responses
+
+| Status Code | Error Type           | Description                                  | Resolution                      |
+|-------------|----------------------|----------------------------------------------|---------------------------------|
+| `400`       | Validation Error     | Invalid field values or constraints          | Check request format            |
+| `400`       | Duplicate Data       | Username/email already exists                | Choose different values         |
+| `401`       | Unauthorized         | Invalid or missing authentication token      | Provide valid Bearer token      |
+| `404`       | User Not Found       | User account not found                       | Check user authentication       |
+| `500`       | Server Error         | Internal server error                        | Contact support                 |
+
+### 📝 Field Validation Rules
+
+#### Username
+- 3-50 characters
+- Must be unique across all users
+- Alphanumeric characters and underscores allowed
+
+#### Email  
+- Valid email format required
+- Must be unique across all users
+- Will be converted to lowercase
+
+#### Country & City
+- City must belong to the selected country
+- Supported countries: Kazakhstan (kz), Russia (ru), USA (us)
+
+#### Training Types (1-5 Scale)
+- 1 = Not interested
+- 2 = Slightly interested  
+- 3 = Moderately interested
+- 4 = Very interested
+- 5 = Extremely interested
+
+### 💡 Usage Tips
+
+1. **Partial Updates**: You can update just one field or multiple fields in a single request
+2. **Atomic Updates**: All updates in one request are processed together - if any field fails validation, nothing is updated
+3. **Idempotent**: Multiple identical PUT requests will have the same result
+4. **Performance**: Only include fields you actually want to change to minimize processing
+
 # Authentication 
 
 # POST	register

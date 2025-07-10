@@ -509,3 +509,136 @@ def update_user_data(
         db.rollback()
         print(f"Error updating user data for user {current_user['id']}")
         raise HTTPException(status_code=500, detail="Failed to update user data")
+
+@app.put("/user-data")
+def put_user_data(
+    data: UserDataUpdate,
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Update user data including profile and training information (PUT method)"""
+    try:
+        updated_user = None
+        
+        # Update basic user information if provided
+        if data.username is not None or data.full_name is not None or data.email is not None or data.country is not None or data.city is not None:
+            updated_user = update_user_profile(
+                db, 
+                current_user["id"], 
+                data.username, 
+                data.full_name,
+                data.email,
+                data.country.value if data.country else None,
+                data.city.value if data.city else None
+            )
+            
+            if not updated_user:
+                raise HTTPException(status_code=404, detail="User not found")
+        
+        # Update training profile if provided
+        if data.training_profile:
+            profile_data = {}
+            
+            # Basic information
+            if data.training_profile.basic_information:
+                basic = data.training_profile.basic_information
+                if basic.gender is not None:
+                    profile_data["gender"] = basic.gender.value
+                if basic.age is not None:
+                    profile_data["age"] = basic.age
+                if basic.height_cm is not None:
+                    profile_data["height_cm"] = basic.height_cm
+                if basic.weight_kg is not None:
+                    profile_data["weight_kg"] = basic.weight_kg
+            
+            # Training goals
+            if data.training_profile.training_goals is not None:
+                profile_data["training_goals"] = [goal.value for goal in data.training_profile.training_goals]
+            
+            # Training experience
+            if data.training_profile.training_experience:
+                exp = data.training_profile.training_experience
+                if exp.level is not None:
+                    profile_data["training_level"] = exp.level.value
+                if exp.frequency_last_3_months is not None:
+                    profile_data["frequency_last_3_months"] = exp.frequency_last_3_months.value
+            
+            # Preferences
+            if data.training_profile.preferences:
+                pref = data.training_profile.preferences
+                if pref.training_location is not None:
+                    profile_data["training_location"] = pref.training_location.value
+                if pref.location_details is not None:
+                    profile_data["location_details"] = pref.location_details.value
+                if pref.session_duration is not None:
+                    profile_data["session_duration"] = pref.session_duration.value
+            
+            # Health
+            if data.training_profile.health:
+                health = data.training_profile.health
+                if health.joint_back_problems is not None:
+                    profile_data["joint_back_problems"] = health.joint_back_problems
+                if health.chronic_conditions is not None:
+                    profile_data["chronic_conditions"] = health.chronic_conditions
+                if health.health_details is not None:
+                    profile_data["health_details"] = health.health_details
+            
+            # Training types
+            if data.training_profile.training_types:
+                types = data.training_profile.training_types
+                if types.strength_training is not None:
+                    profile_data["strength_training"] = types.strength_training
+                if types.cardio is not None:
+                    profile_data["cardio"] = types.cardio
+                if types.hiit is not None:
+                    profile_data["hiit"] = types.hiit
+                if types.yoga_pilates is not None:
+                    profile_data["yoga_pilates"] = types.yoga_pilates
+                if types.functional_training is not None:
+                    profile_data["functional_training"] = types.functional_training
+                if types.stretching is not None:
+                    profile_data["stretching"] = types.stretching
+            
+            # Update training profile if there's data to update
+            if profile_data:
+                updated_profile = update_training_profile(db, current_user["id"], profile_data)
+                if not updated_profile:
+                    raise HTTPException(
+                        status_code=500,
+                        detail="Failed to update training profile"
+                    )
+        
+        # Commit changes
+        db.commit()
+        
+        # Return success response
+        return {
+            "message": "User data updated successfully",
+            "updated_fields": {
+                "user_profile": bool(data.username is not None or data.full_name is not None or data.email is not None or data.country is not None or data.city is not None),
+                "training_profile": bool(data.training_profile is not None)
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except IntegrityError as e:
+        db.rollback()
+        error_msg = str(e.orig).lower() if hasattr(e, 'orig') else str(e).lower()
+        if "email" in error_msg and "unique" in error_msg:
+            raise HTTPException(
+                status_code=400,
+                detail="Email already registered by another user"
+            )
+        elif "username" in error_msg and "unique" in error_msg:
+            raise HTTPException(
+                status_code=400,
+                detail="Username already taken by another user"
+            )
+        else:
+            print(f"Database integrity error for user {current_user['id']}: {e}")
+            raise HTTPException(status_code=400, detail="Data validation error")
+    except Exception as e:
+        db.rollback()
+        print(f"Error updating user data for user {current_user['id']}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update user data")
