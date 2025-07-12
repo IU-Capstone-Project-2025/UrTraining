@@ -19,7 +19,7 @@ const CourseCatalogue = ({ courses, title }: CourseCatalogueProps) => {
       <div className='catalogue__container'>
         <h1 className="catalogue__title">
           <span style={{ display: 'block' }}>{title.title_top}</span>
-          <span style={{ display: 'block', marginBottom: '20px'}}>{title.title_bottom}</span>
+          <span style={{ display: 'block', marginBottom: '20px', opacity: '20%'}}>{title.title_bottom}</span>
         </h1>
 
         <div className="catalogue__grid">

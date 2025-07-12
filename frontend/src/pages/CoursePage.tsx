@@ -91,6 +91,7 @@ const CoursePage = () => {
     };
 
     const training_data = transformRawCourseData(courseData);
+    console.log(courseData)
 
     return (
         <Course 

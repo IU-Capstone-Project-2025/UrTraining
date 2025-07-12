@@ -21,6 +21,7 @@ interface TrainingDay {
 
 interface CoachData {
   username: string;
+  id: number;
   profile_picture: string;
   rating: number;
   reviews: number;
@@ -102,6 +103,7 @@ export function transformRawCourseData(serverData: any): TrainingData {
   const coachData: CoachData = {
     username: serverData["Trainer Name"] || "Unknown Trainer",
     profile_picture: trainer,
+    id: serverData["user_id"] || 0,
     rating: serverData["Experience"]?.Rating || 0,
     reviews: serverData["Active Participants"] || 0
   };

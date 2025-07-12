@@ -3,6 +3,7 @@ import '../css/Course.css'
 import star from '../assets/star.svg'
 import { useEffect, useRef, useState } from 'react';
 import { saveProgram } from '../api/apiRequests';
+import { Link } from 'react-router-dom';
 
 interface Badge {
   badge_text: string;
@@ -25,6 +26,7 @@ interface TrainingDay {
 
 interface CoachData {
   username: string;
+  id: number;
   profile_picture: string;
   rating: number;
   reviews: number;
@@ -65,8 +67,9 @@ const Course: React.FC<CourseProps> = ({
   ...data
 }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
+    const currentTrainerLink = `/catalogue/${data.coach_data.id}`;
 
-    
+    console.log(data);
 
     // Function for horizontal scroll
     // useEffect(() => {
@@ -110,9 +113,11 @@ const Course: React.FC<CourseProps> = ({
                             <div className='course__info__name'>
                                 <h2>{data.course_info.title}</h2>
                             </div>
-                            <div className='course__info__author'>
-                                <h3>by {data.course_info.author}</h3>
-                            </div>
+                            <Link to={currentTrainerLink} state={{ authorName: data.coach_data.username }}>
+                                <div className='course__info__author'>
+                                    <h3>by {data.course_info.author}</h3>
+                                </div>
+                            </Link>
                         </div>
                         <div className='course__info__reviews'>
                             <img src={star} alt="" />
@@ -179,28 +184,18 @@ const Course: React.FC<CourseProps> = ({
                     <div className='course__coach__picture'>
                         <img src={data.coach_data.profile_picture} alt="pfp" />
                     </div>
-                    <div className='course__coach__info'>
-                        <div className='course__coach__name'>
-                            <h2>{data.coach_data.username}</h2>
-                        </div>
-                        <div className='course__coach__rating'>
-                            <img src={star} alt="" />
-                            <p>{data.coach_data.rating}/5</p>
-                            <p>{data.coach_data.reviews} reviews</p>
-                        </div>
-                        <div className='course__coach__statistics'>
-                            <p>12 active training courses, </p>
-                            <p>4,100 views</p>
-                        </div>
-                        <div className='course__coach__tags'>
-                            <div>
-                                <p>#10 in Coaches Honor Roll</p>
+                    <Link to={currentTrainerLink} state={{ authorName: data.coach_data.username }}>
+                        <div className='course__coach__info'>
+                            <div className='course__coach__name'>
+                                <h2>{data.coach_data.username}</h2>
                             </div>
-                            <div>
-                                <p> Certification approved</p>
+                            <div className='course__coach__rating'>
+                                <img src={star} alt="" />
+                                <p>{data.coach_data.rating}/5</p>
+                                <p>{data.coach_data.reviews} reviews</p>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 </div>
 
                 <div className='centered__content'>
