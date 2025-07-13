@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import '../css/TagSearch.css';
+import AuthContext from './context/AuthContext';
+import { getSavedCoursesRequest } from '../api/apiRequests';
+import { useQuery } from '@tanstack/react-query';
 
 interface TagSearchProps {
   courses: any[];
@@ -8,22 +11,91 @@ interface TagSearchProps {
 
 interface TagGroups {
   activityType: string[];
+  programGoal: string[];
   difficultyLevel: string[];
   requiredEquipment: string[];
 }
 
-const TagSearch: React.FC<TagSearchProps> = ({ courses, onFilterChange }) => {
+const TagSearch: React.FC<TagSearchProps> = React.memo(({ courses, onFilterChange }) => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [searchText, setSearchText] = useState<string>('');
+  const [showSavedOnly, setShowSavedOnly] = useState<boolean>(false);
   const [tagGroups, setTagGroups] = useState<TagGroups>({
     activityType: [],
+    programGoal: [],
     difficultyLevel: [],
     requiredEquipment: []
   });
 
-  // Собираем теги по группам из Activity Type, Difficulty Level, Required Equipment
+  const authData = useContext(AuthContext);
+
+  // Получаем сохраненные тренировки
+  const { data: savedCourses = [], isLoading: savedCoursesLoading, refetch: refetchSavedCourses } = useQuery({
+    queryKey: ['savedCourses'],
+    queryFn: () => getSavedCoursesRequest(authData.access_token),
+    enabled: !!authData.access_token && showSavedOnly,
+    refetchOnWindowFocus: true, // Обновляем при фокусе окна
+    retry: 1,
+    staleTime: 0, // Данные всегда считаются устаревшими
+    gcTime: 1000 * 60 * 5, // Кеш на 5 минут
+  });
+
+  // Автоматически отключаем фильтр сохраненных, если нет токена
+  React.useEffect(() => {
+    if (!authData.access_token && showSavedOnly) {
+      setShowSavedOnly(false);
+    }
+  }, [authData.access_token, showSavedOnly]);
+
+  // Рефетчим данные при включении фильтра сохраненных
+  React.useEffect(() => {
+    if (showSavedOnly && authData.access_token) {
+      refetchSavedCourses();
+    }
+  }, [showSavedOnly, authData.access_token, refetchSavedCourses]);
+
+  // Добавляем слушатель фокуса для обновления данных при возврате на страницу
+  React.useEffect(() => {
+    const handleFocus = () => {
+      if (showSavedOnly && authData.access_token) {
+        refetchSavedCourses();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [showSavedOnly, authData.access_token, refetchSavedCourses]);
+
+  // Мемоизируем сохраненные ID курсов для оптимизации
+  const savedCourseIds = useMemo(() => {
+    return savedCourses.map((course: any) => course.id);
+  }, [savedCourses]);
+
+  // Мемоизируем функцию обработки клика по тегу
+  const handleTagClick = useCallback((tag: string) => {
+    setSelectedTags(prev => 
+      prev.includes(tag) 
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  }, []);
+
+  // Мемоизируем функцию очистки всех фильтров
+  const clearAllTags = useCallback(() => {
+    setSelectedTags([]);
+    setSearchText('');
+    setShowSavedOnly(false);
+  }, []);
+
+  // Мемоизируем функцию очистки поиска
+  const clearSearchText = useCallback(() => {
+    setSearchText('');
+  }, []);
+
+  // Собираем теги по группам из Activity Type, Program Goal, Difficulty Level, Required Equipment
   useEffect(() => {
     const activityTypes = new Set<string>();
+    const programGoals = new Set<string>();
     const difficultyLevels = new Set<string>();
     const requiredEquipment = new Set<string>();
     
@@ -31,6 +103,15 @@ const TagSearch: React.FC<TagSearchProps> = ({ courses, onFilterChange }) => {
       // Activity Type
       if (course["Activity Type"]) {
         activityTypes.add(course["Activity Type"]);
+      }
+      
+      // Program Goal
+      if (course["Program Goal"] && Array.isArray(course["Program Goal"])) {
+        course["Program Goal"].forEach((goal: string) => {
+          if (goal.trim()) {
+            programGoals.add(goal.trim());
+          }
+        });
       }
       
       // Difficulty Level
@@ -52,18 +133,24 @@ const TagSearch: React.FC<TagSearchProps> = ({ courses, onFilterChange }) => {
     
     setTagGroups({
       activityType: Array.from(activityTypes).sort(),
+      programGoal: Array.from(programGoals).sort(),
       difficultyLevel: Array.from(difficultyLevels).sort(),
       requiredEquipment: Array.from(requiredEquipment).sort()
     });
   }, [courses]);
 
-  // Фильтрация курсов по выбранным тегам и текстовому поиску
-  useEffect(() => {
-    let filteredCourses = courses;
+  // Фильтрация курсов по выбранным тегам, текстовому поиску и фильтру сохраненных
+  const filteredCourses = useMemo(() => {
+    let filtered = courses;
+
+    // Фильтрация по сохраненным тренировкам
+    if (showSavedOnly && !savedCoursesLoading) {
+      filtered = filtered.filter(course => savedCourseIds.includes(course.id));
+    }
 
     // Фильтрация по тексту (регистронезависимый поиск по названию курса)
     if (searchText.trim()) {
-      filteredCourses = filteredCourses.filter(course => {
+      filtered = filtered.filter(course => {
         const courseTitle = course["Course Title"] || '';
         return courseTitle.toLowerCase().includes(searchText.toLowerCase());
       });
@@ -71,10 +158,15 @@ const TagSearch: React.FC<TagSearchProps> = ({ courses, onFilterChange }) => {
 
     // Фильтрация по тегам
     if (selectedTags.length > 0) {
-      filteredCourses = filteredCourses.filter(course => {
+      filtered = filtered.filter(course => {
         return selectedTags.every(tag => {
           // Проверяем Activity Type
           if (course["Activity Type"] === tag) return true;
+          
+          // Проверяем Program Goal
+          if (course["Program Goal"] && Array.isArray(course["Program Goal"])) {
+            if (course["Program Goal"].includes(tag)) return true;
+          }
           
           // Проверяем Difficulty Level
           if (course["Difficulty Level"]) {
@@ -95,25 +187,13 @@ const TagSearch: React.FC<TagSearchProps> = ({ courses, onFilterChange }) => {
       });
     }
 
+    return filtered;
+  }, [selectedTags, searchText, showSavedOnly, courses, savedCourseIds, savedCoursesLoading]);
+
+  // Уведомляем родительский компонент об изменениях
+  useEffect(() => {
     onFilterChange(filteredCourses);
-  }, [selectedTags, searchText, courses, onFilterChange]);
-
-  const handleTagClick = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
-    );
-  };
-
-  const clearAllTags = () => {
-    setSelectedTags([]);
-    setSearchText('');
-  };
-
-  const clearSearchText = () => {
-    setSearchText('');
-  };
+  }, [filteredCourses, onFilterChange]);
 
   const renderTagGroup = (title: string, tags: string[]) => (
     <div className="tag-search__group">
@@ -136,7 +216,7 @@ const TagSearch: React.FC<TagSearchProps> = ({ courses, onFilterChange }) => {
     <div className="tag-search">
       <div className="tag-search__header">
         <h3>Filter trainings</h3>
-        {(selectedTags.length > 0 || searchText.trim()) && (
+        {(selectedTags.length > 0 || searchText.trim() || showSavedOnly) && (
           <button onClick={clearAllTags} className="tag-search__clear">
             Clear all
           </button>
@@ -157,9 +237,23 @@ const TagSearch: React.FC<TagSearchProps> = ({ courses, onFilterChange }) => {
           </button>
         )}
       </div>
+
+      {/* Checkbox для фильтрации сохраненных тренировок */}
+      <div className="tag-search__saved-filter">
+        <label className="tag-search__checkbox-label">
+          <input
+            type="checkbox"
+            checked={showSavedOnly}
+            onChange={(e) => setShowSavedOnly(e.target.checked)}
+            className="tag-search__checkbox"
+          />
+          <span className="tag-search__checkbox-text">Show saved trainings only</span>
+        </label>
+      </div>
       
       <div className="tag-search__groups">
         {tagGroups.activityType.length > 0 && renderTagGroup("Activity Type", tagGroups.activityType)}
+        {tagGroups.programGoal.length > 0 && renderTagGroup("Program Goal", tagGroups.programGoal)}
         {tagGroups.difficultyLevel.length > 0 && renderTagGroup("Difficulty Level", tagGroups.difficultyLevel)}
         {tagGroups.requiredEquipment.length > 0 && renderTagGroup("Required Equipment", tagGroups.requiredEquipment)}
       </div>
@@ -182,6 +276,6 @@ const TagSearch: React.FC<TagSearchProps> = ({ courses, onFilterChange }) => {
       )}
     </div>
   );
-};
+});
 
 export default TagSearch; 

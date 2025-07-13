@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import CourseCard from './CourseCard';
 import TagSearch from './TagSearch';
 import "../css/CoursesCatalogue.css";
@@ -13,17 +13,22 @@ type CourseCatalogueProps = {
   };
 };
 
-const CourseCatalogue = ({ courses, title }: CourseCatalogueProps) => {
-  const [filteredCourses, setFilteredCourses] = useState<any[]>(courses);
+const CourseCatalogue = React.memo(({ courses, title }: CourseCatalogueProps) => {
+  const [filteredCourses, setFilteredCourses] = useState<any[]>(() => courses);
+  const [showFilters, setShowFilters] = useState<boolean>(true);
 
   // Обновляем фильтрованные курсы при изменении исходного списка
   React.useEffect(() => {
     setFilteredCourses(courses);
   }, [courses]);
 
-  const handleFilterChange = (filtered: any[]) => {
+  const handleFilterChange = useCallback((filtered: any[]) => {
     setFilteredCourses(filtered);
-  };
+  }, []);
+
+  const toggleFilters = useCallback(() => {
+    setShowFilters(prev => !prev);
+  }, []);
   
   return (
     <div className="catalogue basic-page">
@@ -33,7 +38,21 @@ const CourseCatalogue = ({ courses, title }: CourseCatalogueProps) => {
           <span style={{ display: 'block', marginBottom: '20px', opacity: '20%'}}>{title.title_bottom}</span>
         </h1>
 
-        <TagSearch courses={courses} onFilterChange={handleFilterChange} />
+        <div className="catalogue__filter-controls">
+          <button 
+            onClick={toggleFilters}
+            className="catalogue__toggle-filters-btn"
+          >
+            <span className="catalogue__toggle-filters-icon">
+              {showFilters ? '▼' : '▶'}
+            </span>
+            {showFilters ? 'Hide filtration' : 'Show filtration'}
+          </button>
+        </div>
+
+        <div className={`catalogue__filters-container ${showFilters ? 'visible' : 'hidden'}`}>
+          <TagSearch courses={courses} onFilterChange={handleFilterChange} />
+        </div>
 
         <div className="catalogue__results-count">
           Found {filteredCourses.length} training{filteredCourses.length !== 1 ? 's' : ''}
@@ -41,21 +60,29 @@ const CourseCatalogue = ({ courses, title }: CourseCatalogueProps) => {
 
         <div className="catalogue__grid">
 
-          {filteredCourses.map((course: any, index: number) => (
-            <Link
-              to={`/course/${course.id}`} key={course.id}
-            >
-              <CourseCard {...transformRawCourseData(course)} />
-              {(index % 5 == 0) &&
-                <div style={{ position: "relative" }}>
-                  <div className="assets__background__gradient" style={{ top: "0", left: "0" }}></div>
-                </div>}
-            </Link>
-          ))}
+          {filteredCourses.map((course: any, index: number) => {
+            // Проверяем, что у курса есть корректный ID
+            if (!course.id) {
+              return null;
+            }
+            
+            return (
+              <Link
+                to={`/course/${course.id}`} 
+                key={course.id}
+              >
+                <CourseCard {...transformRawCourseData(course)} />
+                {(index % 5 == 0) &&
+                  <div style={{ position: "relative" }}>
+                    <div className="assets__background__gradient" style={{ top: "0", left: "0" }}></div>
+                  </div>}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>
   );
-}
+});
 
 export default CourseCatalogue

@@ -29,9 +29,11 @@ const SavedCoursesPage = () => {
   })
 
   const { data: trainingsData = [], isLoading, status } = useQuery<any, Error>({
-    queryKey: ['myTrainings'],
+    queryKey: ['savedCourses'],
     queryFn: () => getSavedCoursesRequest(authData.access_token),
-    enabled: userData!== null
+    enabled: userData !== null,
+    staleTime: 0, // Данные всегда считаются устаревшими
+    refetchOnWindowFocus: true, // Обновляем при фокусе окна
   })
 
   const title = {title_top: "Saved trainings:", title_bottom: ""}

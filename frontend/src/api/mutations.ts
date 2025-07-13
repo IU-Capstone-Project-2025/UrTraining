@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
     CredentialsData,
     SignInFailed,
@@ -27,51 +27,54 @@ export const useSignUp = () => {
     });
 };
 
-export const useSignIn = (authData: AuthCredentialsTokens) => {
+export const useSignIn = () => {
     return useMutation<
         SignInSuccess,
         AxiosError,
         CredentialsData
     >({
-        mutationFn: signInRequest,
+        mutationFn: signInRequest
     });
 };
 
 export const useSubmitSurvey = (token: String) => {
   return useMutation({
-    mutationFn: (data: any) => submitSurveyRequest(token, data),
-    onSuccess: () => {
-      console.log("Survey submitted successfully!");
+    mutationFn: (data: any) => submitSurveyRequest(data, token),
+    onSuccess: (data) => {
+      console.log(data);
+      console.log("Survey was submitted successfully!");
+      return data;
     },
     onError: (error) => {
-      console.error("Failed to submit survey: ", error);
+      console.error("Failed to submit the survey: ", error);
     }
   })
 };
 
 export const useSubmitCoachData = (token: String) => {
   return useMutation({
-    mutationFn: (data: any) => submitCoachDataRequest(token, data),
+    mutationFn: (data: any) => submitCoachDataRequest(data, token),
     onSuccess: (data) => {
       console.log(data);
-      console.log("Coach data submitted successfully!");
+      console.log("Coach Data was submitted successfully!");
+      return data;
     },
     onError: (error) => {
-      console.error("Failed to submit coach data: ", error);
+      console.error("Failed to submit the coach data: ", error);
     }
   })
 };
 
 export const useSubmitNewTraining = (token: String) => {
   return useMutation({
-    mutationFn: (data: any) => submitNewTrainingRequest(token, data),
+    mutationFn: (data: any) => submitNewTrainingRequest(data, token),
     onSuccess: (data) => {
       console.log(data);
-      console.log("New training data submitted successfully!");
+      console.log("Training data was submitted successfully!");
       return data;
     },
     onError: (error) => {
-      console.error("Failed to submit new training data: ", error);
+      console.error("Failed to submit the training data: ", error);
     }
   })
 };
@@ -91,9 +94,16 @@ export const useDeleteTrainingData = (token: String) => {
 };
 
 export const useSaveProgram = (token: String) => {
+  const queryClient = useQueryClient();
+  
   return useMutation({
     mutationFn: (courseId: any) => saveProgram(courseId, token),
     onSuccess: (data) => {
+      // Инвалидируем кеш сохраненных курсов для обновления фильтров
+      queryClient.invalidateQueries({ queryKey: ['savedCourses'] });
+      // Инвалидируем кеш статуса сохранения
+      queryClient.invalidateQueries({ queryKey: ['is-saved'] });
+      
       console.log(data);
       console.log("Program was saved successfully!");
       return data;
@@ -105,9 +115,16 @@ export const useSaveProgram = (token: String) => {
 };
 
 export const useDeleteFromSavedPrograms = (token: String) => {
+  const queryClient = useQueryClient();
+  
   return useMutation({
     mutationFn: (courseId: any) => deleteFromSavedPrograms(courseId, token),
     onSuccess: (data) => {
+      // Инвалидируем кеш сохраненных курсов для обновления фильтров
+      queryClient.invalidateQueries({ queryKey: ['savedCourses'] });
+      // Инвалидируем кеш статуса сохранения
+      queryClient.invalidateQueries({ queryKey: ['is-saved'] });
+      
       console.log(data);
       console.log("Program was deleted from saved successfully!");
       return data;
