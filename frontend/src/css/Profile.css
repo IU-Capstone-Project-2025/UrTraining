@@ -158,6 +158,7 @@
     width: 100%;
     grid-area: upload;
     height: 120%;
+    text-align: center;
 }
 
 .profile__upload__button {
