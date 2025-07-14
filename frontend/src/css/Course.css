@@ -1,6 +1,7 @@
 .course {
   display: flex;
   flex-direction: column;
+  height: auto;
   gap: 2rem;
 }
 
@@ -31,10 +32,6 @@
 .course__info {
     display: flex;
     align-items: center
-}
-
-.course__info__title, .course__info__description {
-    flex: 1 2;
 }
 
 .course__info__title {
@@ -341,4 +338,45 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 30px;
+}
+
+@media screen and (max-width: 900px) {
+  .course__container {
+    background-color: #00000000;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .course__tags {
+    flex-wrap: wrap;
+    gap: 1rem;
+    height: auto;
+  }
+
+  .course__tags__type {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .course__info {
+    width: 100%;
+    flex: 0;
+  }
+
+  .course__info__title {
+    width: 100%;
+    
+  }
+
+  .course__info__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .course__info__name {
+    font-size: 1.5rem;
+    text-align: center;
+    line-height: 1;
+  }
 }

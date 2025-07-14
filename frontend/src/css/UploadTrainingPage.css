@@ -1,3 +1,8 @@
+.training-page {
+  overflow: hidden;
+  height: auto;
+}
+
 .page-container {
   display: flex;
   justify-content: center;
@@ -43,6 +48,10 @@
 
 .buttons {
   margin-top: 5%;
+}
+
+.buttons > button {
+  width: 100%;
 }
 
 .buttons button:first-child {
@@ -151,5 +160,22 @@
   100% { 
     opacity: 1; 
     transform: scale(1.1);
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .course__container {
+    background-color: #00000000;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .course__metadata__fields{
+    grid-template-columns: 1fr;
+  }
+
+  .button-row {
+    flex-direction: column;
+    gap: 1rem;
   }
 }

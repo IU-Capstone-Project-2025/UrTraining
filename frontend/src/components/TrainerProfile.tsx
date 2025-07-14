@@ -27,9 +27,7 @@ const TrainerProfile = (data: any) => {
 
     return (
         <div className='profile basic-page'>
-            <div className='profile__container' style={{
-                gridTemplateAreas: `${grid_template}`
-            }}>
+            <div className='profile__container trainer-template'>
                 <div className='profile__frame profile__info'>
                     <div className='profile__info__header'>
                         <button className='btn-basic-white profile__header__logout' onClick={() => handleLogout()}>

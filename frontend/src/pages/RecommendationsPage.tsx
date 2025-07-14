@@ -48,7 +48,7 @@ const RecommendationsPage = () => {
 
   if (recsError) {
     return (
-      <div className="centered-content">
+      <div className="centered-content basic-page">
         <div className="step-title-main">Oops...</div>
         <p>Please fill the survey to get personalized recommendations. It takes only 2-3 minutes.</p>
         <div className="buttons">

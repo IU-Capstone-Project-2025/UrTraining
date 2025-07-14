@@ -1,3 +1,8 @@
+.catalogue {
+    overflow: hidden;
+    height: auto;
+}
+
 .catalogue__container {
     display: flex;
     flex-direction: column;
@@ -143,8 +148,8 @@
     font-size: 1rem;
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
+
+@media (max-width: 900px) {
     .catalogue__filter-controls {
         justify-content: center;
         margin-bottom: 16px;
@@ -160,8 +165,23 @@
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
+
+    .catalogue__grid > a {
+        width: 100%;
+         min-width: 0; 
+    }
+
+    .catalogue__tags__category {
+        flex-wrap: wrap;
+    }
+
+    .catalogue__course__title > h2 {
+        line-height: 2.5rem;
+    }
     
     .catalogue__course__card {
+        width: 100%;
+        max-width: 100%;
         padding: 1.25rem;
     }
 }
