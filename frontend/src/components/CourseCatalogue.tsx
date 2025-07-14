@@ -73,7 +73,7 @@ const CourseCatalogue = React.memo(({ courses, title }: CourseCatalogueProps) =>
               >
                 <CourseCard {...transformRawCourseData(course)} />
                 {(index % 5 == 0) &&
-                  <div style={{ position: "relative" }}>
+                  <div style={{ position: "relative"}}>
                     <div className="assets__background__gradient" style={{ top: "0", left: "0" }}></div>
                   </div>}
               </Link>

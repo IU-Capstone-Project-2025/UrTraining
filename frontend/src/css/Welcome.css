@@ -57,3 +57,38 @@
     width: 100%;
     height: auto;
 }
+
+@media screen and (max-width: 900px) {
+    .btn-basic-blur, .btn-basic-black {
+        width: 100%;
+    }
+
+    .welcome__info {
+        flex: 1 1;
+    }
+
+    .welcome__info__text {
+        text-align: center;
+    }
+
+    .welcome__info__text > h1 {
+        font-size: 2.7rem;
+    }
+
+    .welcome__info__text > h3 {
+        font-size: 1.2rem;
+    }
+
+    .welcome__info__buttons {
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .welcome__info__buttons > a {
+        width: 100%;
+    }
+
+    .welcome__image__container {
+        display: none;
+    }
+}

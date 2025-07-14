@@ -84,3 +84,18 @@
 .signup__form-area__error {
     color: rgb(226, 72, 72);
 }
+
+@media screen and (max-width: 900px) {
+    .signup__container {
+        background-color: #00000000;
+        box-shadow: none;
+    }
+
+    .signup__image {
+        display: none;
+    }
+
+    .signup__form-area {
+        padding: 3rem 1rem;
+    }
+}

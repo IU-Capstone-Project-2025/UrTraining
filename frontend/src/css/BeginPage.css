@@ -45,3 +45,21 @@
     width: 100%;
     height: auto;
 }
+
+@media screen and (max-width: 900px) {
+    .begin__container {
+        text-align: center;
+    }
+
+    .begin__image{
+        display: none;
+    }
+
+    .btn-basic-blur, .btn-basic-black {
+        width: 100%;
+    }
+
+    .begin__buttons > a{
+        width: 100%;
+    }
+}

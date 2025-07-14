@@ -6,7 +6,7 @@
     display: grid;
     grid-template-rows: repeat(6, minmax(100px, auto));
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    
+
     gap: 1rem;
     width: 100%;
     height: 150%;
@@ -25,12 +25,12 @@
 }
 
 .profile__frame h3 {
-    font-family: 'TT Travels Bold', sans-serif;
+    font-family: "TT Travels Bold", sans-serif;
     display: inline;
 }
 
 .profile__frame p {
-    font-family: 'TT Travels Regular', sans-serif;
+    font-family: "TT Travels Regular", sans-serif;
     display: inline;
 }
 
@@ -69,7 +69,7 @@
 }
 
 .profile__header__logout {
-    padding: 0.25rem; 
+    padding: 0.25rem;
     color: rgb(224, 67, 67);
     box-shadow: inset 0px 0px 0px 1.5px rgb(224, 67, 67);
 }
@@ -87,7 +87,7 @@
 }
 
 .profile__personal__edit {
-    padding: 0.25rem; 
+    padding: 0.25rem;
 }
 
 .profile__personal__fields {
@@ -105,6 +105,7 @@
 }
 
 .profile__field__value {
+    text-align: right;
     flex: 2 3;
 }
 
@@ -145,7 +146,7 @@
 .profile__trainings__header > img {
     width: 42px;
     height: 42px;
-    flex: 1 4
+    flex: 1 4;
 }
 
 .profile__trainings__footer {
@@ -169,8 +170,64 @@
     width: 100%;
 }
 
+.trainee-template {
+    grid-template-areas:
+        "info info"
+        "info info"
+        "calendar personal"
+        "calendar personal"
+        "calendar trainings"
+        "upload trainings";
+}
+
+.trainer-template {
+    grid-template-areas:
+        "info info"
+        "info info"
+        "personal calendar"
+        "personal calendar"
+        "trainings calendar"
+        "trainings upload";
+}
+
 @media (min-width: 1160px) {
     .profile__container {
         padding: 0 8rem;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .trainee-template, .trainer-template {
+        grid-template-rows: repeat(16, minmax(3rem, auto));
+        grid-template-areas:
+            "info info"
+            "info info"
+            "info info"
+            "info info"
+            "calendar calendar"
+            "calendar calendar"
+            "calendar calendar"
+            "calendar calendar"
+            "personal personal"
+            "personal personal"
+            "personal personal"
+            "personal personal"
+            "trainings trainings"
+            "trainings trainings"
+            "upload upload"
+            "upload upload"
+            "upload upload";
+    }
+
+    .profile__container {
+        gap: 2rem;
+    }
+
+    .profile__frame {
+        padding: 1.5rem;
+    }
+
+    .profile__calendar {
+        gap: 0;
     }
 }
