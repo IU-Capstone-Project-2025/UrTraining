@@ -1,8 +1,5 @@
 # FAQ
 
-I recommend creating **separate FAQ pages** for clients and coaches (if possible). 
----
-
 ## FAQ — Client
 
 ### What is UrTraining and how does it work?
@@ -92,7 +89,8 @@ Alternatively, we could keep both sections, but users may not intuitively expect
 
 Another option is adding a **FAQ link directly on the homepage**. However, this may be less effective if users encounter questions while already navigating the platform — they’d need to return to the homepage and remember that’s where the FAQ link is.
 
-![Main](https://github.com/IU-Capstone-Project-2025/UrTraining/blob/main/docs/imgs/faq2_design.png)
+![Main](https://github.com/IU-Capstone-Project-2025/UrTraining/blob/main/docs/imgs/main_faq.png)
+
 ---
 
 ## Design
