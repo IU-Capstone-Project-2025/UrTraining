@@ -31,8 +31,8 @@ const Navbar = (data: UserProp) => {
           <Link to={authData.access_token === "" ? "/signin" : "/upload-training"}>
             Upload
           </Link>
-          <Link to="http://t.me/mescudiway">
-            About Us
+          <Link to="/about-us">
+            FAQ
           </Link>
         </div>
         <div className='navbar__user'>

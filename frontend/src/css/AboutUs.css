@@ -1,0 +1,84 @@
+.about-us {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 4rem 6rem;
+  padding-top: 136px;
+  gap: 60px;
+  flex-wrap: wrap;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto; /* разрешаем вертикальный скролл */
+  position: relative;
+  box-sizing: border-box;
+}
+
+.faq__image__container {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.faq__image__container > img {
+    width: 100%;
+    height: auto;
+}
+
+.faq-section {
+  flex: 1;
+  max-width: 600px;
+  margin-left: 40px;
+  z-index: 1;
+}
+
+.faq-section h2 {
+  margin-bottom: 24px;
+  font-family: TT Travels Bold;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.faq-item {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 33px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: TT Travels Medium;
+  font-size: 1.1rem;
+}
+
+.faq-toggle {
+  font-size: 24px;
+  margin-left: 12px;
+}
+
+.faq-answer {
+  overflow: hidden;
+  color: #555;
+  transition: all 0.3s ease;
+  font-family: TT Travels Regular;
+}
+
+.left-gradient {
+  top: 0;
+  left: -300px;
+}
+
+.right-gradient {
+  top: 90%;
+  right: -300px; 
+}

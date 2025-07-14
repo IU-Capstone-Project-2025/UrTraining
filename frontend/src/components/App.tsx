@@ -10,6 +10,7 @@ import SignInPage from '../pages/SignInPage';
 import SignUpPage from '../pages/SignUpPage';
 import TraineeBeginPage from '../pages/TraineeBeginPage';
 import TrainerBeginPage from '../pages/TrainerBeginPage';
+import AboutUsPage from '../pages/AboutUsPage';
 import SurveyPage from '../pages/SurveyPage';
 import AdvancedRegistrationPage from '../pages/AdvancedRegistrationPage';
 import CoursesCataloguePage from '../pages/CoursesCataloguePage';
@@ -55,6 +56,7 @@ const App = () => {
                 <Route path="signin" element={<SignInPage />} />
                 <Route path="trainee-begin" element={<TraineeBeginPage />} />
                 <Route path="trainer-begin" element={<TrainerBeginPage />} />
+                <Route path="about-us" element={<AboutUsPage />} />
                 <Route path="survey" element={<SurveyPage />} />
                 <Route path="trainer-registration" element={<AdvancedRegistrationPage />} />
                 <Route path="catalogue" element={<CoursesCataloguePage />} />

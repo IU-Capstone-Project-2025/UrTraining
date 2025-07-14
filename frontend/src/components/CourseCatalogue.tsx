@@ -15,7 +15,7 @@ type CourseCatalogueProps = {
 
 const CourseCatalogue = React.memo(({ courses, title }: CourseCatalogueProps) => {
   const [filteredCourses, setFilteredCourses] = useState<any[]>(() => courses);
-  const [showFilters, setShowFilters] = useState<boolean>(true);
+  const [showFilters, setShowFilters] = useState<boolean>(false);
 
   // Обновляем фильтрованные курсы при изменении исходного списка
   React.useEffect(() => {
