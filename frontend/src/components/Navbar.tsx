@@ -35,8 +35,9 @@ const Navbar = (data: UserProp) => {
           <Link to={authData.access_token === "" ? "/signin" : "/recommendations"}>
             Recommendations
           </Link>
-          <Link to={authData.access_token === "" ? "/signin" : "/upload-training"}>
-            Upload
+          <Link to={authData.access_token === "" ? "/signin" : "/upload-training"} style={data.trainer_profile === null ? { display: "none" } : {}}
+          >
+            Upload training
           </Link>
           <Link to="/about-us">
             FAQ
