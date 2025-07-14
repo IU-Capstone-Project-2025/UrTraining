@@ -25,6 +25,7 @@ import MetadataContext from './context/MetadataContext';
 import TrainerProfilePage from '../pages/TrainerProfilePage';
 import TraineeProfilePage from '../pages/TraineeProfilePage';
 import SavedCoursesPage from '../pages/SavedCoursesPage';
+import CurrentTrainerCoursesPage from '../pages/CurrentTrainerCoursesPage';
 
 const queryClient = new QueryClient()
 
@@ -61,6 +62,7 @@ const App = () => {
                 <Route path="saved-trainings" element={<SavedCoursesPage />} />
                 <Route path="recommendations" element={<RecommendationsPage />} />
                 <Route path="course/:courseId" element={<CoursePage />} />
+                <Route path="catalogue/:userId" element={<CurrentTrainerCoursesPage />} />
                 <Route path="upload-training" element={<UploadTrainingPage />} />
                 <Route path="ai-upload" element={<AIUploadPage />} />
                 <Route path="profile" element={<ProfilePage />} />

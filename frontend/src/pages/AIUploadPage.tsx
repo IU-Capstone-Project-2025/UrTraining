@@ -121,8 +121,8 @@ const AIUploadPage = () => {
     return {
       "Course Title": aiResponse.course_title,
       "Program Description": aiResponse.program_description,
-      training_plan: aiResponse.training_plan,
       ...metadata,
+      "training_plan": aiResponse.training_plan,
     };
   };
 
@@ -153,6 +153,7 @@ const AIUploadPage = () => {
         aiData = typeof aiResult.response === 'string'
           ? JSON.parse(aiResult.response)
           : aiResult.response;
+        console.log(aiData);  
       } catch (parseError) {
         console.error("Failed to parse AI response:", parseError);
         alert("AI response could not be parsed. Please try again.");
@@ -161,6 +162,7 @@ const AIUploadPage = () => {
       }
       
       const aiFormatted = transformAIResponseToBackendFormat(aiData, metadataContext.savedData);
+      console.log(aiFormatted);
 
       const backendResult = await submitNewTrainingRequest(authData.access_token, aiFormatted);
       console.log("Backend upload successful:", backendResult);

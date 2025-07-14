@@ -54,7 +54,7 @@ const TraineeProfilePage = () => {
       text_button_bottom: "View recommendations"
     },
     trainings_text: {
-      text_top: "You have uncompleted trainings",
+      text_top: "Do you have uncompleted trainings?",
       text_bottom: "Try all saved trainings now"
     },
     upload_text: {

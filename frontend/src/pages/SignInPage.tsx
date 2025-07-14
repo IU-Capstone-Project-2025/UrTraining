@@ -14,7 +14,7 @@ const SignInPage = () => {
   const [isError, setIsError] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const authData = useContext(AuthContext)
-  const signInMutation = useSignIn(authData)
+  const signInMutation = useSignIn()
 
   const navigate = useNavigate();
 

@@ -4,14 +4,17 @@ import { transformRawCourseData } from '../utils/transformRawCouseData';
 import '../css/CoursesCatalogue.css';
 import CourseCatalogue from '../components/CourseCatalogue';
 import AuthContext from "../components/context/AuthContext";
-import { getMyTrainingsRequest, getSavedCoursesRequest, userInfoRequest } from "../api/apiRequests";
+import { getMyTrainingsRequest, userInfoRequest } from "../api/apiRequests";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
-import { data, useNavigate } from 'react-router-dom';
+import { data, useLocation, useNavigate, useParams } from 'react-router-dom';
 
-const SavedCoursesPage = () => {
+const MyCoursesPage = () => {
 
-  const authData = useContext(AuthContext)
+  const { userId } = useParams();
+  const location = useLocation();
+  const authorName = location.state?.authorName;
+  const authData = useContext(AuthContext);
   const navigate = useNavigate();
 
   // vvvvvvvvvvvv
@@ -29,19 +32,17 @@ const SavedCoursesPage = () => {
   })
 
   const { data: trainingsData = [], isLoading, status } = useQuery<any, Error>({
-    queryKey: ['savedCourses'],
-    queryFn: () => getSavedCoursesRequest(authData.access_token),
-    enabled: userData !== null,
-    staleTime: 0, // Данные всегда считаются устаревшими
-    refetchOnWindowFocus: true, // Обновляем при фокусе окна
+    queryKey: ['myTrainings'],
+    queryFn: () => getMyTrainingsRequest(authData.access_token, userId as unknown as number),
+    enabled: userData!== null
   })
 
-  const title = {title_top: "Saved trainings:", title_bottom: ""}
+  const title = {title_top: `${authorName}'s training programs:`, title_bottom: `found ${trainingsData.length} trainings`}
 
   if (isLoading) return <div className="centered-content">
                             <div className="step-title-main">Loading...</div>
                             <p>It may take a while to upload the data</p>
-                        </div>                      
+                        </div>
 
   return (
     <>
@@ -50,7 +51,7 @@ const SavedCoursesPage = () => {
       ) : (
         <div className="centered-content">
             <div className="step-title-main">Oops...</div>
-            <p>You have no saved trainings now, so it's time to explore something new!</p>
+            <p>This trainer has no created trainings now, but you can view the millions of other trainings!</p>
             <div className="button-group-welcome">
                 <button className="btn-basic-black" onClick={() => navigate("/catalogue")}>Go to Catalogue</button>
             </div>
@@ -60,4 +61,4 @@ const SavedCoursesPage = () => {
   );
 };
 
-export default SavedCoursesPage;
+export default MyCoursesPage;
