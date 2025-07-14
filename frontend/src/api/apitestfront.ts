@@ -22,7 +22,7 @@ import {
   submitNewTrainingRequest,
   deleteTrainingData,
   uploadFilesForAI,
-} from "../apiRequests";// Укажите правильный путь к файлу
+} from "./apiRequests";// Укажите правильный путь к файлу
 
 const mock = new MockAdapter(axios);
 
@@ -179,7 +179,7 @@ describe("API Functions", () => {
   describe("auth functions", () => {
     describe("signUpRequest", () => {
       it("should register user successfully", async () => {
-        const credentials = { email: "test@test.com", password: "password" };
+        const credentials = { email: 'test@test.com', password: 'password', username: 'test', full_name: 'test test' };
         const mockResponse = { token: "new-token" };
         mock.onPost(`${endpoint}/auth/register`).reply(200, mockResponse);
 
@@ -190,7 +190,7 @@ describe("API Functions", () => {
 
     describe("signInRequest", () => {
       it("should login user successfully", async () => {
-        const credentials = { email: "test@test.com", password: "password" };
+        const credentials = { email: 'test@test.com', password: 'password', username: 'test', full_name: 'test test' };
         const mockResponse = { token: "auth-token" };
         mock.onPost(`${endpoint}/auth/login`).reply(200, mockResponse);
 

@@ -1,6 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import type { Mock } from 'vitest';
 import {
   useSignUp,
   useSignIn,
@@ -37,10 +38,10 @@ const mockQueryClient = {
 describe('Mutation Hooks', () => {
   beforeEach(() => {
     // Мокаем useQueryClient
-    (useQueryClient as jest.Mock).mockReturnValue(mockQueryClient);
+    (useQueryClient as unknown as Mock).mockReturnValue(mockQueryClient);
     
     // Мокаем useMutation
-    (useMutation as jest.Mock).mockImplementation((config) => ({
+    (useMutation as unknown as Mock).mockImplementation((config) => ({
       mutate: vi.fn(),
       mutateAsync: vi.fn().mockImplementation(config.mutationFn),
       ...config,
@@ -53,10 +54,10 @@ describe('Mutation Hooks', () => {
 
   describe('useSignUp', () => {
     it('should call signUpRequest with credentials', async () => {
-      const credentials = { email: 'test@test.com', password: 'password' };
+      const credentials = { email: 'test@test.com', password: 'password', username: 'test', full_name: 'test test' };
       const mockResponse = { user: { id: 1 } };
       
-      (signUpRequest as jest.Mock).mockResolvedValue(mockResponse);
+      (signUpRequest as unknown as Mock).mockResolvedValue(mockResponse);
       
       const { result } = renderHook(() => useSignUp());
       const response = await result.current.mutateAsync(credentials);
@@ -68,10 +69,10 @@ describe('Mutation Hooks', () => {
 
   describe('useSignIn', () => {
     it('should call signInRequest with credentials', async () => {
-      const credentials = { email: 'test@test.com', password: 'password' };
+      const credentials = { email: 'test@test.com', password: 'password', username: 'test', full_name: 'test test' };
       const mockResponse = { token: 'test-token' };
       
-      (signInRequest as jest.Mock).mockResolvedValue(mockResponse);
+      (signInRequest as unknown as Mock).mockResolvedValue(mockResponse);
       
       const { result } = renderHook(() => useSignIn());
       const response = await result.current.mutateAsync(credentials);
@@ -86,7 +87,7 @@ describe('Mutation Hooks', () => {
       const surveyData = { age: 25 };
       const mockResponse = { success: true };
       
-      (submitSurveyRequest as jest.Mock).mockResolvedValue(mockResponse);
+      (submitSurveyRequest as unknown as Mock).mockResolvedValue(mockResponse);
       
       const { result } = renderHook(() => useSubmitSurvey(mockToken));
       const response = await result.current.mutateAsync(surveyData);
@@ -101,7 +102,7 @@ describe('Mutation Hooks', () => {
       const coachData = { certification: 'NASM' };
       const mockResponse = { success: true };
       
-      (submitCoachDataRequest as jest.Mock).mockResolvedValue(mockResponse);
+      (submitCoachDataRequest as unknown as Mock).mockResolvedValue(mockResponse);
       
       const { result } = renderHook(() => useSubmitCoachData(mockToken));
       const response = await result.current.mutateAsync(coachData);
@@ -116,7 +117,7 @@ describe('Mutation Hooks', () => {
       const trainingData = { title: 'New Program' };
       const mockResponse = { id: 123 };
       
-      (submitNewTrainingRequest as jest.Mock).mockResolvedValue(mockResponse);
+      (submitNewTrainingRequest as unknown as Mock).mockResolvedValue(mockResponse);
       
       const { result } = renderHook(() => useSubmitNewTraining(mockToken));
       const response = await result.current.mutateAsync(trainingData);
@@ -131,7 +132,7 @@ describe('Mutation Hooks', () => {
       const courseId = '123';
       const mockResponse = { success: true };
       
-      (deleteTrainingData as jest.Mock).mockResolvedValue(mockResponse);
+      (deleteTrainingData as unknown as Mock).mockResolvedValue(mockResponse);
       
       const { result } = renderHook(() => useDeleteTrainingData(mockToken));
       const response = await result.current.mutateAsync(courseId);
@@ -146,7 +147,7 @@ describe('Mutation Hooks', () => {
       const courseId = '123';
       const mockResponse = { success: true };
       
-      (saveProgram as jest.Mock).mockResolvedValue(mockResponse);
+      (saveProgram as unknown as Mock).mockResolvedValue(mockResponse);
       
       const { result } = renderHook(() => useSaveProgram(mockToken));
       const response = await result.current.mutateAsync(courseId);
@@ -170,7 +171,7 @@ describe('Mutation Hooks', () => {
       const courseId = '123';
       const mockResponse = { success: true };
       
-      (deleteFromSavedPrograms as jest.Mock).mockResolvedValue(mockResponse);
+      (deleteFromSavedPrograms as unknown as Mock).mockResolvedValue(mockResponse);
       
       const { result } = renderHook(() => useDeleteFromSavedPrograms(mockToken));
       const response = await result.current.mutateAsync(courseId);
