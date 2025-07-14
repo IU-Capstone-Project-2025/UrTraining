@@ -70,8 +70,17 @@ const AdvancedRegistration = (props: SurveyStep) => {
                                 <div className="survey__section__forms">
                                     <form onChange={handleChange}>
                                         {options_page.inputs.map((input_option: InputField, value: number) => {
+                                            const fieldName = input_option.name;
                                             return (
-                                                <InputTemplates key={value} {...input_option} />
+                                                <InputTemplates 
+                                                    key={value} 
+                                                    {...input_option} 
+                                                    value={savedData[fieldName] || ""}
+                                                    onChange={(e) => {
+                                                        const { name, value } = e.target;
+                                                        setSavedData(prev => ({ ...prev, [name]: value }));
+                                                    }}
+                                                />
                                             )
                                         })}
                                     </form>

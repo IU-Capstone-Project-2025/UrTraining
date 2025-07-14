@@ -70,7 +70,7 @@ const CoursePage = () => {
         deleteFromSavedPrograms.mutate(courseId, {
             onSuccess: (data) => {
                 setSavedStatus(false)
-                console.log(data.message);
+                //console.log(data.message);
             },
             onError: (error) => {
                 console.error("Error when deleting from saved:", error);
@@ -91,7 +91,7 @@ const CoursePage = () => {
     };
 
     const training_data = transformRawCourseData(courseData);
-    console.log(courseData)
+    //console.log(courseData)
 
     return (
         <Course 
