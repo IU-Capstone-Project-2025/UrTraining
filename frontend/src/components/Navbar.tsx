@@ -11,6 +11,8 @@ const Navbar = (data: UserProp) => {
   const authData = useContext(AuthContext)
   const [menuOpen, setMenuOpen] = useState(false);
 
+  console.log(data);
+
   return (
     <>
       <div className='navbar'>
