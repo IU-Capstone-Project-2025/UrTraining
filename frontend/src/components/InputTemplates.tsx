@@ -1,7 +1,12 @@
 // import React from 'react'
 import type { InputField, SelectOption } from './interface/interfaces'
 
-export const InputTemplates = (props: InputField) => {
+interface ControlledInputField extends InputField {
+    value: any;
+    onChange: (e: React.ChangeEvent<any>) => void;
+}
+
+export const InputTemplates = (props: ControlledInputField) => {
     if (props.input_type === "text" ||
         props.input_type === "number")
         return <TextInputTemplate {...props} />
@@ -19,7 +24,7 @@ export const InputTemplates = (props: InputField) => {
     )
 }
 
-export const TextInputTemplate = (props: InputField) => {
+export const TextInputTemplate = (props: ControlledInputField) => {
     return (
         <input
             type={props.input_type}
@@ -27,31 +32,32 @@ export const TextInputTemplate = (props: InputField) => {
             name={props.name}
             className="form-basic-white"
             placeholder={props.placeholder}
+            value={props.value || ""}
+            onChange={props.onChange}
         />
     )
 }
 
-export const SelectInputTemplate = (props: InputField) => {
+export const SelectInputTemplate = (props: ControlledInputField) => {
     return (
         <select
             id={props.id}
             name={props.name}
             className="form-basic-white"
-            defaultValue={"select"}
+            value={props.value || "select"}
+            onChange={props.onChange}
         >
             <option disabled value={"select"}>Select... </option>
-            {props.options.length === 0 ? [] : props.options.map((option: SelectOption, value: number) => {
-                return (
-                    <option key={value} value={option.value}>
-                        {option.placeholder}
-                    </option>
-                )
-            })}
+            {props.options?.map((option: SelectOption, index: number) => (
+                <option key={index} value={option.value}>
+                    {option.placeholder}
+                </option>
+            ))}
         </select>
     )
 }
 
-export const RadioInputTemplate = (props: InputField) => {
+export const RadioInputTemplate = (props: ControlledInputField) => {
     return (
         <>
             {(props.options.length === 0 ? [] : props.options).map((option: SelectOption, value: number) => {
@@ -62,6 +68,8 @@ export const RadioInputTemplate = (props: InputField) => {
                             id={option.id}
                             name={option.name}
                             value={option.value}
+                            checked={props.value === option.value}
+                            onChange={props.onChange}
                         />
                         <div>{option.placeholder}</div>
                     </label>
@@ -71,7 +79,7 @@ export const RadioInputTemplate = (props: InputField) => {
     )
 }
 
-export const ScaleInputTemplate = (props: InputField) => {
+export const ScaleInputTemplate = (props: ControlledInputField) => {
     return (
         <div className="scale-input-row">
             <label className="scale-label">{props.placeholder}</label>
@@ -82,6 +90,8 @@ export const ScaleInputTemplate = (props: InputField) => {
                             type="radio"
                             name={props.name}
                             value={num}
+                            checked={props.value === String(num)}
+                            onChange={props.onChange}
                         />
                         <span>{num}</span>
                     </label>

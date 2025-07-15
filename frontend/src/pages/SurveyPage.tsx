@@ -62,20 +62,23 @@ const SurveyPage = () => {
   })
 
   // Grab correct page from array of received data
-  const currentStepData = pagesData.find(
-    (item) => item.step_current === `step-${surveyStep}`
-  );
+  if (status == "success") {
+    const currentStepData = pagesData.find(
+      (item) => item.step_current === `step-${surveyStep}`
+    );
 
-  // Convert found page to SurveyStep
-  const stepData = currentStepData as SurveyStep
+    // Convert found page to SurveyStep
+    const stepData = currentStepData as SurveyStep
 
-  return (
-    isLoading ?
-      <div>...Loading</div> :
-      <SurveyPageContext value={contextValue}>
-        <Survey {...stepData} />
-      </SurveyPageContext>
-  )
+    return (
+      isLoading ?
+        <div>...Loading</div> :
+        <SurveyPageContext value={contextValue}>
+          <Survey {...stepData} />
+        </SurveyPageContext>
+    )
+  }
+
 }
 
 export default SurveyPage

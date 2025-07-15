@@ -7,6 +7,7 @@ export interface UserProp {
   created_at: string
   updated_at: any
   training_profile: TrainingProfile
+  trainer_profile: { [key: string]: any };
 }
 
 export interface TrainingProfile {

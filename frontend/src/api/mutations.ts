@@ -39,7 +39,7 @@ export const useSignIn = () => {
 
 export const useSubmitSurvey = (token: String) => {
   return useMutation({
-    mutationFn: (data: any) => submitSurveyRequest(data, token),
+    mutationFn: (data: any) => submitSurveyRequest(token, data),
     onSuccess: (data) => {
       console.log(data);
       console.log("Survey was submitted successfully!");
@@ -53,7 +53,7 @@ export const useSubmitSurvey = (token: String) => {
 
 export const useSubmitCoachData = (token: String) => {
   return useMutation({
-    mutationFn: (data: any) => submitCoachDataRequest(data, token),
+    mutationFn: (data: any) => submitCoachDataRequest(token, data),
     onSuccess: (data) => {
       console.log(data);
       console.log("Coach Data was submitted successfully!");
@@ -67,7 +67,7 @@ export const useSubmitCoachData = (token: String) => {
 
 export const useSubmitNewTraining = (token: String) => {
   return useMutation({
-    mutationFn: (data: any) => submitNewTrainingRequest(data, token),
+    mutationFn: (data: any) => submitNewTrainingRequest(token, data),
     onSuccess: (data) => {
       console.log(data);
       console.log("Training data was submitted successfully!");

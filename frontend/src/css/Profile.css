@@ -19,8 +19,11 @@
     align-items: center;
     padding: 2rem;
     overflow: hidden;
-
-    background-color: #a693931c;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(22, 22, 22, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: 2rem;
 }
 
@@ -233,4 +236,14 @@
     .profile__calendar {
         gap: 1rem;
     }
+}
+
+.left__gradient {
+  top: 10%;
+  left: -400px;
+}
+
+.right__gradient {
+  top: 10%;
+  right: -400px; 
 }

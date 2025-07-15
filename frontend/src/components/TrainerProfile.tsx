@@ -27,6 +27,9 @@ const TrainerProfile = (data: any) => {
 
     return (
         <div className='profile basic-page'>
+            <div className="assets__background__gradient left__gradient" />
+            <div className="assets__background__gradient right__gradient" />
+
             <div className='profile__container trainer-template'>
                 <div className='profile__frame profile__info'>
                     <div className='profile__info__header'>

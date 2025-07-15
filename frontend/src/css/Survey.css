@@ -1,6 +1,7 @@
 .survey {
     display: flex;
     overflow: hidden;
+    flex-direction: column;
 }
 
 .survey__box {

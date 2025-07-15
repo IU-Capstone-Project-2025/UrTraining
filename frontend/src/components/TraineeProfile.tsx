@@ -28,6 +28,9 @@ const TraineeProfile = (data: any) => {
 
     return (
         <div className='profile basic-page'>
+            <div className="assets__background__gradient left-gradient" />
+            <div className="assets__background__gradient right-gradient" />
+
             <div className='profile__container trainee-template'>
                 <div className='profile__frame profile__info'>
                     <div className='profile__info__header'>

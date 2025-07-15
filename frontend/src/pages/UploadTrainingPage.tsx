@@ -19,6 +19,7 @@ const UploadTrainingPage = () => {
 
     const authData = useContext(AuthContext)
     const submitTrainingDataMutation = useSubmitNewTraining(authData.access_token)
+    const navigate = useNavigate();
 
     const { data: meData, isLoading: isMeLoading } = useQuery({
         queryKey: ['me'],
@@ -142,8 +143,12 @@ const UploadTrainingPage = () => {
                         <div className="step-title-main">New training plan was succesfully created!</div>
                         <p>You can view it or return to the main page, as you wish.</p>
                         <div className="buttons">
-                            <button className="btn-basic-black"><Link to={`/course/${createdTrainingId}`}>View plan</Link></button>
-                            <button className="btn-basic-white"><Link to="/">Main menu</Link></button>
+                            <button onClick={() => navigate(`/course/${createdTrainingId}`)} className="btn-basic-black">
+                                View plan
+                            </button>
+                            <button onClick={() => navigate('/')} className="btn-basic-white">
+                                Main menu
+                            </button>
                         </div>
                     </div>
                 )}
