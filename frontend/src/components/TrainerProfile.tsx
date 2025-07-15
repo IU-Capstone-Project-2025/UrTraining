@@ -28,10 +28,79 @@ const TrainerProfile = (data: any) => {
     return (
         <div className='profile basic-page'>
 
-            <div className="assets__background__gradient left__gradient" style={{ background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
-                    filter: 'url(#blurOval)' }} />
-            <div className="assets__background__gradient right__gradient" style={{ background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
-                    filter: 'url(#blurOval)' }} />
+            <div style={{ position: "relative" }}>
+                <svg
+                    width="1200"
+                    height="1200"
+                    viewBox="0 0 1200 1200"
+                    style={{
+                        position: "absolute",
+                        top: "-400px",
+                        right: "-500px",
+                        zIndex: -1,
+                        pointerEvents: "none"
+                    }}
+                    >
+                    <defs>
+                        <filter
+                        id="blurOval"
+                        x="-50%"
+                        y="-50%"
+                        width="200%"
+                        height="200%"
+                        filterUnits="objectBoundingBox"
+                        >
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="80" />
+                        </filter>
+
+                        <linearGradient id="grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="rgba(229, 46, 232, 0.2)" />
+                        <stop offset="100%" stopColor="rgba(32, 228, 193, 0.2)" />
+                        </linearGradient>
+                    </defs>
+
+                    <ellipse
+                        cx="600"
+                        cy="600"
+                        rx="300"
+                        ry="200"
+                        fill="url(#grad)"
+                        filter="url(#blurOval)"
+                    />
+                </svg>
+            </div>
+
+            <div style={{ position: "relative" }}>
+                <svg
+                    width="1600"
+                    height="1600"
+                    viewBox="0 0 1600 1600"
+                    style={{
+                    position: "absolute",
+                    top: "-200px",    // ниже
+                    left: "-600px",
+                    zIndex: -1,
+                    }}
+                >
+                    <defs>
+                    <filter id="blurOval">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="60" />
+                    </filter>
+                    <linearGradient id="grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="rgba(229, 46, 232, 0.2)" />
+                        <stop offset="100%" stopColor="rgba(32, 228, 193, 0.2)" />
+                    </linearGradient>
+                    </defs>
+                    <ellipse
+                    cx="800"
+                    cy="800"
+                    rx="300"
+                    ry="200"
+                    fill="url(#grad)"
+                    filter="url(#blurOval)"
+                    />
+                </svg>
+            </div>
 
             <div className='profile__container trainer-template'>
                 <div className='profile__frame profile__info'>

@@ -21,8 +21,45 @@ const Begin = ({ css_style, button_link, text }: BeginProps) => {
             { css_style === "begin__left" &&
                 <div className="begin__image">
                     <div style={{ position: "relative" }}>
-                        <div className="assets__background__gradient" style={{ background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
-                        filter: 'url(#blurOval)', top: "0", right: "0" }}></div>
+                        <svg
+                            width="1200"
+                            height="1200"
+                            viewBox="0 0 1200 1200"
+                            style={{
+                                position: "absolute",
+                                top: "-300px",
+                                right: "-400px",
+                                zIndex: -1,
+                                pointerEvents: "none"
+                            }}
+                            >
+                            <defs>
+                                <filter
+                                id="blurOval"
+                                x="-50%"
+                                y="-50%"
+                                width="200%"
+                                height="200%"
+                                filterUnits="objectBoundingBox"
+                                >
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="80" />
+                                </filter>
+
+                                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="rgba(229, 46, 232, 0.2)" />
+                                <stop offset="100%" stopColor="rgba(32, 228, 193, 0.2)" />
+                                </linearGradient>
+                            </defs>
+
+                            <ellipse
+                                cx="600"
+                                cy="600"
+                                rx="300"
+                                ry="200"
+                                fill="url(#grad)"
+                                filter="url(#blurOval)"
+                            />
+                        </svg>
                     </div>
                     <img src={notebook_left} alt="" />
                 </div>
@@ -49,8 +86,45 @@ const Begin = ({ css_style, button_link, text }: BeginProps) => {
             { css_style === "begin__right" &&
                 <div className="begin__image">
                     <div style={{ position: "relative" }}>
-                        <div className="assets__background__gradient" style={{ background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
-                        filter: 'url(#blurOval)', top: "0", right: "0" }}></div>
+                        <svg
+                            width="1200"
+                            height="1200"
+                            viewBox="0 0 1200 1200"
+                            style={{
+                                position: "absolute",
+                                top: "-300px",
+                                right: "-400px",
+                                zIndex: -1,
+                                pointerEvents: "none"
+                            }}
+                            >
+                            <defs>
+                                <filter
+                                id="blurOval"
+                                x="-50%"
+                                y="-50%"
+                                width="200%"
+                                height="200%"
+                                filterUnits="objectBoundingBox"
+                                >
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="80" />
+                                </filter>
+
+                                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="rgba(229, 46, 232, 0.2)" />
+                                <stop offset="100%" stopColor="rgba(32, 228, 193, 0.2)" />
+                                </linearGradient>
+                            </defs>
+
+                            <ellipse
+                                cx="600"
+                                cy="600"
+                                rx="300"
+                                ry="200"
+                                fill="url(#grad)"
+                                filter="url(#blurOval)"
+                            />
+                        </svg>
                     </div>
                     <img src={notebook_right} alt="" />
                 </div>

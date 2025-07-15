@@ -33,7 +33,7 @@ const Welcome = () => {
                             <feGaussianBlur in="SourceGraphic" stdDeviation="80" />
                             </filter>
 
-                            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <linearGradient id="grad" x1="0%" y1="100%" x2="100%" y2="0%">
                             <stop offset="0%" stopColor="rgba(229, 46, 232, 0.2)" />
                             <stop offset="100%" stopColor="rgba(32, 228, 193, 0.2)" />
                             </linearGradient>
@@ -91,7 +91,7 @@ const Welcome = () => {
                         <filter id="blurOval">
                             <feGaussianBlur in="SourceGraphic" stdDeviation="60" />
                         </filter>
-                        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <linearGradient id="grad" x1="0%" y1="100%" x2="100%" y2="0%">
                             <stop offset="0%" stopColor="rgba(229, 46, 232, 0.2)" />
                             <stop offset="100%" stopColor="rgba(32, 228, 193, 0.2)" />
                         </linearGradient>

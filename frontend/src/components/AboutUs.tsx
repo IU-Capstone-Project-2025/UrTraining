@@ -24,12 +24,50 @@ const AboutUs = ({ faqItems }: AboutUsProps) => {
       {/* Левая часть — картинка */}
       <div className="faq__image__container">
         <img src={notebook} alt="notebook" />
+        <div style={{ position: "relative" }}>
+          <svg
+              width="1600"
+              height="1600"
+              viewBox="0 0 1600 1600"
+              style={{
+                  position: "absolute",
+                  bottom: "-200px",
+                  right: "-300px",
+                  zIndex: -1,
+                  pointerEvents: "none"
+              }}
+              >
+              <defs>
+                  <filter
+                  id="blurOval"
+                  x="-50%"
+                  y="-50%"
+                  width="200%"
+                  height="200%"
+                  filterUnits="objectBoundingBox"
+                  >
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="80" />
+                  </filter>
+
+                  <linearGradient id="grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(229, 46, 232, 0.25)" />
+                  <stop offset="100%" stopColor="rgba(32, 228, 193, 0.25)" />
+                  </linearGradient>
+              </defs>
+
+              <ellipse
+                  cx="800"
+                  cy="800"
+                  rx="300"
+                  ry="200"
+                  fill="url(#grad)"
+                  filter="url(#blurOval)"
+              />
+            </svg>
+          </div>
       </div>
 
-      <div className="assets__background__gradient left-gradient" style={{ background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
-                    filter: 'url(#blurOval)' }} />
-      <div className="assets__background__gradient right-gradient" style={{ background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
-                    filter: 'url(#blurOval)' }} />
+      
 
       {/* Правая часть — FAQ */}
       <div className="faq-section">
@@ -56,6 +94,49 @@ const AboutUs = ({ faqItems }: AboutUsProps) => {
             </div>
           </div>
         ))}
+
+        <div style={{ position: "relative" }}>
+          <svg
+              width="1200"
+              height="1200"
+              viewBox="0 0 1200 1200"
+              style={{
+                  position: "absolute",
+                  bottom: "0px",
+                  left: "-200px",
+                  zIndex: -1,
+                  pointerEvents: "none"
+              }}
+              >
+              <defs>
+                  <filter
+                  id="blurOval"
+                  x="-50%"
+                  y="-50%"
+                  width="200%"
+                  height="200%"
+                  filterUnits="objectBoundingBox"
+                  >
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="80" />
+                  </filter>
+
+                  <linearGradient id="grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(229, 46, 232, 0.2)" />
+                  <stop offset="100%" stopColor="rgba(32, 228, 193, 0.2)" />
+                  </linearGradient>
+              </defs>
+
+              <ellipse
+                  cx="600"
+                  cy="600"
+                  rx="300"
+                  ry="200"
+                  fill="url(#grad)"
+                  filter="url(#blurOval)"
+              />
+          </svg>
+      </div>
+
       </div>
     </div>
   );

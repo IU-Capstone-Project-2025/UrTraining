@@ -184,19 +184,79 @@ const AIUploadPage = () => {
 
   return (
     <div className="basic-page">
-
-      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-          <filter id="blurOval" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="60" />
-          </filter>
-      </svg>
-    
+      
       <div style={{ position: "relative" }}>
-        <div
-          className="assets__background__gradient"
-          style={{ top: "0", left: "0", background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
-                    filter: 'url(#blurOval)' }}
-        ></div>
+          <svg
+              width="1200"
+              height="1200"
+              viewBox="0 0 1200 1200"
+              style={{
+                  position: "absolute",
+                  top: "-400px",
+                  right: "-500px",
+                  zIndex: -1,
+                  pointerEvents: "none"
+              }}
+              >
+              <defs>
+                  <filter
+                  id="blurOval"
+                  x="-50%"
+                  y="-50%"
+                  width="200%"
+                  height="200%"
+                  filterUnits="objectBoundingBox"
+                  >
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="80" />
+                  </filter>
+
+                  <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="rgba(229, 46, 232, 0.2)" />
+                  <stop offset="100%" stopColor="rgba(32, 228, 193, 0.2)" />
+                  </linearGradient>
+              </defs>
+
+              <ellipse
+                  cx="600"
+                  cy="600"
+                  rx="300"
+                  ry="200"
+                  fill="url(#grad)"
+                  filter="url(#blurOval)"
+              />
+          </svg>
+      </div>
+
+      <div style={{ position: "relative" }}>
+          <svg
+              width="1200"
+              height="1200"
+              viewBox="0 0 1200 1200"
+              style={{
+              position: "absolute",
+              top: "-200px",    // ниже
+              left: "-600px",
+              zIndex: -1,
+              }}
+          >
+              <defs>
+              <filter id="blurOval">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="60" />
+              </filter>
+              <linearGradient id="grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(229, 46, 232, 0.2)" />
+                  <stop offset="100%" stopColor="rgba(32, 228, 193, 0.2)" />
+              </linearGradient>
+              </defs>
+              <ellipse
+              cx="600"
+              cy="600"
+              rx="300"
+              ry="200"
+              fill="url(#grad)"
+              filter="url(#blurOval)"
+              />
+          </svg>
       </div>
 
       <Link to="/upload-training" className="back-link">
