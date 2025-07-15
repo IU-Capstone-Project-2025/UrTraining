@@ -101,6 +101,7 @@
 
 .profile__personal__field {
     display: flex;
+    align-items: center;
 }
 
 .profile__field__name {
@@ -201,37 +202,39 @@
 
 @media screen and (max-width: 900px) {
     .trainee-template, .trainer-template {
-        grid-template-rows: repeat(16, minmax(3rem, auto));
+        /* grid-template-rows: repeat(16, minmax(3rem, auto)); */
+        grid-template-rows: repeat(12, 8rem);
+        grid-auto-rows: auto;
         grid-template-areas:
             "info info"
             "info info"
-            "info info"
-            "info info"
             "calendar calendar"
             "calendar calendar"
             "calendar calendar"
-            "calendar calendar"
-            "personal personal"
             "personal personal"
             "personal personal"
             "personal personal"
             "trainings trainings"
             "trainings trainings"
-            "upload upload"
             "upload upload"
             "upload upload";
+        gap: 2rem;
+        padding: 1.5rem;
     }
 
     .profile__container {
         gap: 2rem;
+        padding: 0;
+        flex-direction: column;
     }
 
     .profile__frame {
+        height: auto;
         padding: 1.5rem;
     }
 
     .profile__calendar {
-        gap: 0;
+        gap: 1rem;
     }
 }
 

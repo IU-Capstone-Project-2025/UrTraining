@@ -51,6 +51,15 @@
         text-align: center;
     }
 
+    .begin__title {
+        font-size: 1.5rem;
+        line-height: 0.9;
+    }
+
+    .begin__description {
+        font-size: 1rem;
+    }
+
     .begin__image{
         display: none;
     }
