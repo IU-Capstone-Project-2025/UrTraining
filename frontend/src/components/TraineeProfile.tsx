@@ -28,8 +28,11 @@ const TraineeProfile = (data: any) => {
 
     return (
         <div className='profile basic-page'>
-            <div className="assets__background__gradient left-gradient" />
-            <div className="assets__background__gradient right-gradient" />
+            
+            <div className="assets__background__gradient left__gradient" style={{ background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
+                    filter: 'url(#blurOval)' }} />
+            <div className="assets__background__gradient right__gradient" style={{ background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
+                    filter: 'url(#blurOval)' }} />
 
             <div className='profile__container trainee-template'>
                 <div className='profile__frame profile__info'>

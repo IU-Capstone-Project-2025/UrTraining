@@ -44,10 +44,24 @@ const App = () => {
   }
 
   return (
+
     <AuthContext value={contextValue}>
       <MetadataContext value={metadataContextValue}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
+
+            <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+              <defs>
+                <filter
+                  id="blurOval"
+                  x="-50%" y="-50%" width="200%" height="200%"
+                  colorInterpolationFilters="sRGB"
+                >
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="60" />
+                </filter>
+              </defs>
+            </svg>
+
             <TokenChecker />
             <Routes>
               <Route path="/" element={<NavbarPage />}>

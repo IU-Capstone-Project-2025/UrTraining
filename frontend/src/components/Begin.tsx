@@ -18,12 +18,6 @@ const Begin = ({ css_style, button_link, text }: BeginProps) => {
     return (
         <div className={"begin basic-page " + css_style}>
 
-            <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-                <filter id="blurOval" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur stdDeviation="60" />
-                </filter>
-            </svg>
-
             { css_style === "begin__left" &&
                 <div className="begin__image">
                     <div style={{ position: "relative" }}>

@@ -33,12 +33,6 @@ const CourseCatalogue = React.memo(({ courses, title }: CourseCatalogueProps) =>
   return (
     <div className="catalogue basic-page">
 
-      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-          <filter id="blurOval" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="60" />
-          </filter>
-      </svg>
-
       <div className='catalogue__container'>
         <h1 className="catalogue__title">
           <span style={{ display: 'block' }}>{title.title_top}</span>

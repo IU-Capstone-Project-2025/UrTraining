@@ -72,12 +72,6 @@ const AdvancedRegistration = (props: SurveyStep) => {
     return (
         <div className="survey basic-page">
 
-            <svg style={{ position: 'absolute', width: 0, height: 0 }}>
-                <filter id="blurOval" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur stdDeviation="60" />
-                </filter>
-            </svg>
-
             <div className='survey__box'>
 
                 <div className="survey__navbar">
