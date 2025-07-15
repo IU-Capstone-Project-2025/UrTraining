@@ -15,7 +15,7 @@ const Welcome = () => {
                         viewBox="0 0 800 800"
                         style={{
                         position: "absolute",
-                        top: "-300px",    // ниже
+                        top: "-250px",    // ниже
                         right: "-200px",
                         zIndex: -1,
                         }}
@@ -67,13 +67,13 @@ const Welcome = () => {
             <div className="welcome__image__container">
                 <div style={{ position: "relative" }}>
                     <svg
-                        width="800"
-                        height="800"
-                        viewBox="0 0 800 800"
+                        width="1000"
+                        height="1000"
+                        viewBox="0 0 1000 1000"
                         style={{
                         position: "absolute",
-                        bottom: "100px",    // ниже
-                        left: "200px",
+                        bottom: "-100px",    // ниже
+                        left: "100px",
                         zIndex: -1,
                         }}
                     >
@@ -87,8 +87,8 @@ const Welcome = () => {
                         </linearGradient>
                         </defs>
                         <ellipse
-                        cx="400"
-                        cy="400"
+                        cx="500"
+                        cy="500"
                         rx="300"
                         ry="200"
                         fill="url(#grad)"
