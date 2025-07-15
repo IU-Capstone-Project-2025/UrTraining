@@ -10,32 +10,42 @@ const Welcome = () => {
             <div className='welcome__info'>
                 <div style={{ position: "relative" }}>
                     <svg
-                        width="800"
-                        height="800"
-                        viewBox="0 0 800 800"
+                        width="1200"
+                        height="1200"
+                        viewBox="0 0 1200 1200"
                         style={{
-                        position: "absolute",
-                        top: "-250px",    // ниже
-                        right: "-200px",
-                        zIndex: -1,
+                            position: "absolute",
+                            top: "-400px",
+                            right: "-500px",
+                            zIndex: -1,
+                            pointerEvents: "none"
                         }}
-                    >
+                        >
                         <defs>
-                        <filter id="blurOval">
-                            <feGaussianBlur in="SourceGraphic" stdDeviation="60" />
-                        </filter>
-                        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <filter
+                            id="blurOval"
+                            x="-50%"
+                            y="-50%"
+                            width="200%"
+                            height="200%"
+                            filterUnits="objectBoundingBox"
+                            >
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="80" />
+                            </filter>
+
+                            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stopColor="rgba(229, 46, 232, 0.2)" />
                             <stop offset="100%" stopColor="rgba(32, 228, 193, 0.2)" />
-                        </linearGradient>
+                            </linearGradient>
                         </defs>
+
                         <ellipse
-                        cx="400"
-                        cy="400"
-                        rx="300"
-                        ry="200"
-                        fill="url(#grad)"
-                        filter="url(#blurOval)"
+                            cx="600"
+                            cy="600"
+                            rx="300"
+                            ry="200"
+                            fill="url(#grad)"
+                            filter="url(#blurOval)"
                         />
                     </svg>
                 </div>
@@ -67,13 +77,13 @@ const Welcome = () => {
             <div className="welcome__image__container">
                 <div style={{ position: "relative" }}>
                     <svg
-                        width="1000"
-                        height="1000"
-                        viewBox="0 0 1000 1000"
+                        width="1200"
+                        height="1200"
+                        viewBox="0 0 1200 1200"
                         style={{
                         position: "absolute",
-                        bottom: "-100px",    // ниже
-                        left: "100px",
+                        bottom: "-200px",    // ниже
+                        left: "0px",
                         zIndex: -1,
                         }}
                     >
@@ -87,8 +97,8 @@ const Welcome = () => {
                         </linearGradient>
                         </defs>
                         <ellipse
-                        cx="500"
-                        cy="500"
+                        cx="600"
+                        cy="600"
                         rx="300"
                         ry="200"
                         fill="url(#grad)"
