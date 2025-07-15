@@ -63,6 +63,7 @@ const SurveyPage = () => {
 
   // Grab correct page from array of received data
   if (status == "success") {
+    console.log(pagesData);
     const currentStepData = pagesData.find(
       (item) => item.step_current === `step-${surveyStep}`
     );
