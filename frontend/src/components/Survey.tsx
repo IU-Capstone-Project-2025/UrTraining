@@ -86,6 +86,13 @@ const Survey = (props: SurveyStep) => {
 
     return (
         <div className="survey basic-page">
+
+            <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+                <filter id="blurOval" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="60" />
+                </filter>
+            </svg>
+
             <div className="survey__box">
 
                 <div className="survey__navbar">
@@ -146,7 +153,8 @@ const Survey = (props: SurveyStep) => {
 
                     <div className="survey__info">
                         <div style={{ position: "relative" }}>
-                            <div className="assets__background__gradient" style={{ top: "0", left: "0" }}></div>
+                            <div className="assets__background__gradient" style={{ top: "0", left: "0", background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
+                            filter: 'url(#blurOval)' }}></div>
                         </div>
                         <div className="survey__info__description">
                             <div className="survey__title">

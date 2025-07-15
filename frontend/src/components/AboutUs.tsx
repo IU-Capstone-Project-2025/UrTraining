@@ -21,13 +21,21 @@ const AboutUs = ({ faqItems }: AboutUsProps) => {
   return (
     <div className="about-us basic-page">
 
+      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+          <filter id="blurOval" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="60" />
+          </filter>
+      </svg>
+
       {/* Левая часть — картинка */}
       <div className="faq__image__container">
         <img src={notebook} alt="notebook" />
       </div>
 
-      <div className="assets__background__gradient left-gradient" />
-      <div className="assets__background__gradient right-gradient" />
+      <div className="assets__background__gradient left-gradient" style={{ background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
+                    filter: 'url(#blurOval)' }} />
+      <div className="assets__background__gradient right-gradient" style={{ background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
+                    filter: 'url(#blurOval)' }} />
 
       {/* Правая часть — FAQ */}
       <div className="faq-section">

@@ -184,10 +184,18 @@ const AIUploadPage = () => {
 
   return (
     <div className="basic-page">
+
+      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+          <filter id="blurOval" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="60" />
+          </filter>
+      </svg>
+    
       <div style={{ position: "relative" }}>
         <div
           className="assets__background__gradient"
-          style={{ top: "0", left: "0" }}
+          style={{ top: "0", left: "0", background: 'linear-gradient(45deg, rgba(229, 46, 232, 0.2) 0%, rgba(32, 228, 193, 0.2) 100%)',
+                    filter: 'url(#blurOval)' }}
         ></div>
       </div>
 
