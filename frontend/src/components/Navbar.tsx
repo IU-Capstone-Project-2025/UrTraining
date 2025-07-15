@@ -111,15 +111,18 @@ const Navbar = (data: UserProp) => {
                 <img src={arrow} alt="" />
               </div>
             </Link>
-            <Link to={authData.access_token === "" ? "/signin" : "/upload-training"} onClick={() => setMenuOpen(!menuOpen)}>
+            <Link to={authData.access_token === "" ? "/signin" : "/upload-training"} 
+                  style={data.trainer_profile === null ? { display: "none" } : {}} 
+                  onClick={() => setMenuOpen(!menuOpen)}
+            >
               <div className='navbar__mobile__link'>
                 <h3>Upload</h3>
                 <img src={arrow} alt="" />
               </div>
             </Link>
-            <Link to="http://t.me/mescudiway" onClick={() => setMenuOpen(!menuOpen)}>
+            <Link to="/about-us" onClick={() => setMenuOpen(!menuOpen)}>
               <div className='navbar__mobile__link'>
-                <h3>About Us</h3>
+                <h3>FAQ</h3>
                 <img src={arrow} alt="" />
               </div>
             </Link>
