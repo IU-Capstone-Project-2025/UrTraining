@@ -103,6 +103,9 @@
     border-radius: 999rem;
     filter: blur(6rem);
     overflow: hidden;
+
+    -webkit-mask-image: radial-gradient(circle, white 60%, transparent 100%);
+    mask-image: radial-gradient(circle, white 60%, transparent 100%);
 }
 
 .assets__background__image {
