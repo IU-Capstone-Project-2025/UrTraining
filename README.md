@@ -155,14 +155,14 @@ cd ml/course-assistant
 # Run any script or training notebook as needed
 ```
 
-### 6. Smart Assistant (for the training uploading)
+### 7. Trainer Assistant (for the training uploading)
 ```bash
 cd ml/course-checker
 pip install -r requirements.txt
 # Run any script or training notebook as needed
 ```
 
-### 7. Environment Variables
+### 8. Environment Variables
 
 Set environment variables for backend/frontend via .env files:
 
