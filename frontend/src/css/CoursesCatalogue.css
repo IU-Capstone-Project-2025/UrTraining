@@ -148,6 +148,19 @@
     font-size: 1rem;
 }
 
+.catalogue__course__progress {
+    padding: 0.5rem 0;
+    border-top: 1px solid #e9ecef;
+    margin-top: 0.5rem;
+}
+
+.catalogue__course__progress span {
+    font-family: "TT Travels Bold", sans-serif;
+    font-size: 0.9rem;
+    color: #28a745;
+    font-weight: 600;
+}
+
 
 @media (max-width: 900px) {
     .catalogue__filter-controls {

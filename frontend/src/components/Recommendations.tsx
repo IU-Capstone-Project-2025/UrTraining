@@ -18,7 +18,11 @@ const Recommendations = (data: any) => {
                         <Link
                             to={`/course/${course.id}`} key={course.id}
                         >
-                            <CourseCard {...transformRawCourseData(course)} />
+                            <CourseCard 
+                                {...transformRawCourseData(course)}
+                                progressPercentage={undefined}
+                                isSaved={false}
+                            />
                         </Link>
                     ))}
                 </div>
