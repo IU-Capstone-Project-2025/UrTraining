@@ -90,6 +90,68 @@ Our AI-based system matches users with training programs created by verified coa
 
 Implemented features:
 
+- Main page with Sign In and Sign Up buttons for trainers and clients
+
+![main](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/main_page.png)
+
+- Registration process
+
+![re-login](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/logfix.gif) 
+
+- Questionnaire for users to generate recommendations
+
+![client_survey](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/client_survey.gif)
+
+- AI-powered recommendation engine
+
+![main](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/client_recomendation.png)
+
+- Client profile
+
+![profile](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/client_profilee.gif)
+
+- Training catalog with filtering
+
+![catalog](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/catalog.gif)
+
+- Course card
+
+![card](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/card1.png)
+![card](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/card2.png)
+
+- Save functionality
+
+![save](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/save.gif)
+
+- Simple tracking system
+
+![tracking1](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/tracking1.png)
+![tracking2](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/tracking2.png)
+
+- Questionnaire for trainers
+
+![trainer_survey](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/trainer_survey.gif)
+
+- Trainer profile
+
+![trainer_profile](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/trainer_profile.gif)
+
+- Course metadata information
+
+![metadata](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/course_step1.gif)
+
+- Manual course creation
+
+![upload_manualy](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/course_step2.gif)
+
+- Training upload from photo
+
+![upload_photo](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/photo_upload.gif)
+
+- FAQ page
+
+![FAQ](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/FAQ.gif)
+
 ---
 
 ## Deploy
