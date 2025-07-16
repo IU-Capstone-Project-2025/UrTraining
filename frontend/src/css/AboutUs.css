@@ -91,8 +91,9 @@
   .about-us {
     flex-direction: column;
     padding: 2rem 1rem;
-    padding-top: 700px;
+    padding-top: 110px;
     gap: 24px;
+    height: auto;
   }
 
   /* Hide the large side‑image on phones */
