@@ -31,7 +31,8 @@ Our AI-based system matches users with training programs created by verified coa
 
 ### Frontend
 - **React** – Component-based UI development
-- **shadcn/ui** – Reusable UI components
+- **vite** – Fast build- and dev-server for service
+- **Nginx** - Serve built frontend vite-application to users
 
 ### Backend
 - **FastAPI** – High-performance Python backend
@@ -45,9 +46,6 @@ Our AI-based system matches users with training programs created by verified coa
 - **PyTorch, Transformers** -  Fine-tuned, pre-trained models hosting
 - **OpenAI-like APIs** - LLMs integration
 - **sentence_transformers** - embedding models training
-
-### Storage
-- **Cloudinary / Supabase / AWS S3** – For storing images, files, and training PDFs
 
 ---
 
