@@ -41,10 +41,10 @@ Our AI-based system matches users with training programs created by verified coa
 - **GitHub Actions** – CI/CD pipeline
 
 ### ML
-- **FAISS** - Vector storage library 
-— **PyTorch, Transformers** -  Fine-tuned, pre-trained models hosting
-— **OpenAI-like APIs** - LLMs integration
-— **sentence_transformers** - embedding models training
+- **FAISS** - Vector storage library
+- **PyTorch, Transformers** -  Fine-tuned, pre-trained models hosting
+- **OpenAI-like APIs** - LLMs integration
+- **sentence_transformers** - embedding models training
 
 ### Storage
 - **Cloudinary / Supabase / AWS S3** – For storing images, files, and training PDFs
