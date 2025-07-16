@@ -116,9 +116,11 @@ cd urtraining
 cd backend
 python -m venv venv
 source venv/bin/activate     # or .\venv\Scripts\activate on Windows
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+docker-compose build
+docker-compose up -d
 ```
+
+Server will be accessible at **port 8000**.
 
 ### 3. Frontend Setup (React + Tailwind)
 ```bash
@@ -127,32 +129,52 @@ npm install
 npm run dev
 ```
 
-### 4. ML Module (for recommendation engine)
+### 4. Vector Database (for recommendation engine)
 ```bash
-cd ml
+cd ml/vector-db
+docker-compose build
+docker-compose up -d
+# Run any script or training notebook as needed
+```
+
+Endpoints will be accessible at **port 1337**.
+
+### 5. Image2tracker Module
+```bash
+cd ml/image2tracker
+docker-compose build
+docker-compose up -d
+# Run any script or training notebook as needed
+```
+
+Endpoints will be accessible at **port 1338**.
+
+### 6. Smart Assistant (for the course card)
+```bash
+cd ml/course-assistant
+# Run any script or training notebook as needed
+```
+
+### 6. Smart Assistant (for the training uploading)
+```bash
+cd ml/course-checker
 pip install -r requirements.txt
 # Run any script or training notebook as needed
 ```
 
-### 5. Environment Variables
+### 7. Environment Variables
 
 Set environment variables for backend/frontend via .env files:
 
 
 **backend/.env**
 
-**frontend/.env**
+**frontend/.env.local**
 
 **Hint:** copy ```.env.example``` to ```.env``` and fill in the required data before running the project.
 
 
 (Templates will be provided later)
 
-### Project Deployment
-To run full stack with Docker:
-
-```bash
-docker-compose up --build
-```
 
 
