@@ -82,3 +82,70 @@
   top: 90%;
   right: -300px; 
 }
+
+/* --------------------------------------------
+   Mobile styles for screens ≤ 600px
+--------------------------------------------- */
+@media screen and (max-width: 600px) {
+  /* Stack everything vertically and tighten padding */
+  .about-us {
+    flex-direction: column;
+    padding: 2rem 1rem;
+    padding-top: 700px;
+    gap: 24px;
+  }
+
+  /* Hide the large side‑image on phones */
+  .faq__image__container {
+    display: none;
+  }
+
+  /* Make FAQ section full‑width with no left margin */
+  .faq-section {
+    max-width: 100%;
+    width: 80%;
+    margin-left: 5;
+    margin-right: 5;
+    align-items: center;
+  }
+
+  /* Center the heading and shrink it a bit */
+  .faq-section h2 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  /* Tighter, more touch‑friendly spacing on each item */
+  .faq-item {
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 24px;
+  }
+
+  /* Slightly smaller question text and toggle icon */
+  .faq-question {
+    font-size: 1rem;
+  }
+  .faq-toggle {
+    font-size: 20px;
+  }
+
+  /* Make the expanded answer span the full width and reset left indent */
+  .faq-answer {
+    font-size: 0.9rem;
+    margin-left: 0 !important;
+    max-height: none; /* let JS handle the slide open */
+  }
+
+  /* Re‑position your gradient decorations if needed */
+  .left-gradient {
+    left: -150px;
+    top: -50px;
+  }
+  .right-gradient {
+    right: -150px;
+    top: 100%;
+  }
+
+}
