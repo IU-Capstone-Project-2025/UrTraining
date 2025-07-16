@@ -377,3 +377,75 @@ export async function uploadFilesForAI(imageBase64: String) {
         throw error;
     }
 }
+
+// Training Progress API requests
+export async function getTrainingProgress(courseId: String, token: String): Promise<any> {
+    try {
+        const resp = await axios.get(`${endpoint}/progress/${courseId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function updateTrainingProgress(courseId: String, itemNumber: number, token: String): Promise<any> {
+    try {
+        const resp = await axios.post(`${endpoint}/progress/update`, {
+            course_id: courseId,
+            item_number: itemNumber
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function resetTrainingProgress(courseId: String, token: String): Promise<any> {
+    try {
+        const resp = await axios.post(`${endpoint}/progress/reset`, {
+            course_id: courseId
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function getAllTrainingProgress(token: String): Promise<any> {
+    try {
+        const resp = await axios.get(`${endpoint}/progress/`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}

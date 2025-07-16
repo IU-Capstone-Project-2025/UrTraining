@@ -6,13 +6,14 @@ import { transformRawCourseData } from "../utils/transformRawCouseData"
 import { useSaveProgram, useDeleteFromSavedPrograms, useDeleteTrainingData } from "../api/mutations";
 import { currentTrainingDataRequest, isTrainingSaved, isTrainingCreatedByUser } from "../api/apiRequests";
 import AuthContext from "../components/context/AuthContext";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 
 const CoursePage = () => {
 
     const { courseId } = useParams();
     const authData = useContext(AuthContext);
+    const queryClient = useQueryClient();
 
     const saveProgram = useSaveProgram(authData.access_token);
     const deleteFromSavedPrograms = useDeleteFromSavedPrograms(authData.access_token);
@@ -58,6 +59,9 @@ const CoursePage = () => {
             onSuccess: (data) => {
                 setSavedStatus(true);
                 console.log(data.message);
+                
+                // Invalidate saved courses cache to update catalogue
+                queryClient.invalidateQueries({ queryKey: ['savedCourses'] });
             },
             onError: (error) => {
                 console.error("Error when saving:", error);
@@ -71,6 +75,9 @@ const CoursePage = () => {
             onSuccess: (data) => {
                 setSavedStatus(false)
                 //console.log(data.message);
+                
+                // Invalidate saved courses cache to update catalogue
+                queryClient.invalidateQueries({ queryKey: ['savedCourses'] });
             },
             onError: (error) => {
                 console.error("Error when deleting from saved:", error);

@@ -47,7 +47,12 @@ const MyCoursesPage = () => {
   return (
     <>
       {trainingsData.length > 0 ? (
-        <CourseCatalogue courses={trainingsData} title={title} />
+        <CourseCatalogue 
+          courses={trainingsData} 
+          title={title}
+          progressData={[]} // Other trainer's courses don't need progress tracking
+          savedCourses={[]} // Other trainer's courses tracking not relevant here
+        />
       ) : (
         <div className="centered-content">
             <div className="step-title-main">Oops...</div>

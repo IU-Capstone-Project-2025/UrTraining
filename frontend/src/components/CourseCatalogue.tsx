@@ -11,9 +11,11 @@ type CourseCatalogueProps = {
     title_top: string;
     title_bottom: string;
   };
+  progressData?: any[];
+  savedCourses?: any[];
 };
 
-const CourseCatalogue = React.memo(({ courses, title }: CourseCatalogueProps) => {
+const CourseCatalogue = React.memo(({ courses, title, progressData = [], savedCourses = [] }: CourseCatalogueProps) => {
   const [filteredCourses, setFilteredCourses] = useState<any[]>(() => courses);
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
@@ -67,12 +69,27 @@ const CourseCatalogue = React.memo(({ courses, title }: CourseCatalogueProps) =>
               return null;
             }
             
+            // Find progress for this course
+            const courseProgress = progressData.find((progress: any) => progress.course_id === course.id);
+            
+            // Check if course is saved
+            const isSaved = savedCourses.some((savedCourse: any) => savedCourse.id === course.id);
+            
+            // If course is saved but no progress record exists, show 0%
+            const progressPercentage = isSaved 
+              ? (courseProgress?.progress_percentage ?? 0) 
+              : courseProgress?.progress_percentage;
+            
             return (
               <Link
                 to={`/course/${course.id}`} 
                 key={course.id}
               >
-                <CourseCard {...transformRawCourseData(course)} />
+                <CourseCard 
+                  {...transformRawCourseData(course)} 
+                  progressPercentage={progressPercentage}
+                  isSaved={isSaved}
+                />
                 {(index % 5 == 0) &&
                   <div style={{ position: "relative" }}>
                     <svg
