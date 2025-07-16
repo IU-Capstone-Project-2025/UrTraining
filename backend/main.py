@@ -15,6 +15,7 @@ from typing import Optional, List, Dict
 from enum import Enum
 import json
 import os
+import re
 
 # Database imports
 from app.database import engine
@@ -175,10 +176,30 @@ class TrainingProfileUpdate(BaseModel):
 class UserDataUpdate(BaseModel):
     username: Optional[str] = Field(None, min_length=3, max_length=50)
     full_name: Optional[str] = Field(None, min_length=2, max_length=100)
-    email: Optional[str] = None
+    email: Optional[str] = Field(None, min_length=5, max_length=100, description="Valid email address")
     country: Optional[CountryEnum] = None
     city: Optional[CityEnum] = None
     training_profile: Optional[TrainingProfileUpdate] = None
+    
+    @validator('email')
+    def validate_email(cls, v):
+        """Validate email format"""
+        if v is None:
+            return v
+            
+        # Check if email is empty or whitespace only
+        if not v or not v.strip():
+            raise ValueError('Email cannot be empty')
+        
+        # Remove whitespace
+        v = v.strip()
+        
+        # Basic email format validation
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(email_pattern, v):
+            raise ValueError('Please enter a valid email address')
+        
+        return v.lower()  # Convert to lowercase for consistency
     
     @validator('city')
     def validate_city_country_match(cls, city, values):
@@ -502,6 +523,26 @@ def put_user_data(
         
         # Update basic user information if provided
         if data.username is not None or data.full_name is not None or data.email is not None or data.country is not None or data.city is not None:
+            # Check if new email is already taken by another user
+            if data.email and data.email != current_user["email"]:
+                from app.crud import get_user_by_email
+                existing_user = get_user_by_email(db, data.email)
+                if existing_user and existing_user.id != current_user["id"]:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="Email already registered by another user"
+                    )
+            
+            # Check if new username is already taken by another user
+            if data.username and data.username != current_user["username"]:
+                from app.crud import get_user_by_username
+                existing_user = get_user_by_username(db, data.username)
+                if existing_user and existing_user.id != current_user["id"]:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="Username already taken by another user"
+                    )
+            
             updated_user = update_user_profile(
                 db, 
                 current_user["id"], 
