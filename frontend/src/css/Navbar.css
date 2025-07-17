@@ -7,7 +7,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 3;
+    z-index: 100;
     padding: 2rem 6rem;
     box-sizing: border-box;
     backdrop-filter: blur(5px);
@@ -138,5 +138,7 @@
         height: 100vh;
 
         background-color: #f3f3f3;
+
+        z-index: 99;
     }
 }
