@@ -1,6 +1,6 @@
 import uuid
 import typing as tp
-from openai import OpenAI
+from openai import AsyncOpenAI
 from openai.types.chat.chat_completion import ChatCompletion
 
 from util import format_initial_user_prompt
@@ -8,8 +8,8 @@ from models import CourseAssistantRequest, CourseAssistantResponse
 from prompts import COURSE_ASSISTANT_PROMPT as prompt
 
 class CourseAssistant:
-    def __init__(self, client: OpenAI, model: str) -> None:
-        self.client: OpenAI = client
+    def __init__(self, client: AsyncOpenAI, model: str) -> None:
+        self.client: AsyncOpenAI = client
         self.model: str = model
         self.sessions: tp.Dict[uuid.UUID, tp.List[tp.Dict[str, str]]] = {}
 
@@ -86,7 +86,7 @@ class CourseAssistant:
                 )
         return plan_str
 
-    def chat(self, request: CourseAssistantRequest) -> CourseAssistantResponse:
+    async def chat(self, request: CourseAssistantRequest) -> CourseAssistantResponse:
         session: tp.List[tp.Dict[str, str]] = self._get_session(request.session_id)
 
         if not session:
@@ -106,7 +106,7 @@ class CourseAssistant:
         else:
             session.append({"role": "user", "content": request.query})
 
-        response: ChatCompletion = self.client.chat.completions.create(
+        response: ChatCompletion = await self.client.chat.completions.create(
             model=self.model,
             messages=session,
         )
@@ -120,4 +120,4 @@ class CourseAssistant:
 
         self.sessions[request.session_id] = session
 
-        return CourseAssistantResponse(answer=response.choices[0].message.content)
+        return CourseAssistantResponse(answer=response.choices[0].message.content, session_id=request.session_id)

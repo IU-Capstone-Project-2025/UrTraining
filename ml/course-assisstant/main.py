@@ -1,7 +1,7 @@
 import os
 import fastapi
 import uvicorn
-from openai import OpenAI
+from openai import AsyncOpenAI
 from models import CourseAssistantRequest
 from selection_assistent import CourseAssistant
 
@@ -10,9 +10,9 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable is not set")
 
-MODEL_ID = os.getenv("MODEL_ID", "gpt-3.5-turbo")
+MODEL_ID = os.getenv("MODEL_ID", "google/gemma-3-27b-it")
 
-client = OpenAI(api_key=OPENAI_API_KEY, base_url="https://api.kluster.ai/v1")
+client = AsyncOpenAI(api_key=OPENAI_API_KEY, base_url="https://api.kluster.ai/v1")
 
 app = fastapi.FastAPI()
 course_assistant_instance = CourseAssistant(client, MODEL_ID)
