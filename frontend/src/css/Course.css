@@ -347,6 +347,10 @@
   margin-top: 30px;
 }
 
+.course__coach__mobile {
+  display: none;
+}
+
 @media screen and (max-width: 900px) {
   .course__container {
     background-color: #00000000;
@@ -447,5 +451,27 @@
 
   .course__structure__mobile {
     display: flex;
+  }
+
+  .course__coach {
+    display: none;
+  }
+
+  .course__coach__mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .mobile__generate {
+    padding: 0;
+  }
+
+  .mobile__display {
+    display: none;
+  }
+
+  .button-row, .editor-actions {
+    margin: 0;
   }
 }

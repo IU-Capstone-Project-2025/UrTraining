@@ -122,15 +122,16 @@ const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, 
   };
 
   return (
-    <div className="course basic-page" onDoubleClick={stopEditing}>
-      <button className="btn-ai-generate" onClick={() => navigate('/ai-upload')}>
-        <span className="ai-icon">✨</span>
-        Generate with AI
-        <span className="ai-sparkle">⚡</span>
-      </button>
+    <div className="course basic-page mobile__generate" onDoubleClick={stopEditing}>
+
       <div className="course__container">
         <h2 className="step-title">Step 2: Course Plan</h2>
-        <div className='course__info'>
+        <button className="btn-ai-generate" onClick={() => navigate('/ai-upload')}>
+          <span className="ai-icon">✨</span>
+          Generate with AI
+          <span className="ai-sparkle">⚡</span>
+        </button>
+        <div className='course__info mobile__display'>
           <div className='course__info__title'>
             <div className='course__info__text'>
               <input
@@ -148,7 +149,7 @@ const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, 
         </div>
 
         {/* Редактор структуры тренировки */}
-        <div className='course__structure'>
+        <div className='course__structure mobile__display'>
           <div className='course__structure__header'>
             <h3>Course Structure</h3>
             <button onClick={addTrainingDay} className="btn-basic-white">

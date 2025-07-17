@@ -1,3 +1,8 @@
+.ai-upload {
+  overflow: hidden;
+  height: auto;
+}
+
 .ai-upload-container {
   max-width: 900px;
   margin: 0 auto;
@@ -390,7 +395,7 @@
 
 /* Success Modal */
 .modal-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
@@ -401,6 +406,7 @@
   justify-content: center;
   z-index: 10000;
   backdrop-filter: blur(5px);
+  overflow: hidden;
 }
 
 .success-modal {
@@ -485,7 +491,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .ai-upload-container {
     padding: 10px;
     min-height: calc(100vh - 160px);
@@ -509,9 +515,9 @@
   .drop-zone {
     padding: 40px 20px;
   }
-  
-  .files-grid {
-    grid-template-columns: 1fr;
+
+  .file-name {
+    overflow: hidden;
   }
   
   .btn-ai-upload {

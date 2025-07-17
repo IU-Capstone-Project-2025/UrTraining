@@ -67,10 +67,15 @@ const Course: React.FC<CourseProps> = ({
     handleDeleteTraining,
     ...data
 }) => {
+    const [showAllSessions, setShowAllSessions] = useState(false)
     const scrollRef = useRef<HTMLDivElement>(null);
     const currentTrainerLink = `/catalogue/${data.coach_data.id}`;
 
     console.log(data);
+
+    const sessionsToRender = showAllSessions
+        ? data.training_plan
+        : data.training_plan.slice(0, 1)
 
     // Function for horizontal scroll
     // useEffect(() => {
@@ -221,7 +226,7 @@ const Course: React.FC<CourseProps> = ({
                     </div>
 
                     <div className='course__structure__container' ref={scrollRef}>
-                        {data.training_plan.map((training: any, index: number) => (
+                        {sessionsToRender.map((training: any, index: number) => (
                             <div key={index} className="course__structure__session">
                                 <div className="course__session__table">
                                     <div className="course__session__title">
@@ -253,7 +258,7 @@ const Course: React.FC<CourseProps> = ({
                     </div>
 
                     <div className='course__structure__container course__structure__mobile' ref={scrollRef}>
-                        {data.training_plan.map((training: any, index: number) => (
+                        {sessionsToRender.map((training: any, index: number) => (
                             <div key={index} className="course__structure__session">
                                 <div className="course__session__table">
                                     <div className="course__session__title">
@@ -272,7 +277,7 @@ const Course: React.FC<CourseProps> = ({
                                                 <div className="course__row__values">
                                                     <div className="course__row__info">
                                                         <p>{exercise.repeats === '-' ? 0 : exercise.repeats} reps</p>
-                                                        <img src={Dot} alt="" style={{width: '0.4rem', height: '0.4rem'}} />
+                                                        <img src={Dot} alt="" style={{ width: '0.4rem', height: '0.4rem' }} />
                                                         <p>{exercise.sets === '-' ? 0 : exercise.sets} sets</p>
                                                     </div>
 
@@ -302,12 +307,40 @@ const Course: React.FC<CourseProps> = ({
                     </div>
                 </div>
 
+                <button
+                    className="btn-basic-black"
+                    onClick={() => setShowAllSessions(prev => !prev)}
+                >
+                    {showAllSessions ? 'Show Less' : 'Show More'}
+                </button>
+
                 <div className='course__coach'>
                     <div className='course__coach__title'>
                         <h2>About coach:</h2>
                     </div>
                     <div className='course__coach__picture'>
                         <img src={data.coach_data.profile_picture} alt="pfp" />
+                    </div>
+                    <Link to={currentTrainerLink} state={{ authorName: data.coach_data.username }}>
+                        <div className='course__coach__info'>
+                            <div className='course__coach__name'>
+                                <h2>{data.coach_data.username}</h2>
+                            </div>
+                            <div className='course__coach__rating'>
+                                <img src={star} alt="" />
+                                <p>{data.coach_data.rating}/5</p>
+                                <p>{data.coach_data.reviews} reviews</p>
+                            </div>
+                        </div>
+                    </Link>
+                </div>
+
+                <div className='course__coach course__coach__mobile'>
+                    <div className='course__coach__picture'>
+                        <img src={data.coach_data.profile_picture} alt="pfp" />
+                    </div>
+                    <div className='course__coach__title'>
+                        <h2>About coach:</h2>
                     </div>
                     <Link to={currentTrainerLink} state={{ authorName: data.coach_data.username }}>
                         <div className='course__coach__info'>

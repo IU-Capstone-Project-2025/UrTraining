@@ -183,7 +183,7 @@ const AIUploadPage = () => {
   };
 
   return (
-    <div className="basic-page">
+    <div className="ai-upload basic-page">
       
       <div style={{ position: "relative" }}>
           <svg

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import TrainingEditor from "../components/CourseEditor";
+import CourseEditor from "../components/CourseEditor";
 import Metadata from "../components/Metadata";
 import "../css/UploadTrainingPage.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -201,7 +201,7 @@ const UploadTrainingPage = () => {
                 {step === "editor" && (
                     <>
 
-                        <TrainingEditor
+                        <CourseEditor
                             savedData={savedData}
                             setSavedData={setSavedData}
                             onBack={prevStep}
