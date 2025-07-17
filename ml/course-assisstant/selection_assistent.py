@@ -3,7 +3,7 @@ import typing as tp
 from openai import OpenAI
 from openai.types.chat.chat_completion import ChatCompletion
 
-from utils import format_initial_user_prompt
+from util import format_initial_user_prompt
 from models import CourseAssistantRequest, CourseAssistantResponse
 from prompts import COURSE_ASSISTANT_PROMPT as prompt
 

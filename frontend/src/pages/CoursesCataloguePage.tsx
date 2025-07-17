@@ -4,7 +4,7 @@ import { transformRawCourseData } from '../utils/transformRawCouseData';
 import '../css/CoursesCatalogue.css';
 import CourseCatalogue from '../components/CourseCatalogue';
 import AuthContext from "../components/context/AuthContext";
-import { trainingsDataRequest, userInfoRequest } from "../api/apiRequests";
+import { trainingsDataRequest, userInfoRequest, getAllTrainingProgress, getSavedCoursesRequest } from "../api/apiRequests";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { data, useNavigate } from 'react-router-dom';
@@ -39,6 +39,24 @@ const CoursesCataloguePage = React.memo(() => {
     refetchOnWindowFocus: false,
   })
 
+  // Get user's progress data
+  const { data: progressData = [], isLoading: progressLoading } = useQuery({
+    queryKey: ['allProgress'],
+    queryFn: () => getAllTrainingProgress(authData.access_token),
+    enabled: authData.access_token !== "",
+    staleTime: 2 * 60 * 1000, // 2 минуты
+    refetchOnWindowFocus: false,
+  })
+
+  // Get user's saved courses
+  const { data: savedCourses = [], isLoading: savedLoading } = useQuery({
+    queryKey: ['savedCourses'],
+    queryFn: () => getSavedCoursesRequest(authData.access_token),
+    enabled: authData.access_token !== "",
+    staleTime: 2 * 60 * 1000, // 2 минуты
+    refetchOnWindowFocus: false,
+  })
+
   useEffect(() => {
     if (userData === undefined)
       navigate("/signin")
@@ -58,7 +76,12 @@ const CoursesCataloguePage = React.memo(() => {
 
   return (
     <>
-      <CourseCatalogue courses={trainingsData} title={title} />
+      <CourseCatalogue 
+        courses={trainingsData} 
+        title={title}
+        progressData={progressData}
+        savedCourses={savedCourses}
+      />
     </>
   );
 });
