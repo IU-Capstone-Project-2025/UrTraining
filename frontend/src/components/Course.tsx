@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, useContext } from 'react';
 import { saveProgram, getTrainingProgress, updateTrainingProgress, resetTrainingProgress } from '../api/apiRequests';
 import { Link } from 'react-router-dom';
 import Dot from '../assets/Dot.svg'
-import AuthContext from './context/';
+import AuthContext from './context/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface Badge {
