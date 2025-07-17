@@ -10,11 +10,9 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable is not set")
 
-OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL")
 MODEL_ID = os.getenv("MODEL_ID", "gpt-3.5-turbo")
 
-
-client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_BASE_URL)
+client = OpenAI(api_key=OPENAI_API_KEY, base_url="https://api.kluster.ai/v1")
 
 app = fastapi.FastAPI()
 course_assistant_instance = CourseAssistant(client, MODEL_ID)
