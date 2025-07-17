@@ -1,6 +1,13 @@
 import star from '../assets/star.svg';
 
-const CourseCard = (data: any) => {
+interface CourseCardProps {
+  course_info: any;
+  header_badges: any;
+  progressPercentage?: number;
+  isSaved?: boolean;
+}
+
+const CourseCard = (data: CourseCardProps) => {
   return (
     <div className='catalogue__course__card'>
         <div className='catalogue__course__tags'>
@@ -37,6 +44,13 @@ const CourseCard = (data: any) => {
              ({data.course_info.reviews} reviews)
           </span>
       </div>
+
+      {/* Progress indicator - only show if training is saved */}
+      {data.isSaved && typeof data.progressPercentage === 'number' && (
+        <div className='catalogue__course__progress'>
+          <span>Progress: {data.progressPercentage.toFixed(0)}%</span>
+        </div>
+      )}
     </div>
   );
 };

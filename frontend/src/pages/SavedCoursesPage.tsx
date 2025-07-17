@@ -4,7 +4,7 @@ import { transformRawCourseData } from '../utils/transformRawCouseData';
 import '../css/CoursesCatalogue.css';
 import CourseCatalogue from '../components/CourseCatalogue';
 import AuthContext from "../components/context/AuthContext";
-import { getMyTrainingsRequest, getSavedCoursesRequest, userInfoRequest } from "../api/apiRequests";
+import { getMyTrainingsRequest, getSavedCoursesRequest, userInfoRequest, getAllTrainingProgress } from "../api/apiRequests";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { data, useNavigate } from 'react-router-dom';
@@ -36,6 +36,15 @@ const SavedCoursesPage = () => {
     refetchOnWindowFocus: true, // Обновляем при фокусе окна
   })
 
+  // Get user's progress data
+  const { data: progressData = [], isLoading: progressLoading } = useQuery({
+    queryKey: ['allProgress'],
+    queryFn: () => getAllTrainingProgress(authData.access_token),
+    enabled: authData.access_token !== "",
+    staleTime: 2 * 60 * 1000, // 2 минуты
+    refetchOnWindowFocus: false,
+  })
+
   const title = {title_top: "Saved trainings:", title_bottom: ""}
 
   if (isLoading) return <div className="centered-content">
@@ -46,7 +55,12 @@ const SavedCoursesPage = () => {
   return (
     <>
       {trainingsData.length > 0 ? (
-        <CourseCatalogue courses={trainingsData} title={title} />
+        <CourseCatalogue 
+          courses={trainingsData} 
+          title={title}
+          progressData={progressData}
+          savedCourses={trainingsData} // All courses on this page are saved
+        />
       ) : (
         <div className="centered-content">
             <div className="step-title-main">Oops...</div>
