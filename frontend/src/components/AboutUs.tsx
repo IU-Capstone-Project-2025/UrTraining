@@ -25,7 +25,7 @@ const AboutUs = ({ faqItems }: AboutUsProps) => {
       <div className="faq__image__container">
         <img src={notebook} alt="notebook" />
         <div style={{ position: "relative" }}>
-          <svg
+          <svg  
               width="1600"
               height="1600"
               viewBox="0 0 1600 1600"
