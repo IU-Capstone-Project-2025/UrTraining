@@ -2,6 +2,7 @@ import os
 import fastapi
 import uvicorn
 from openai import AsyncOpenAI
+from fastapi.middleware.cors import CORSMiddleware
 from models import CourseAssistantRequest
 from selection_assistent import CourseAssistant
 
@@ -15,7 +16,24 @@ MODEL_ID = os.getenv("MODEL_ID", "google/gemma-3-27b-it")
 client = AsyncOpenAI(api_key=OPENAI_API_KEY, base_url="https://api.kluster.ai/v1")
 
 app = fastapi.FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 course_assistant_instance = CourseAssistant(client, MODEL_ID)
+
+@app.get("/")
+async def health_check():
+    return {"status": "healthy", "service": "course-assisstant"}
+
+
+def postprocess_response(response: str) -> str:
+    response = response.replace("```json", "").replace("```", "")
+    return response
 
 @app.post("/course-assistant-chat")
 async def course_assistant(request: CourseAssistantRequest):

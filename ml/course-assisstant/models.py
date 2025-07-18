@@ -15,3 +15,4 @@ class CourseAssistantRequest(BaseModel):
     query: str = Field(..., min_length=1, description="User query")
     user_form: str = Field(..., description="User form data")
     course_data: dict = Field(..., description="Course data in JSON format")
+    training_profile: dict = Field(..., description="User training profile data in JSON format")

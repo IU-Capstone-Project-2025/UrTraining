@@ -85,14 +85,61 @@ class CourseAssistant:
                     f"  ({exercise.get('description', 'without a description')})\n"
                 )
         return plan_str
+    
+    def _format_training_profile(self, profile: dict) -> str:
+        """Formats user training profile data"""
+        basic = profile.get("basic_information", {})
+        health = profile.get("health", {})
+        prefs = profile.get("preferences", {})
+        experience = profile.get("training_experience", {})
+        goals = profile.get("training_goals", [])
+        types = profile.get("training_types", {})
+
+        formatted = f"""
+    **User Profile:**
+
+    **Basic Information:**
+    - Age: {basic.get('age', 'N/A')}
+    - Gender: {basic.get('gender', 'N/A')}
+    - Height: {basic.get('height_cm', 'N/A')} cm
+    - Weight: {basic.get('weight_kg', 'N/A')} kg
+
+    **Health:**
+    - Chronic conditions: {"Yes" if health.get('chronic_conditions') else "No"}
+    - Joint/back problems: {"Yes" if health.get('joint_back_problems') else "No"}
+    - Details: {health.get('health_details', 'N/A')}
+
+    **Preferences:**
+    - Training location: {prefs.get('training_location', 'N/A')}
+    - Equipment: {prefs.get('location_details', 'N/A')}
+    - Session duration: {prefs.get('session_duration', 'N/A')}
+
+    **Training Experience:**
+    - Frequency (last 3 months): {experience.get('frequency_last_3_months', 'N/A')}
+    - Level: {experience.get('level', 'N/A')}
+
+    **Goals:**
+    - {', '.join(goals) or 'N/A'}
+
+    **Training Type Preferences (1–5 scale):**
+    - Cardio: {types.get('cardio', 'N/A')}
+    - Functional training: {types.get('functional_training', 'N/A')}
+    - HIIT: {types.get('hiit', 'N/A')}
+    - Strength training: {types.get('strength_training', 'N/A')}
+    - Stretching: {types.get('stretching', 'N/A')}
+    - Yoga/Pilates: {types.get('yoga_pilates', 'N/A')}
+    """.strip()
+
+        return formatted
 
     async def chat(self, request: CourseAssistantRequest) -> CourseAssistantResponse:
         session: tp.List[tp.Dict[str, str]] = self._get_session(request.session_id)
 
         if not session:
             formatted_course = self._format_course_data(request.course_data)
+            formatted_profile = self._format_training_profile(request.training_profile)
             prompt_with_course = prompt.format(
-                course_data=formatted_course,
+                course_data = formatted_course + "\n\n" + formatted_profile,
             )
             session.append({"role": "system", "content": prompt_with_course})
             session.append(

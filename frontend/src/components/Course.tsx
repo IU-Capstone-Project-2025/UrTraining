@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import Dot from '../assets/Dot.svg'
 import AuthContext from './context/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
+import ChatAssistant from './ChatAssistant';
 
 interface Badge {
     badge_text: string;
@@ -63,9 +64,11 @@ interface ProgressData {
   last_updated: string;
 }
 
-type CourseProps = TrainingData & {
+type CourseProps = {
     savedStatus?: boolean;
     isCreated?: boolean;
+    trainingData: TrainingData;
+    courseData: any;
     handleAddToSaved: () => void;
     handleDeleteFromSaved: () => void;
     handleDeleteTraining: () => void;
@@ -77,40 +80,40 @@ const Course: React.FC<CourseProps> = ({
     handleAddToSaved,
     handleDeleteFromSaved,
     handleDeleteTraining,
-    ...data
+    trainingData,
+    courseData
 }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
-    const currentTrainerLink = `/catalogue/${data.coach_data.id}`;
+    const currentTrainerLink = `/catalogue/${trainingData.coach_data.id}`;
     const authData = useContext(AuthContext);
     const queryClient = useQueryClient();
     
     const [progress, setProgress] = useState<ProgressData | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(true);
     const [completingItems, setCompletingItems] = useState<Set<number>>(new Set());
-
-    console.log(data);
-
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    
     // Load progress when component mounts and training is saved
     useEffect(() => {
-        if (authData?.access_token && data.id && savedStatus) {
+        if (authData?.access_token && trainingData.id && savedStatus) {
             loadProgress();
         } else if (savedStatus === false) {
             // Reset progress state if training is not saved
             setProgress(null);
         }
-    }, [authData?.access_token, data.id, savedStatus]);
+    }, [authData?.access_token, trainingData.id, savedStatus]);
 
     const loadProgress = async () => {
         try {
             setLoadingProgress(true);
-            const progressData = await getTrainingProgress(data.id, authData.access_token);
+            const progressData = await getTrainingProgress(trainingData.id, authData.access_token);
             setProgress(progressData);
         } catch (error) {
             console.error('Error loading progress:', error);
             // If error, create empty progress
             setProgress({
-                course_id: data.id,
-                total_items: data.training_plan?.length || 0,
+                course_id: trainingData.id,
+                total_items: trainingData.training_plan?.length || 0,
                 completed_items: [],
                 progress_percentage: 0,
                 last_completed_item: null,
@@ -127,7 +130,7 @@ const Course: React.FC<CourseProps> = ({
 
         try {
             setCompletingItems(prev => new Set(prev).add(itemIndex));
-            const response = await updateTrainingProgress(data.id, itemIndex, authData.access_token);
+            const response = await updateTrainingProgress(trainingData.id, itemIndex, authData.access_token);
             setProgress(response.progress);
             
             // Invalidate progress cache to update catalogue
@@ -150,8 +153,8 @@ const Course: React.FC<CourseProps> = ({
     const handleDeleteFromSavedWithReset = async () => {
         try {
             // First reset progress if exists
-            if (authData?.access_token && data.id && progress) {
-                await resetTrainingProgress(data.id, authData.access_token);
+            if (authData?.access_token && trainingData.id && progress) {
+                await resetTrainingProgress(trainingData.id, authData.access_token);
                 setProgress(null);
                 
                 // Invalidate progress cache to update catalogue
@@ -259,7 +262,7 @@ const Course: React.FC<CourseProps> = ({
 
             <div className="course__container">
                 <div className='course__tags'>
-                    {Object.entries(data.header_badges).map(([sectionKey, badges]: any) => (
+                    {Object.entries(trainingData.header_badges).map(([sectionKey, badges]: any) => (
                         <div
                             key={sectionKey}
                             className={`course__tags__type`}
@@ -281,21 +284,21 @@ const Course: React.FC<CourseProps> = ({
                     <div className='course__info__title'>
                         <div className='course__info__text'>
                             <div className='course__info__name'>
-                                <h2>{data.course_info.title}</h2>
+                                <h2>{trainingData.course_info.title}</h2>
                             </div>
-                            <Link to={currentTrainerLink} state={{ authorName: data.coach_data.username }}>
+                            <Link to={currentTrainerLink} state={{ authorName: trainingData.coach_data.username }}>
                                 <div className='course__info__author'>
-                                    <h3>by {data.course_info.author}</h3>
+                                    <h3>by {trainingData.course_info.author}</h3>
                                 </div>
                             </Link>
                         </div>
                         <div className='course__info__reviews'>
                             <img src={star} alt="" />
                             <p>
-                                {data.course_info.rating}/5
+                                {trainingData.course_info.rating}/5
                             </p>
                             <p>
-                                {data.course_info.reviews} reviews
+                                {trainingData.course_info.reviews} reviews
                             </p>
                         </div>
                     </div>
@@ -319,7 +322,7 @@ const Course: React.FC<CourseProps> = ({
                     )}
                     
                     <div className='course__info__description'>
-                        <p>{data.course_info.description}</p>
+                        <p>{trainingData.course_info.description}</p>
                         <h4></h4>
                     </div>
                 </div>
@@ -334,7 +337,7 @@ const Course: React.FC<CourseProps> = ({
                     </div>
 
                     <div className='course__structure__container' ref={scrollRef}>
-                        {data.training_plan.map((training: any, index: number) => (
+                        {trainingData.training_plan.map((training: any, index: number) => (
                             <div key={index} className="course__structure__session">
                                 <div className="course__session__table">
                                     <div className="course__session__title">
@@ -381,7 +384,7 @@ const Course: React.FC<CourseProps> = ({
                     </div>
 
                     <div className='course__structure__container course__structure__mobile' ref={scrollRef}>
-                        {data.training_plan.map((training: any, index: number) => (
+                        {trainingData.training_plan.map((training: any, index: number) => (
                             <div key={index} className="course__structure__session">
                                 <div className="course__session__table">
                                     <div className="course__session__title">
@@ -435,17 +438,17 @@ const Course: React.FC<CourseProps> = ({
                         <h2>About coach:</h2>
                     </div>
                     <div className='course__coach__picture'>
-                        <img src={data.coach_data.profile_picture} alt="pfp" />
+                        <img src={trainingData.coach_data.profile_picture} alt="pfp" />
                     </div>
-                    <Link to={currentTrainerLink} state={{ authorName: data.coach_data.username }}>
+                    <Link to={currentTrainerLink} state={{ authorName: trainingData.coach_data.username }}>
                         <div className='course__coach__info'>
                             <div className='course__coach__name'>
-                                <h2>{data.coach_data.username}</h2>
+                                <h2>{trainingData.coach_data.username}</h2>
                             </div>
                             <div className='course__coach__rating'>
                                 <img src={star} alt="" />
-                                <p>{data.coach_data.rating}/5</p>
-                                <p>{data.coach_data.reviews} reviews</p>
+                                <p>{trainingData.coach_data.rating}/5</p>
+                                <p>{trainingData.coach_data.reviews} reviews</p>
                             </div>
                         </div>
                     </Link>
@@ -468,6 +471,17 @@ const Course: React.FC<CourseProps> = ({
                     )}
                 </div>
             </div>
+
+            {isChatOpen && (
+                <ChatAssistant
+                onClose={() => setIsChatOpen(false)}
+                courseData={courseData}
+                />
+            )}
+
+            <button className="chat__fab" onClick={() => setIsChatOpen(true)}>
+                💬
+            </button>
         </div>
     )
 }

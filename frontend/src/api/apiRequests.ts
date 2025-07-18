@@ -13,6 +13,7 @@ type FlatFormData = { [key: string]: any };
 
 const endpoint = import.meta.env.VITE_API_URL;
 const ai_endpoint = import.meta.env.VITE_IMAGE2TRACKER_API_URL;
+const assistant_endpoint = import.meta.env.VITE_COURSE_ASSISTANT_API_URL;
 
 export async function userInfoRequest(token: String): Promise<UserProp> {
     try {
@@ -448,4 +449,36 @@ export async function getAllTrainingProgress(token: String): Promise<any> {
         }
         throw error;
     }
+}
+
+export async function sendCourseAssistantMessage(
+  sessionId: String,
+  query: String,
+  courseData: any,
+  trainingProfile: any,
+): Promise<any> {
+  try {
+    const resp = await axios.post(
+      `${assistant_endpoint}/course-assistant-chat`,
+      {
+        session_id: sessionId,
+        query,
+        user_form: "string",
+        course_data: courseData,
+        training_profile: trainingProfile,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+
+    return resp.data
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error
+    }
+    throw error
+  }
 }

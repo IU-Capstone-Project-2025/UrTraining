@@ -347,6 +347,10 @@
   margin-top: 30px;
 }
 
+.course__structure__mobile {
+  display: none;
+}
+
 @media screen and (max-width: 900px) {
   .course__container {
     background-color: #00000000;
@@ -542,4 +546,21 @@
     cursor: not-allowed;
     transform: none;
 
+}
+
+.chat__fab {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  color: white;
+  border: none;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  font-size: 24px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(22, 22, 22, 0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 999;
 }

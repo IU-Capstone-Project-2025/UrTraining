@@ -101,8 +101,9 @@ const CoursePage = () => {
     //console.log(courseData)
 
     return (
-        <Course 
-            {...training_data} 
+        <Course
+            courseData={courseData}
+            trainingData={training_data} 
             savedStatus={savedStatus}
             isCreated={createdStatus} 
             handleAddToSaved={handleAddToSaved} 

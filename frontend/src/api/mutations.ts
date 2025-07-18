@@ -9,7 +9,7 @@ import type {
 import type { AxiosError } from "axios";
 import { 
   signInRequest, signUpRequest, submitSurveyRequest, submitCoachDataRequest, 
-  submitNewTrainingRequest, saveProgram, deleteFromSavedPrograms, deleteTrainingData, logOutRequest
+  submitNewTrainingRequest, saveProgram, deleteFromSavedPrograms, deleteTrainingData, logOutRequest, sendCourseAssistantMessage
 } from "./apiRequests";
 import { useNavigate } from "react-router-dom";
 import type { AuthCredentialsTokens } from "../components/context/AuthContext";
@@ -134,3 +134,29 @@ export const useDeleteFromSavedPrograms = (token: String) => {
     }
   })
 };
+
+export const useAssistantChat = () => {
+  return useMutation({
+    mutationFn: (data: {
+      sessionId: String
+      query: String
+      courseData: any
+      trainingProfile: any
+    }) =>
+      sendCourseAssistantMessage(
+        data.sessionId,
+        data.query,
+        data.courseData,
+        data.trainingProfile,
+      ),
+
+    onSuccess: (response) => {
+      console.log('Assistant response:', response);
+      return response;
+    },
+
+    onError: (error) => {
+      console.error('Failed to send assistant message:', error);
+    },
+  })
+}
