@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
 from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
-from app.models.database_models import User, TrainingProfile, ActiveSession, Course, UserCourseProgress, Training, SavedProgram, TrainingProgress
+from app.models.database_models import User, TrainingProfile, ActiveSession, Course, UserCourseProgress, Training, SavedProgram, TrainingProgress, TrainingSchedule
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any
@@ -481,7 +481,18 @@ def is_program_saved_by_user(db: Session, user_id: int, training_id: int) -> boo
 
 def get_training_by_course_id(db: Session, course_id: str) -> Optional[Training]:
     """Получить тренировку по course_id"""
-    return db.query(Training).filter(Training.course_id == course_id).first()
+    training = db.query(Training).filter(Training.course_id == course_id).first()
+    if not training:
+        print(f"⚠️ Training with course_id '{course_id}' not found in database")
+    return training
+
+
+def get_available_course_ids(db: Session) -> List[str]:
+    """Получить список всех доступных course_id"""
+    trainings = db.query(Training.course_id, Training.course_title).all()
+    course_ids = [f"{t.course_id} ({t.course_title})" for t in trainings]
+    print(f"📋 Available course_ids: {course_ids}")
+    return [t.course_id for t in trainings]
 
 
 # Training Progress CRUD operations
@@ -631,4 +642,150 @@ def get_training_progress_by_course_id(db: Session, user_id: int, course_id: str
     if not training:
         return None
     
-    return get_training_progress(db, user_id, training.id) 
+    return get_training_progress(db, user_id, training.id)
+
+
+# ===== TRAINING SCHEDULE (TRACKER) CRUD FUNCTIONS =====
+
+def save_user_schedule(db: Session, user_id: int, schedule_data: List[Dict[str, Any]]) -> int:
+    """Сохранить расписание пользователя"""
+    try:
+        added_count = 0
+        
+        for item in schedule_data:
+            # Нормализуем дату: убираем лишние пробелы
+            normalized_date = item["date"].strip()
+            
+            # Проверяем, существует ли тренировка с таким course_id
+            training = get_training_by_course_id(db, item["course_id"])
+            if not training:
+                print(f"❌ Training not found for course_id: {item['course_id']}, skipping...")
+                continue
+            
+            # Проверяем, не существует ли уже такая запись
+            existing = db.query(TrainingSchedule).filter(
+                and_(
+                    TrainingSchedule.user_id == user_id,
+                    TrainingSchedule.course_id == item["course_id"],
+                    TrainingSchedule.date == normalized_date,
+                    TrainingSchedule.training_index == item["index"]
+                )
+            ).first()
+            
+            if not existing:
+                schedule_instance = TrainingSchedule(
+                    user_id=user_id,
+                    course_id=item["course_id"],
+                    date=normalized_date,
+                    training_index=item["index"]
+                )
+                db.add(schedule_instance)
+                added_count += 1
+                print(f"📅 Adding schedule: user={user_id}, course={item['course_id']}, date='{normalized_date}', index={item['index']}")
+            else:
+                print(f"ℹ️ Schedule already exists: user={user_id}, course={item['course_id']}, date='{normalized_date}', index={item['index']}")
+        
+        db.commit()
+        print(f"✅ Added {added_count} schedule instances for user {user_id}")
+        return added_count
+        
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Error saving schedule: {e}")
+        raise
+
+
+def get_user_schedule(db: Session, user_id: int, course_id: Optional[str] = None) -> List[TrainingSchedule]:
+    """Получить расписание пользователя, опционально фильтруя по course_id"""
+    query = db.query(TrainingSchedule).filter(TrainingSchedule.user_id == user_id)
+    
+    if course_id:
+        query = query.filter(TrainingSchedule.course_id == course_id)
+    
+    return query.order_by(TrainingSchedule.date, TrainingSchedule.training_index).all()
+
+
+def get_trainings_by_date(db: Session, user_id: int, date: str) -> List[Dict[str, Any]]:
+    """Получить все тренировки на конкретную дату"""
+    # Нормализуем дату: убираем лишние пробелы
+    normalized_date = date.strip()
+    
+    # Получаем все записи расписания для пользователя на эту дату
+    schedule_items = db.query(TrainingSchedule).filter(
+        and_(
+            TrainingSchedule.user_id == user_id,
+            TrainingSchedule.date == normalized_date
+        )
+    ).all()
+    
+    trainings = []
+    
+    for item in schedule_items:
+        # Получаем тренировку по course_id
+        training = get_training_by_course_id(db, item.course_id)
+        
+        if training and training.training_plan:
+            # Проверяем, что индекс не выходит за границы
+            if 0 <= item.training_index < len(training.training_plan):
+                training_day = training.training_plan[item.training_index]
+                
+                training_info = {
+                    "course_id": item.course_id,
+                    "course_title": training.course_title,
+                    "training_index": item.training_index,
+                    "training_day": training_day
+                }
+                trainings.append(training_info)
+    
+    return trainings
+
+
+def delete_user_schedule(db: Session, user_id: int, course_id: str) -> int:
+    """Удалить все расписание для конкретного курса пользователя"""
+    try:
+        deleted_count = db.query(TrainingSchedule).filter(
+            and_(
+                TrainingSchedule.user_id == user_id,
+                TrainingSchedule.course_id == course_id
+            )
+        ).count()
+        
+        db.query(TrainingSchedule).filter(
+            and_(
+                TrainingSchedule.user_id == user_id,
+                TrainingSchedule.course_id == course_id
+            )
+        ).delete()
+        
+        db.commit()
+        print(f"🗑️ Deleted {deleted_count} schedule instances for user {user_id}, course {course_id}")
+        return deleted_count
+        
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Error deleting schedule: {e}")
+        raise
+
+
+def get_user_calendar_dates(db: Session, user_id: int) -> List[str]:
+    """Получить все даты с тренировками для календаря пользователя"""
+    dates = db.query(TrainingSchedule.date).filter(
+        TrainingSchedule.user_id == user_id
+    ).distinct().order_by(TrainingSchedule.date).all()
+    
+    date_list = [date[0] for date in dates]
+    print(f"📅 Calendar dates for user {user_id}: {date_list}")
+    return date_list
+
+
+def debug_all_schedules(db: Session) -> None:
+    """Отладочная функция для просмотра всех записей в таблице training_schedule"""
+    all_schedules = db.query(TrainingSchedule).all()
+    print(f"🔍 DEBUG: Total records in training_schedule table: {len(all_schedules)}")
+    
+    if all_schedules:
+        print(f"📋 All schedule records:")
+        for item in all_schedules:
+            print(f"   - ID: {item.id}, User: {item.user_id}, Date: '{item.date}', Course: {item.course_id}, Index: {item.training_index}")
+    else:
+        print(f"❌ No records found in training_schedule table") 

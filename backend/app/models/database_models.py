@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, JSON, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, JSON, ForeignKey, UniqueConstraint, Index
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
@@ -216,4 +216,27 @@ class TrainingProgress(Base):
     # Уникальная комбинация пользователя и тренировки
     __table_args__ = (
         UniqueConstraint('user_id', 'training_id', name='unique_user_training_progress'),
+    ) 
+
+
+class TrainingSchedule(Base):
+    """
+    SQLAlchemy модель для расписания тренировок пользователей
+    """
+    __tablename__ = "training_schedule"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    course_id = Column(String, nullable=False)  # ID тренировочного плана
+    date = Column(String(10), nullable=False)   # формат "ДД.ММ.ГГГГ" 
+    training_index = Column(Integer, nullable=False)  # номер в training_plan (0, 1, 2...)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Связи
+    user = relationship("User")
+    
+    # Составной индекс для быстрого поиска
+    __table_args__ = (
+        Index('idx_user_date', 'user_id', 'date'),
+        Index('idx_user_course', 'user_id', 'course_id'),
     ) 
