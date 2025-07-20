@@ -7,7 +7,7 @@ on:
   pull_request:
     types: [closed]
     branches: [ "main" ]
-    paths: [ "ml/assisstant/**" ]
+    paths: [ "ml/course-assisstant/**" ]
 
 jobs:
   deploy:
