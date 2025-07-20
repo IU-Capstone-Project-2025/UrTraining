@@ -160,7 +160,78 @@ Fronted part is deployed [HERE](http://31.129.96.182/).
 
 Backend part is deployed [HERE](http://31.129.96.182:8000/).
 
-ML part is deployed [HERE](http://31.129.96.182:1337/).
+Vector database API is deployed [HERE](http://31.129.96.182:1337/).
+
+Image-to-tracker system API is deployed [HERE](http://31.129.96.182:1338/).
+
+Trainee assistant API is deployed [HERE](http://31.129.96.182:1340/).
+
+Assitant for schedule generation API is deployed [HERE](http://31.129.96.182:1341/).
+
+---
+
+## CI/CD Configurations
+
+All CI/CD files are located at ```.github/workflows```.
+
+### Pipeline Overview
+
+#### Deployment Targets
+| Service | Path | Technology | Deployment Method |
+|---------|------|------------|-------------------|
+| Backend | `backend/` | Docker | SSH + Docker Compose |
+| Frontend | `frontend/` | Vite + Nginx | SSH + File Copy |
+| Image2Tracker | `ml/image2tracker/` | Docker | SSH + Docker Compose |
+| Vector DB | `ml/vector-db/` | Docker | SSH + Docker Compose |
+| Course Assistant | `ml/course-assistant/` | Docker | SSH + Docker Compose |
+| Schedule Creator | `ml/schedule-creator/` | Docker | SSH + Docker Compose |
+
+### Workflow Configuration
+
+#### Common Structure
+All workflows share the same trigger pattern: pull request with ```main``` branch or push to this branch.
+```yaml
+on:
+  push:
+    branches: [ "main" ]
+    paths: [ "service_path/**" ]
+  pull_request:
+    types: [closed]
+    branches: [ "main" ]
+    paths: [ "service_path/**" ]
+```
+
+#### Key Components
+1. **Conditional Execution**:
+   ```yaml
+   if: |
+     github.event_name == 'push' ||
+     (github.event_name == 'pull_request' && github.event.pull_request.merged)
+   ```
+
+2. **SSH Deployment**:
+   ```yaml
+   uses: appleboy/ssh-action@v1.0.3
+   with:
+     host: ${{ secrets.SSH_HOST }}
+     username: ${{ secrets.SSH_USER }}
+     key: ${{ secrets.SSH_KEY }}
+   ```
+
+#### Server Requirements
+- Docker + Docker Compose installed
+- Nginx for frontend
+- SSH access configured 
+
+#### Log Locations
+```bash
+~/deploy-backend.log
+~/deploy-vector-db.log
+~/deploy-image2tracker.log
+~/deploy-course-assistant.log
+~/deploy-schedule-creator.log
+/var/log/nginx/error.log
+```
 
 ---
 
@@ -213,9 +284,12 @@ Endpoints will be accessible at **port 1338**.
 
 ### 6. Smart Assistant (for the course card)
 ```bash
-cd ml/course-assistant
-# Run any script or training notebook as needed
+cd ml/course-assisstant
+docker-compose build
+docker-compose up -d
 ```
+
+Endpoints will be accessible at **port 1340**.
 
 ### 7. Trainer Assistant (for the training uploading)
 ```bash
@@ -224,19 +298,29 @@ pip install -r requirements.txt
 # Run any script or training notebook as needed
 ```
 
-### 8. Environment Variables
+### 8. Schedule creator (schedule generation for the tracker system)
+```bash
+cd ml/course-checker
+docker-compose build
+docker-compose up -d
+```
 
-Set environment variables for backend/frontend via .env files:
+Endpoints will be accessible at **port 1341**.
+
+### 9. Environment Variables
+
+Set environment variables for backend/frontend/ml via .env files:
 
 
 **backend/.env**
 
 **frontend/.env.local**
 
-**Hint:** copy ```.env.example``` to ```.env``` and fill in the required data before running the project.
+**ml/course-assisstant/.env**
 
+**ml/schedule-creator/.env**
 
-(Templates will be provided later)
+**Hint:** copy ```.env.example``` or ```.env.production``` structure to ```.env``` and fill in the required data before running the project.
 
 
 
