@@ -21,6 +21,7 @@ const CoursePage = () => {
     const deleteTraining = useDeleteTrainingData(authData.access_token);
     const getScheduleFromAI = useGetScheduleFromAI();
     const sendSchedule = useSendSchedule(authData.access_token);
+    const [addStatus, setAddStatus] = useState<'idle' | 'loading' | 'success'>('idle')
  
     const { data: courseData = [], isLoading: isLoadingTraining, status } = useQuery<any, Error>({
         queryKey: ['formTraining'],
@@ -107,6 +108,7 @@ const CoursePage = () => {
     };
 
     const handleAddInSchedule = () => {
+        setAddStatus('loading');
         
         getScheduleFromAI.mutate(
             {
@@ -125,15 +127,19 @@ const CoursePage = () => {
                     sendSchedule.mutate(scheduleWithCourseId, {
                             onSuccess: (data) => {
                                 console.log(data);
+                                setAddStatus('success');
+                                setTimeout(() => setAddStatus('idle'), 2000);
                             },
                             onError: (error) => {
                                 console.error("Error when sending the schedule:", error);
+                                setAddStatus('idle');
                             }
                         }
                     );
                 },
                 onError: (error) => {
                     console.error("Error when adding in schedule:", error);
+                    setAddStatus('idle');
                 }
             }
         );
@@ -147,7 +153,8 @@ const CoursePage = () => {
             courseData={courseData}
             trainingData={training_data}
             savedStatus={savedStatus}
-            isCreated={createdStatus} 
+            isCreated={createdStatus}
+            addStatus={addStatus} 
             handleAddToSaved={handleAddToSaved} 
             handleDeleteFromSaved={handleDeleteFromSaved}
             handleDeleteTraining={handleDeleteTraining}

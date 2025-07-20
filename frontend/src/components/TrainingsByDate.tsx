@@ -101,7 +101,7 @@ const TrainingsByDate: React.FC<TrainingsByDateProps> = ({ trainings }) => {
                 {trainings.map((training, index) => (
                     <div key={index} className="training__structure__session">
                         <h2 className="training__course-title">{training.course_title}</h2>
-                        <h3 className="training__day-title">{training.training_day.title}</h3>
+                        <h3 className="training__day-title" style={{ opacity: '30%'}}>{training.training_day.title}</h3>
 
                         <div className="training__table__header">
                             {["Exercise", "Reps", "Sets", "Duration", "Rest", "Description"].map((h) => (
@@ -132,7 +132,7 @@ const TrainingsByDate: React.FC<TrainingsByDateProps> = ({ trainings }) => {
                 {trainings.map((training, index) => (
                     <div key={index} className="training__structure__session">
                         <h2 className="training__course-title">{training.course_title}</h2>
-                        <h3 className="training__day-title">{training.training_day.title}</h3>
+                        <h3 className="training__day-title" style={{ opacity: '30%'}}>{training.training_day.title}</h3>
 
                         {training.training_day.exercises.map((exercise, i) => (
                             <div key={i} className="training__table__row">
