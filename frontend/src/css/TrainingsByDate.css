@@ -1,0 +1,188 @@
+.trainings-by-date {
+    height: auto;
+    overflow: hidden;
+}
+
+.course__structure__header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    font-family: "TT Travels Bold", sans-serif;
+    font-size: 1.5rem;
+}
+
+.training__structure__container {
+    display: flex;
+    width: auto;
+    flex-direction: column;
+    gap: 2rem;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+}
+
+/* .course__structure__container::-webkit-scrollbar { 
+	display: none; 
+} */
+
+.training__structure__session {
+    min-width: 880px;
+
+    border-radius: 2rem;
+    padding: 2rem 2rem;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(22, 22, 22, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.training__session__table {
+    display: flex;
+    flex-direction: column;
+    max-height: 768px;
+    overflow-y: scroll;
+
+    border-radius: 2rem;
+    padding: 0 2rem;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(22, 22, 22, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.course__session__title {
+    font-family: "TT Travels Bold", sans-serif;
+    padding-top: 2rem;
+}
+
+.training__table__header,
+.training__table__row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 3fr;
+    align-items: center;
+}
+
+.training__table__header, .training__table__body {
+    padding: 2rem 0;
+}
+
+.training__table__header {
+    font-family: "TT Travels Medium", sans-serif;
+    font-size: 1rem;
+
+    border-bottom: 1px solid black;
+    box-sizing: border-box;
+}
+
+.training__table__body {
+    font-family: "TT Travels Regular", sans-serif;
+    font-size: 1rem;
+
+    display: grid;
+    gap: 1rem;
+}
+
+.training__table__cell {
+    padding: 0 1rem;
+}
+
+.course__array__button {
+  height: 3rem;
+  padding: 0rem;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.training__structure__mobile {
+  display: none;
+}
+
+@media screen and (max-width: 900px) {
+  .training__container {
+    background-color: #00000000;
+    box-shadow: none;
+    padding: 0;
+    gap: 2rem;
+  }
+
+  .training__structure__session {
+    border: 0px;
+  }
+
+  .training__session__table {
+    background: rgba(255, 255, 255, 0);
+    border: none;
+    box-shadow: none;
+
+    padding: 0;
+    height: auto;
+    max-height: none;
+  }
+
+  .training__structure__container {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .training__structure__session {
+    background: rgba(255, 255, 255, 0);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.0);
+    padding: 0px 0px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .training__table__row {
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(22, 22, 22, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+    padding: 1rem;
+    gap: 1rem;
+    
+    display: flex;
+    flex-direction: column;
+  }
+
+  .training__row__title {
+    width: 100%;
+    font-family: 'TT Travels Bold', sans-serif;
+  }
+
+  .training__row__info {
+    width: 100%;
+    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    align-items: center;
+    column-gap: 1rem;
+  }
+
+  .training__row__values, .training__row__rest, .training__row__description{
+    width: 100%;
+  }
+
+  .training__row__description {
+    font-family: 'TT Travels Bold', sans-serif;
+  }
+
+  .training__structure__mobile {
+    display: flex;
+  }
+
+}
+
+

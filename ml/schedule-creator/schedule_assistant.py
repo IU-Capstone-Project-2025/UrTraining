@@ -15,10 +15,13 @@ class TrackerAssistant:
         self.client = client
         self.model = model
 
-    def _format_data(self, training_plan: list, training_profile: dict, start_date: str) -> str:
+    def _format_data(self, weeks_number: int, training_plan: list, training_profile: dict, start_date: str) -> str:
         return f"""
 **Training Plan:**
 {training_plan}
+
+**Number of weeks:**
+{weeks_number}
 
 **Training Profile:**
 {training_profile}
@@ -32,7 +35,7 @@ class TrackerAssistant:
         logger.info(f"Request: {request}")
 
         formatted_input = self._format_data(
-            request.training_plan, request.training_profile, request.start_date
+            request.weeks_number, request.training_plan, request.training_profile, request.start_date
         )
 
         logger.info(f"Formatted input: {formatted_input}")

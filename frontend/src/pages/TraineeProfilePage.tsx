@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import Profile from '../components/Profile'
-import { userInfoRequest } from '../api/apiRequests';
+import { getAllScheduleRequest, userInfoRequest } from '../api/apiRequests';
 import TraineeProfile from '../components/TraineeProfile';
 import { useQuery } from '@tanstack/react-query';
 import AuthContext from '../components/context/AuthContext';
@@ -19,11 +19,14 @@ const TraineeProfilePage = () => {
     enabled: authData.access_token !== ""
   })
 
-  if (userDataStatus == "success") {
-    console.log(userData)
-  }
+  const { data: userSchedule, isLoading: userScheduleIsLoading, status: userScheduleStatus } = useQuery({
+    queryKey: ['mySchedule'],
+    queryFn: () => getAllScheduleRequest(authData.access_token),
+    enabled: authData.access_token !== ""
+  })
 
   const data_trainee = {
+    schedule: userSchedule,
     picture: "/images/kanyeeast.jpg",
     username: userData!.username,
     user_type: "trainee",
@@ -50,20 +53,24 @@ const TraineeProfilePage = () => {
     calendar_text: {
       text_top: " Welcome to a new day - let’s take one step closer to your goals today!",
       text_button_top: "View all training plans",
-      text_bottom: "",
+      text_bottom: "You can view all the amount of training plans - everything is in your hands",
       text_button_bottom: "View recommendations"
     },
     trainings_text: {
       text_top: "Do you have uncompleted trainings?",
       text_bottom: "Try all saved trainings now"
     },
+    today_text: {
+      text_top: "Let's check the trainings you have today!",
+      text_button: "See the trainings"
+    },
     upload_text: {
       text_top: "Add new preferences and goals to get better training experience",
-      text_button: "Get new personalized recommendation"
+      text_button: "Get new personalized plan"
     }
   }
 
-  if (userDataIsLoading) {
+  if (userDataIsLoading || userScheduleIsLoading) {
     return <div className="centered-content">
             <div className="step-title-main">Loading...</div>
            </div>

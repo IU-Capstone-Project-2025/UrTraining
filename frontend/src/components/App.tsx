@@ -23,10 +23,9 @@ import ProfilePage from '../pages/ProfilePage';
 import MyCoursesPage from '../pages/MyCoursesPage';
 import AIUploadPage from '../pages/AIUploadPage';
 import MetadataContext from './context/MetadataContext';
-import TrainerProfilePage from '../pages/TrainerProfilePage';
-import TraineeProfilePage from '../pages/TraineeProfilePage';
 import SavedCoursesPage from '../pages/SavedCoursesPage';
 import CurrentTrainerCoursesPage from '../pages/CurrentTrainerCoursesPage';
+import TrainingsByDatePage from '../pages/TrainingsByDatePage';
 
 const queryClient = new QueryClient()
 
@@ -82,6 +81,7 @@ const App = () => {
                 <Route path="upload-training" element={<UploadTrainingPage />} />
                 <Route path="ai-upload" element={<AIUploadPage />} />
                 <Route path="profile" element={<ProfilePage />} />
+                <Route path="calendar/:currentDate" element={<TrainingsByDatePage />} />
               </Route>
             </Routes>
           </BrowserRouter>

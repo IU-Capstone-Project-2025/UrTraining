@@ -5,12 +5,15 @@ import '../css/Profile.css'
 import { logOutRequest } from '../api/apiRequests'
 import { useNavigate } from 'react-router-dom'
 import AuthContext from './context/AuthContext'
+import TrainingCalendar from './TrainingCalendar';
 
 
 const TraineeProfile = (data: any) => {
 
     const authData = useContext(AuthContext)
     const navigate = useNavigate();
+    const today = new Date();
+    const formattedCurrentDate = today.toLocaleDateString('ru-RU');
 
     const grid_template = "'" + data.grid_template.join("' '") + "'"
 
@@ -178,13 +181,20 @@ const TraineeProfile = (data: any) => {
                     </div>
                     <div className='profile__calendar__option'>
                         <p>{data.calendar_text.text_top}</p>
-                        <button className='btn-basic-black' onClick={() => navigate("/catalogue")}>{data.calendar_text.text_button_top}</button>
-                    </div>
-                    <div className='profile__calendar__option'>
-                        <p>{data.calendar_text.text_bottom}</p>
-                        <button className='btn-basic-white' onClick={() => navigate("/recommendations")}>{data.calendar_text.text_button_bottom}</button>
+                        <TrainingCalendar
+                            schedule={data.schedule}
+                            onDateClick={(date: String) => navigate(`/calendar/${date}`)}
+                        />
+                    </div>                    
+                </div>
+
+                <div className='profile__frame profile__today' onClick={() => navigate(`/calendar/${formattedCurrentDate}`)}>
+                    <div className='profile__today__option'>
+                        <p>{data.today_text.text_top}</p>
+                        <button className='btn-basic-black'>{data.today_text.text_button}</button>
                     </div>
                 </div>
+
                 <div className='profile__frame profile__trainings' onClick={() => navigate("/saved-trainings")}>
                     <div className='profile__trainings__header'>
                         <p>{data.trainings_text.text_top}</p>
@@ -194,7 +204,16 @@ const TraineeProfile = (data: any) => {
                         <h3>{data.trainings_text.text_bottom}</h3>
                     </div>
                 </div>
+
                 <div className='profile__frame profile__upload'>
+
+                    <div className='profile__calendar__option'>
+                        <p>{data.calendar_text.text_bottom}</p>
+                        <button className='btn-basic-black' onClick={() => navigate("/catalogue")}>{data.calendar_text.text_button_top}</button>
+                    </div>            
+                    <div className='profile__calendar__option'>
+                        <button className='btn-basic-white' onClick={() => navigate("/recommendations")}>{data.calendar_text.text_button_bottom}</button>
+                    </div>
                     <div className='profile__upload__text'>
                         <p>{data.upload_text.text_top}</p>
                     </div>

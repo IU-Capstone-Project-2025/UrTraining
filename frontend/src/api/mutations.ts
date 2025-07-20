@@ -9,10 +9,13 @@ import type {
 import type { AxiosError } from "axios";
 import { 
   signInRequest, signUpRequest, submitSurveyRequest, submitCoachDataRequest, 
-  submitNewTrainingRequest, saveProgram, deleteFromSavedPrograms, deleteTrainingData, logOutRequest, sendCourseAssistantMessage
+  submitNewTrainingRequest, saveProgram, deleteFromSavedPrograms, deleteTrainingData, sendCourseAssistantMessage,
+  getScheduleFromAssistant,
+  sendScheduleRequest
 } from "./apiRequests";
 import { useNavigate } from "react-router-dom";
 import type { AuthCredentialsTokens } from "../components/context/AuthContext";
+import type { TrackerProp } from "../components/interface/TrackerInterface";
 
 // Mutation functions that is used for POST, PUT, DELETE, etc. requests
 // For GET requests, Mutation is not necessary and useQuery is more preferable
@@ -157,6 +160,45 @@ export const useAssistantChat = () => {
 
     onError: (error) => {
       console.error('Failed to send assistant message:', error);
+    },
+  })
+}
+
+export const useGetScheduleFromAI = () => {
+  return useMutation({
+    mutationFn: (data: {
+      weeks: number
+      trainingPlan: any
+      trainingProfile: any
+    }) =>
+      getScheduleFromAssistant(
+        data.weeks,
+        data.trainingPlan,
+        data.trainingProfile,
+      ),
+
+    onSuccess: (response) => {
+      console.log('Schedule was received succesfully:', response);
+      return response;
+    },
+
+    onError: (error) => {
+      console.error('Failed to get schedule from AI assistant:', error);
+    },
+  })
+}
+
+export const useSendSchedule = (token: String) => {
+  return useMutation({
+    mutationFn: (schedule: TrackerProp[]) => sendScheduleRequest(schedule, token),
+
+    onSuccess: (response) => {
+      console.log('Schedule was sended succesfully:', response);
+      return response;
+    },
+
+    onError: (error) => {
+      console.error('Failed to send schedule to server:', error);
     },
   })
 }

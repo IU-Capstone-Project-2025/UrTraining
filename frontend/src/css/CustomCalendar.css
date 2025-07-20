@@ -1,0 +1,96 @@
+
+.react-calendar {
+  width: 100%;
+  background: rgba(154, 151, 151, 0.05);
+  border: 1px solid rgba(22, 22, 22, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 2rem;
+  font-family: 'TT Travels Regular', sans-serif;
+  padding: 1rem;
+}
+
+.react-calendar__navigation {
+  font-family: 'TT Travels Regular', sans-serif;
+}
+
+.react-calendar__tile {
+  padding: 1rem 0.5rem;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.react-calendar__tile--now {
+  background-color: #e0e0e0;
+  font-weight: bold;
+  border-radius: 2rem;
+}
+
+.react-calendar__tile--active {
+  background-color: #e0e0e0;
+  color: inherit;
+  border-radius: 2rem;
+}
+
+.react-calendar__tile:enabled:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.react-calendar__tile.training-day {
+  position: relative;
+  color: black;
+  font-weight: bold;
+}
+
+/* Кружочек вокруг числа */
+.react-calendar__tile.training-day::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 37px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: black;
+  z-index: 0;
+}
+
+/* Сам текст должен быть поверх кружка */
+.react-calendar__tile.training-day abbr {
+  position: relative;
+  color: white;
+  z-index: 1;
+}
+
+@media screen and (max-width: 900px) {
+
+  .react-calendar__tile.training-day {
+    position: relative;
+    font-weight: normal;
+    color: inherit;
+    background-color: transparent;
+  }
+
+  .react-calendar__tile.training-day::before {
+    display: none;
+  }
+
+  .react-calendar__tile.training-day abbr {
+    color: inherit;
+  }
+
+  .react-calendar__tile.training-day::after {
+    content: "";
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: black;
+    border-radius: 50%;
+  } 
+}

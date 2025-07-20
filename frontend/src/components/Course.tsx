@@ -69,6 +69,7 @@ type CourseProps = {
     isCreated?: boolean;
     trainingData: TrainingData;
     courseData: any;
+    handleAddInSchedule: () => void;
     handleAddToSaved: () => void;
     handleDeleteFromSaved: () => void;
     handleDeleteTraining: () => void;
@@ -80,8 +81,9 @@ const Course: React.FC<CourseProps> = ({
     handleAddToSaved,
     handleDeleteFromSaved,
     handleDeleteTraining,
+    handleAddInSchedule,
     trainingData,
-    courseData
+    courseData,
 }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const currentTrainerLink = `/catalogue/${trainingData.coach_data.id}`;
@@ -463,6 +465,9 @@ const Course: React.FC<CourseProps> = ({
                         }
                     }}>
                         {savedStatus ? "Delete from saved" : "Save training"}
+                    </button>
+                    <button className="btn-basic-white" onClick={() => handleAddInSchedule()}>
+                        Add in schedule
                     </button>
                     {isCreated === true && (
                         <button className="btn-basic-red" onClick={() => handleDeleteTraining()}>

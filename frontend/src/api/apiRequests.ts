@@ -7,13 +7,15 @@ import type {
     SignUpSuccess,
 } from "../components/interface/interfaces";
 import type { SurveyProp } from "../components/interface/surveyInterface";
-import type { UserProp } from "../components/interface/userInterface";
+import type { TrainingProfile, UserProp } from "../components/interface/userInterface";
+import type { TrackerProp, TrackerWithDataProp } from "../components/interface/TrackerInterface"
 
 type FlatFormData = { [key: string]: any };
 
 const endpoint = import.meta.env.VITE_API_URL;
 const ai_endpoint = import.meta.env.VITE_IMAGE2TRACKER_API_URL;
 const assistant_endpoint = import.meta.env.VITE_COURSE_ASSISTANT_API_URL;
+const schedule_creatror_endpoint = import.meta.env.VITE_SCHEDULE_CREATOR_API_URL;
 
 export async function userInfoRequest(token: String): Promise<UserProp> {
     try {
@@ -38,7 +40,6 @@ export async function trainerDataRequest(token: String): Promise<FlatFormData> {
                 Authorization: `Bearer ${token}`,
             },
         });
-        console.log("бро красава")
         return resp.data;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -87,7 +88,6 @@ export async function trainingsDataRequest(token: String): Promise<any> {
                 Authorization: `Bearer ${token}`,
             },
         });
-        // console.log("бро красава")
         return resp.data;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -192,7 +192,6 @@ export async function currentTrainingDataRequest(courseId: String, token: String
                 Authorization: `Bearer ${token}`,
             },
         });
-        // console.log("бро красава")
         return resp.data;
     } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -481,4 +480,98 @@ export async function sendCourseAssistantMessage(
     }
     throw error
   }
+}
+
+function getCurrentDateString() {
+        const now = new Date();
+
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+
+        return `${day}.${month}.${year}`;
+    }
+
+export async function getScheduleFromAssistant(weeks: number, trainingPlan: any, trainingProfile: TrainingProfile) {
+
+    const today = new Date();
+
+    try {
+        const resp = await axios.post(
+            `${schedule_creatror_endpoint}/generate-tracker`,
+            {
+                weeks_number: weeks,
+                training_plan: trainingPlan,
+                training_profile: trainingProfile,
+                start_date: getCurrentDateString()
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        )
+        return resp.data;
+
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+
+}
+
+export async function sendScheduleRequest(schedule: TrackerProp[], token: String): Promise<TrackerProp[]> {
+
+    const today = new Date();
+
+    try {
+        const resp = await axios.post(`${endpoint}/tracker/schedule`, { schedule: schedule }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+        return resp.data;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function getAllScheduleRequest(token: String): Promise<TrackerProp[]> {
+
+    try {
+        const resp = await axios.get(`${endpoint}/tracker/schedule`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+        return resp.data.schedule;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
+}
+
+export async function getTrainingsByDateRequest(date: String, token: String): Promise<TrackerWithDataProp[]> {
+
+    try {
+        const resp = await axios.get(`${endpoint}/tracker/schedule/date/${date}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+        return resp.data.trainings;
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error) && error.response) {
+            throw error;
+        }
+        throw error;
+    }
 }

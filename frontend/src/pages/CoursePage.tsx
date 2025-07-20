@@ -3,11 +3,12 @@ import { useParams } from 'react-router-dom';
 import Course from "../components/Course"
 import kanye from '../assets/kanye.jpg'
 import { transformRawCourseData } from "../utils/transformRawCouseData"
-import { useSaveProgram, useDeleteFromSavedPrograms, useDeleteTrainingData } from "../api/mutations";
-import { currentTrainingDataRequest, isTrainingSaved, isTrainingCreatedByUser } from "../api/apiRequests";
+import { useSaveProgram, useDeleteFromSavedPrograms, useDeleteTrainingData, useGetScheduleFromAI, useSendSchedule } from "../api/mutations";
+import { currentTrainingDataRequest, isTrainingSaved, isTrainingCreatedByUser, userInfoRequest } from "../api/apiRequests";
 import AuthContext from "../components/context/AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
+import type { GeneratedTrackerProp, TrackerProp } from '../components/interface/TrackerInterface';
 
 const CoursePage = () => {
 
@@ -18,11 +19,19 @@ const CoursePage = () => {
     const saveProgram = useSaveProgram(authData.access_token);
     const deleteFromSavedPrograms = useDeleteFromSavedPrograms(authData.access_token);
     const deleteTraining = useDeleteTrainingData(authData.access_token);
-
+    const getScheduleFromAI = useGetScheduleFromAI();
+    const sendSchedule = useSendSchedule(authData.access_token);
+ 
     const { data: courseData = [], isLoading: isLoadingTraining, status } = useQuery<any, Error>({
         queryKey: ['formTraining'],
         queryFn: () => currentTrainingDataRequest(courseId as String, authData.access_token),
         enabled: !!authData?.access_token && !!courseId
+    })
+
+    const { data: userData, isLoading: userDataIsLoading, status: userDataStatus } = useQuery({
+        queryKey: ['me'],
+        queryFn: () => userInfoRequest(authData.access_token),
+        enabled: authData.access_token !== ""
     })
 
     const { data: isSaved, isLoading: isLoadingStatus, status: statusSaved } = useQuery({
@@ -97,18 +106,52 @@ const CoursePage = () => {
         });
     };
 
-    const training_data = transformRawCourseData(courseData);
-    //console.log(courseData)
+    const handleAddInSchedule = () => {
+        
+        getScheduleFromAI.mutate(
+            {
+                weeks: courseData["Course Duration (weeks)"],
+                trainingPlan: courseData.training_plan,
+                trainingProfile: userData?.training_profile,
+            },
+            {
+                onSuccess: (data) => {
+
+                    const scheduleWithCourseId: TrackerProp[] = data.schedule.map((item: GeneratedTrackerProp) => ({
+                        ...item,
+                        course_id: courseData.id,
+                    }));
+
+                    sendSchedule.mutate(scheduleWithCourseId, {
+                            onSuccess: (data) => {
+                                console.log(data);
+                            },
+                            onError: (error) => {
+                                console.error("Error when sending the schedule:", error);
+                            }
+                        }
+                    );
+                },
+                onError: (error) => {
+                    console.error("Error when adding in schedule:", error);
+                }
+            }
+        );
+
+    }; 
+
+    const training_data = transformRawCourseData(courseData);       
 
     return (
         <Course
             courseData={courseData}
-            trainingData={training_data} 
+            trainingData={training_data}
             savedStatus={savedStatus}
             isCreated={createdStatus} 
             handleAddToSaved={handleAddToSaved} 
             handleDeleteFromSaved={handleDeleteFromSaved}
-            handleDeleteTraining={handleDeleteTraining} 
+            handleDeleteTraining={handleDeleteTraining}
+            handleAddInSchedule={handleAddInSchedule} 
         />
     )
 }
