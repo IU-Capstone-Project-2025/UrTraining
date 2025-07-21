@@ -128,6 +128,10 @@ Implemented features:
 ![tracking1](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/tracking1.png)
 ![tracking2](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/tracking2.png)
 
+- Tracking schedule
+
+![Tracking schedule](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/TrackingSchedule.gif)
+
 - Questionnaire for trainers
 
 ![trainer_survey](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/trainer_survey.gif)
