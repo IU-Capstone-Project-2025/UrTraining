@@ -94,7 +94,7 @@ def extract_text_from_image(image_path: str) -> str:
         "max_tokens": 1500,
         "temperature": 0
     }
-    resp = requests.post("https://api.kluster.ai/v1/chat/completions", headers=HEADERS, json=payload)
+    resp = requests.post("https://api.together.xyz/v1/chat/completions", headers=HEADERS, json=payload)
     resp.raise_for_status()
     return resp.json()["choices"][0]["message"]["content"].strip()
 
@@ -172,7 +172,7 @@ def fill_form_with_llm(raw_text: str) -> dict:
     "max_tokens": 3500,
     "temperature": 0.0
 }   
-    resp = requests.post("https://api.kluster.ai/v1/chat/completions", headers=headers, json=payload)
+    resp = requests.post("https://api.together.xyz/v1/chat/completions", headers=headers, json=payload)
     resp.raise_for_status()
     text = resp.json()["choices"][0]["message"]["content"].strip()
 

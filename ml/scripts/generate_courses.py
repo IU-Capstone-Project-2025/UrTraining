@@ -18,7 +18,7 @@ KLUSTER_AI_TOKEN: str = os.getenv("KLUSTER_AI_TOKEN")
 NUM_PROGRAMS: int = 100
 
 client = OpenAI(
-    base_url="https://api.kluster.ai/v1",
+    base_url="https://api.together.xyz/v1",
     api_key=KLUSTER_AI_TOKEN,
 )
 

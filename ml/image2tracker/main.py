@@ -37,7 +37,7 @@ def postprocess_response(response: str) -> str:
 @app.post("/image2tracker")
 async def image2tracker(request: Image2TrackerRequest) -> Image2TrackerResponse:
     try:
-        client = OpenAI(api_key=OPENAI_API_KEY, base_url="https://api.kluster.ai/v1")
+        client = OpenAI(api_key=OPENAI_API_KEY, base_url="https://api.together.xyz/v1")
         image_base64 = request.image
 
         messages: List[Dict[str, Any]] = [

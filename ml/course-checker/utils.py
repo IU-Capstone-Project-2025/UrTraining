@@ -3,9 +3,8 @@ import os
 
 from fastapi import HTTPException
 
-# KLUSTER_API_KEY = os.environ.get("KLUSTER_API_KEY")
+KLUSTER_API_KEY = os.environ.get("KLUSTER_API_KEY")
 
-KLUSTER_API_KEY = "4202cfda-385f-4c65-b8ec-3be1677915af"
 if not KLUSTER_API_KEY:
     raise RuntimeError("KLUSTER_API_KEY environment variable not set")
 
@@ -24,7 +23,7 @@ def call_kluster_llm(model: str, messages: list, max_tokens: int = 3500, tempera
         "max_tokens": max_tokens,
         "temperature": temperature
     }
-    response = requests.post("https://api.kluster.ai/v1/chat/completions", headers=HEADERS, json=payload)
+    response = requests.post("https://api.together.xyz/v1/chat/completions", headers=HEADERS, json=payload)
     try:
         response.raise_for_status()
     except requests.HTTPError as e:

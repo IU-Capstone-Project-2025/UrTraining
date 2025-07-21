@@ -13,7 +13,7 @@ if not OPENAI_API_KEY:
 
 MODEL_ID = os.getenv("MODEL_ID", "google/gemma-7b-it")
 
-client = AsyncOpenAI(api_key=OPENAI_API_KEY, base_url="https://api.kluster.ai/v1")
+client = AsyncOpenAI(api_key=OPENAI_API_KEY, base_url="https://api.together.xyz/v1")
 
 app = fastapi.FastAPI()
 app.add_middleware(

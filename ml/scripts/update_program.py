@@ -73,7 +73,7 @@ def update_course_data(program_data_string: str, user_comments: str) -> str:
     }   
 
     # Send the POST request to the Kluster API
-    resp = requests.post("https://api.kluster.ai/v1/chat/completions", headers=HEADERS, json=payload)
+    resp = requests.post("https://api.together.xyz/v1/chat/completions", headers=HEADERS, json=payload)
     resp.raise_for_status()  # Raise an exception for HTTP errors
 
     # Extract and return the LLM's response content
