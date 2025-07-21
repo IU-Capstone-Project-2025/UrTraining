@@ -14,14 +14,6 @@ const MyCoursesPage = () => {
   const authData = useContext(AuthContext)
   const navigate = useNavigate();
 
-  // vvvvvvvvvvvv
-  // PLEASE FIX!!!
-  // PLEASE FIX!!!
-  // PLEASE FIX!!!
-  // PLEASE FIX!!!
-  // PLEASE FIX!!!
-  // vvvvvvvvvvvv
-
   const { data: userData, isLoading: userDataIsLoading, status: userDataStatus } = useQuery({
     queryKey: ['me'],
     queryFn: () => userInfoRequest(authData.access_token),

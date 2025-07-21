@@ -96,6 +96,8 @@
     text-decoration: none;
     transition: all 0.3s ease;
     flex-shrink: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 .catalogue__course__card:hover {

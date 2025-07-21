@@ -75,6 +75,14 @@
 
 }
 
+.placeholder {
+  padding-left: 30px;
+  padding-right: 30px;
+  text-align: center;
+  opacity: 50%;
+  font-family: "TT Travels", sans-serif;
+}
+
 .chat__input {
   display: flex;
   gap: 10px;

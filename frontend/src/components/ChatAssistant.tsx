@@ -108,15 +108,23 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ onClose, courseData }) =>
                     <button className="chat__button exit" onClick={() => onClose()}>✖</button>
                 </div>
                 <div className="chat__window">
-                {messages.map((msg, i) => (
-                    <div
-                    key={i}
-                    className={msg.role === "user" ? "message user" : "message bot"}
-                    >
-                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                {messages.length === 0 ? (
+                    <div className="placeholder">
+                        AI-powered assistant will answer all questions about this training course, from special diet to tips on proper technique and schedule making.  
                     </div>
-                ))}
-                {mutation.isPending && <div className="message bot">Typing...</div>}
+                ) : (
+                    <>
+                        {messages.map((msg, i) => (
+                            <div
+                                key={i}
+                                className={msg.role === "user" ? "message user" : "message bot"}
+                            >
+                                <ReactMarkdown>{msg.content}</ReactMarkdown>
+                            </div>
+                        ))}
+                        {mutation.isPending && <div className="message bot">Typing...</div>}
+                    </>
+                )}
                 </div>
 
                 <div className="chat__input">

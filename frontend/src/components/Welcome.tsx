@@ -7,16 +7,15 @@ const Welcome = () => {
     return (
         <div className="welcome basic-page">
 
-            <div className='welcome__info'>
-                <div style={{ position: "relative" }}>
+            <div style={{ position: "relative" }}>
                     <svg
                         width="1200"
                         height="1200"
                         viewBox="0 0 1200 1200"
                         style={{
                             position: "absolute",
-                            top: "-400px",
-                            right: "-500px",
+                            top: "-700px",
+                            right: "-600px",
                             zIndex: -1,
                             pointerEvents: "none"
                         }}
@@ -49,6 +48,8 @@ const Welcome = () => {
                         />
                     </svg>
                 </div>
+
+            <div className='welcome__info'>
 
                 <div className='welcome__info__text'>
                     <h1>

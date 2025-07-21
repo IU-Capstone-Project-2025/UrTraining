@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import AuthContext from "../components/context/AuthContext";
@@ -11,6 +11,7 @@ const TrainingsByDatePage = () => {
 
     const { currentDate } = useParams();
     const authData = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const { data : trainingsByDate = [], isLoading: isLoadingTraining, status } = useQuery<TrackerWithDataProp[], Error>({
         queryKey: ['trainingsThisDay'],
@@ -25,9 +26,21 @@ const TrainingsByDatePage = () => {
     }
 
     return(
-        <TrainingsByDate
-            trainings={trainingsByDate}
-        />
+        <>
+            {trainingsByDate.length > 0 ? (
+                <TrainingsByDate
+                    trainings={trainingsByDate}
+                />
+            ) : (
+                <div className="centered-content">
+                    <div className="step-title-main">Oops...</div>
+                    <p>You have no training sessions for today, so it's time for rest or looking for new workouts and plans!</p>
+                    <div className="button-group-welcome">
+                        <button className="btn-basic-black" onClick={() => navigate("/catalogue")}>Go to catalogue</button>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
 
