@@ -108,7 +108,7 @@ Implemented features:
 
 - Client profile
 
-![profile](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/client_profilee.gif)
+![profile](https://raw.githubusercontent.com/IU-Capstone-Project-2025/UrTraining/main/reports/static/new_client_profile.gif)
 
 - Training catalog with filtering
 
