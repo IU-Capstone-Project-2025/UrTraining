@@ -1,0 +1,171 @@
+import uuid
+import typing as tp
+
+from util import format_initial_user_prompt
+from models import CourseAssistantRequest, CourseAssistantResponse
+from prompts import COURSE_ASSISTANT_PROMPT as prompt
+
+class CourseAssistant:
+    def __init__(self, client, model: str) -> None:
+        self.client = client
+        self.model: str = model
+        self.sessions: tp.Dict[uuid.UUID, tp.List[tp.Dict[str, str]]] = {}
+
+    def _get_session(self, session_id: uuid.UUID) -> tp.List[tp.Dict[str, str]]:
+        if session_id not in self.sessions:
+            self.sessions[session_id] = []
+        return self.sessions[session_id]
+
+    def _format_course_data(self, course_data: dict) -> str:
+        """Formats course data into readable text"""
+        formatted = f"""
+**Basic information:**
+- Course name: {course_data.get('Course Title', 'N/A')}
+- Type of activity: {course_data.get('Activity Type', 'N/A')}
+- Coach: {course_data.get('Trainer Name', 'N/A')}
+- Language of the course: {course_data.get('Course Language', 'N/A')}
+
+**Program Details:**
+- Difficulty level: {course_data.get('Difficulty Level', 'N/A')}
+- Duration: {course_data.get('Course Duration (weeks)', 'N/A')} weeks
+- Training frequency: {course_data.get('Weekly Training Frequency', 'N/A')}
+- Average training duration:{course_data.get('Average Workout Duration', 'N/A')}
+- Objectives of the program: {', '.join(course_data.get('Program Goal', [])) or 'N/A'}
+- Training environment: {', '.join(course_data.get('Training Environment', [])) or 'N/A'}
+- Age group: {', '.join(course_data.get('Age Group', [])) or 'N/A'}
+- Gender orientation: {course_data.get('Gender Orientation', 'N/A')}
+- Physical limitations: {', '.join(course_data.get('Physical Limitations', [])) or 'Нет'}
+- Necessary equipment: {', '.join(course_data.get('Required Equipment', [])) or 'N/A'}
+
+**Ratings and statistics:**
+- Average course rating: {course_data.get('Average Course Rating', 'N/A')}
+- Number of reviews: {course_data.get('Number of Reviews', 0)}
+- Active participants: {course_data.get('Active Participants', 0)}
+
+**Trainer certification:**
+- Type: {course_data.get('Certification', {}).get('Type', 'N/A')}
+- Level: {course_data.get('Certification', {}).get('Level', 'N/A')}
+- Specialization: {course_data.get('Certification', {}).get('Specialization', 'N/A')}
+
+**Coach's experience:**
+- Experience {course_data.get('Experience', {}).get('Years', 'N/A')} years
+- Specialization: {course_data.get('Experience', {}).get('Specialization', 'N/A')}
+- Courses conducted: {course_data.get('Experience', {}).get('Courses', 'N/A')}
+- Coach's rating: {course_data.get('Experience', {}).get('Rating', 'N/A')}
+
+**Course Features:**
+- Visual content: {', '.join(course_data.get('Visual Content', [])) or 'N/A'}
+- Feedback formats: {', '.join(course_data.get('Trainer Feedback Options', [])) or 'N/A'}
+- Tags: {', '.join(course_data.get('Tags', [])) or 'N/A'}
+
+**Program description:**
+{course_data.get('Program Description', 'N/A')}
+
+**Training plan:**
+{self._format_training_plan(course_data.get('training_plan', []))}
+"""
+        return formatted.strip()
+
+    def _format_training_plan(self, training_plan: list) -> str:
+        """Formats the training plan"""
+        if not training_plan:
+            return "N/A"
+        
+        plan_str = ""
+        for day in training_plan:
+            plan_str += f"\n### {day.get('title', 'Untitled')}\n"
+            for exercise in day.get('exercises', []):
+                plan_str += (
+                    f"- {exercise.get('exercise', 'N/A')}: "
+                    f"{exercise.get('sets', 'N/A')} software approach(s)"
+                    f"{exercise.get('duration', 'N/A')}, "
+                    f"отдых {exercise.get('rest', 'N/A')}\n"
+                    f"  ({exercise.get('description', 'without a description')})\n"
+                )
+        return plan_str
+    
+    def _format_training_profile(self, profile: dict) -> str:
+        """Formats user training profile data"""
+        basic = profile.get("basic_information", {})
+        health = profile.get("health", {})
+        prefs = profile.get("preferences", {})
+        experience = profile.get("training_experience", {})
+        goals = profile.get("training_goals", [])
+        types = profile.get("training_types", {})
+
+        formatted = f"""
+    **User Profile:**
+
+    **Basic Information:**
+    - Age: {basic.get('age', 'N/A')}
+    - Gender: {basic.get('gender', 'N/A')}
+    - Height: {basic.get('height_cm', 'N/A')} cm
+    - Weight: {basic.get('weight_kg', 'N/A')} kg
+
+    **Health:**
+    - Chronic conditions: {"Yes" if health.get('chronic_conditions') else "No"}
+    - Joint/back problems: {"Yes" if health.get('joint_back_problems') else "No"}
+    - Details: {health.get('health_details', 'N/A')}
+
+    **Preferences:**
+    - Training location: {prefs.get('training_location', 'N/A')}
+    - Equipment: {prefs.get('location_details', 'N/A')}
+    - Session duration: {prefs.get('session_duration', 'N/A')}
+
+    **Training Experience:**
+    - Frequency (last 3 months): {experience.get('frequency_last_3_months', 'N/A')}
+    - Level: {experience.get('level', 'N/A')}
+
+    **Goals:**
+    - {', '.join(goals) or 'N/A'}
+
+    **Training Type Preferences (1–5 scale):**
+    - Cardio: {types.get('cardio', 'N/A')}
+    - Functional training: {types.get('functional_training', 'N/A')}
+    - HIIT: {types.get('hiit', 'N/A')}
+    - Strength training: {types.get('strength_training', 'N/A')}
+    - Stretching: {types.get('stretching', 'N/A')}
+    - Yoga/Pilates: {types.get('yoga_pilates', 'N/A')}
+    """.strip()
+
+        return formatted
+
+    async def chat(self, request: CourseAssistantRequest) -> CourseAssistantResponse:
+        session: tp.List[tp.Dict[str, str]] = self._get_session(request.session_id)
+
+        if not session:
+            formatted_course = self._format_course_data(request.course_data)
+            formatted_profile = self._format_training_profile(request.training_profile)
+            prompt_with_course = prompt.format(
+                course_data = formatted_course + "\n\n" + formatted_profile,
+            )
+            session.append({"role": "system", "content": prompt_with_course})
+            session.append(
+                {
+                    "role": "user",
+                    "content": format_initial_user_prompt(
+                        request.query, request.user_form
+                    ),
+                }
+            )
+        else:
+            session.append({"role": "user", "content": request.query})
+
+        print("📨 Incoming request:", request)    
+
+        try:
+            response = await self.client.create_completion(
+                model=self.model,
+                messages=session
+            )
+            print("📩 GigaChat raw response:", response)
+        except Exception as e:
+            import traceback
+            print("💥 Exception while calling GigaChat:", type(e).__name__, e)
+            traceback.print_exc()
+
+        message = response["choices"][0]["message"]["content"]
+        session.append({"role": "assistant", "content": message})
+        self.sessions[request.session_id] = session
+
+        return CourseAssistantResponse(answer=message, session_id=request.session_id)
