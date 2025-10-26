@@ -137,34 +137,27 @@ class CourseAssistant:
             formatted_course = self._format_course_data(request.course_data)
             formatted_profile = self._format_training_profile(request.training_profile)
             prompt_with_course = prompt.format(
-                course_data = formatted_course + "\n\n" + formatted_profile,
+                course_data=formatted_course + "\n\n" + formatted_profile,
             )
-            session.append({"role": "system", "content": prompt_with_course})
-            session.append(
-                {
-                    "role": "user",
-                    "content": format_initial_user_prompt(
-                        request.query, request.user_form
-                    ),
-                }
-            )
+            user_prompt = format_initial_user_prompt(request.query, request.user_form)
+            full_prompt = f"{prompt_with_course}\n\nUser: {user_prompt}"
         else:
-            session.append({"role": "user", "content": request.query})
+            full_prompt = request.query
 
-        print("📨 Incoming request:", request)    
+        print("📨 Sending prompt to GigaChat:", full_prompt)
 
         try:
-            response = await self.client.create_completion(
-                model=self.model,
-                messages=session
-            )
+            # Вызов метода chat у GigaChat SDK
+            response = self.client.chat(full_prompt)  # или chat_async() если async
             print("📩 GigaChat raw response:", response)
         except Exception as e:
             import traceback
             print("💥 Exception while calling GigaChat:", type(e).__name__, e)
             traceback.print_exc()
+            return CourseAssistantResponse(answer="Error occurred", session_id=request.session_id)
 
-        message = response["choices"][0]["message"]["content"]
+        # В SDK GigaChat ответ обычно в response.choices[0].message.content
+        message = response.choices[0].message.content
         session.append({"role": "assistant", "content": message})
         self.sessions[request.session_id] = session
 
