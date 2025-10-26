@@ -6,10 +6,12 @@ import { useContext } from "react";
 import AuthContext from '../components/context/AuthContext';
 import TraineeProfilePage from '../pages/TraineeProfilePage';
 import TrainerProfilePage from '../pages/TrainerProfilePage';
+import { useTranslation } from 'react-i18next';
 
 const ProfilePage = () => {
 
   const authData = useContext(AuthContext);
+  const { t } = useTranslation();
 
   const { data: trainerData = [], isLoading, status } = useQuery<any, Error>({
     queryKey: ['myTrainings'],
@@ -17,7 +19,7 @@ const ProfilePage = () => {
   })
 
   if (isLoading) return <div className="centered-content">
-                            <div className="step-title-main">Loading...</div>
+                            <div className="step-title-main">{t("catalogue.loading")}</div>
                         </div>
 
   if (status=="success" && trainerData.trainer_profile !== null) { console.log(trainerData.trainer_profile) }                      

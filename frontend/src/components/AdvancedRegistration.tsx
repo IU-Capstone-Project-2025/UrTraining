@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import type { StepsTotal, SurveyOption, SurveyStep } from './interface/surveyInterface';
 import SurveyPageContext from './context/SurveyPageContext';
 import { InputTemplates } from './InputTemplates'
@@ -6,6 +6,7 @@ import "../css/Survey.css"
 import type { InputField } from './interface/interfaces';
 import AuthContext from './context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface StepData {
     [key: string]: any;
@@ -16,25 +17,27 @@ const NavButtons = (props: SurveyStep, handleBack: any, handleContinue: any, han
     const first_step = props.steps_total[0].value
     const last_step = props.steps_total[props.steps_total.length - 1].value
 
+    const { t } = useTranslation();
+
     return (<>
         {
             props.step_current !== last_step ?
                 <button className="btn-basic-black" onClick={handleContinue}>
-                    Continue
+                    {t("survey.continue")}
                 </button> : ""
         }
 
         {
             props.step_current === last_step ?
                 <button className="btn-basic-black" onClick={handleSubmit}>
-                    Submit
+                    {t("survey.submit")}
                 </button> : ""
         }
 
         {
             props.step_current !== first_step ?
                 <button className="btn-basic-black" onClick={handleBack}>
-                    Back
+                    {t("survey.back")}
                 </button> : ""
         }
     </>)
@@ -43,9 +46,42 @@ const NavButtons = (props: SurveyStep, handleBack: any, handleContinue: any, han
 const AdvancedRegistration = (props: SurveyStep) => {
     const [savedData, setSavedData] = useState<StepData>({})
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const stepContext = useContext(SurveyPageContext)
+    const stepContext = useContext(SurveyPageContext);
+    const { t, i18n } = useTranslation();
 
     const navigate = useNavigate();
+
+    const [localizedForm, setLocalizedForm] = useState(props);
+    
+    useEffect(() => {
+    // вызывать каждый раз, когда меняется язык
+        setLocalizedForm(translateForm(props));
+    }, [props, i18n.language, t]);
+
+    const translateForm = (data: any): any => {
+        if (Array.isArray(data)) {
+        return data.map(item => translateForm(item));
+        } else if (typeof data === "object" && data !== null) {
+        const translated: Record<string, any> = {};
+
+        for (const [key, value] of Object.entries(data)) {
+            if (typeof value === "string") {
+            // переводим только ключевые поля
+            if (["title", "subtitle", "placeholder", "description"].includes(key)) {
+                translated[key] = t(`survey_form.${value}`, { defaultValue: value });
+            } else {
+                translated[key] = value;
+            }
+            } else {
+            translated[key] = translateForm(value);
+            }
+        }
+
+        return translated;
+        }
+
+        return data;
+    };
 
     const handleChange = (event: React.FormEvent<HTMLFormElement>) => {
         const target = event.target as HTMLInputElement;
@@ -75,9 +111,9 @@ const AdvancedRegistration = (props: SurveyStep) => {
             <div className='survey__box'>
 
                 <div className="survey__navbar">
-                    {props.steps_total.map((step: StepsTotal, value: number) => {
+                    {localizedForm.steps_total.map((step: StepsTotal, value: number) => {
                         return (
-                            <div key={value} className={step.value === props.step_current ? "survey__navbar__element survey__navbar__selected" : "survey__navbar__element"}>
+                            <div key={value} className={step.value === localizedForm.step_current ? "survey__navbar__element survey__navbar__selected" : "survey__navbar__element"}>
                                 <h3>{step.placeholder}</h3>
                             </div>
                         )
@@ -85,9 +121,9 @@ const AdvancedRegistration = (props: SurveyStep) => {
                 </div>
 
                 <div className="survey__navbar survey__mobile">
-                    {props.steps_total.map((step: StepsTotal, value: number) => {
+                    {localizedForm.steps_total.map((step: StepsTotal, value: number) => {
                         return (
-                            <div key={value} className={step.value === props.step_current ? "survey__navbar__element survey__navbar__selected" : "survey__navbar__element"}>
+                            <div key={value} className={step.value === localizedForm.step_current ? "survey__navbar__element survey__navbar__selected" : "survey__navbar__element"}>
                                 <h3>{step.value.substring(5)}</h3>
                             </div>
                         )
@@ -97,9 +133,9 @@ const AdvancedRegistration = (props: SurveyStep) => {
                 <div className="survey__container">
                     <div className="survey__options">
                         <div className="survey__title">
-                            {props.title}
+                            {localizedForm.title}
                         </div>
-                        {props.options.map((options_page: SurveyOption, value: number) => {
+                        {localizedForm.options.map((options_page: SurveyOption, value: number) => {
                             return (
                                 <div key={value} className="survey__options__section">
                                     <p>
@@ -127,7 +163,7 @@ const AdvancedRegistration = (props: SurveyStep) => {
                             )
                         })}
                         <div className="survey__info__button survey__mobile">
-                            {NavButtons(props, handleBack, handleContinue, handleSubmit)}
+                            {NavButtons(localizedForm, handleBack, handleContinue, handleSubmit)}
                         </div>
                     </div>
 
@@ -139,15 +175,15 @@ const AdvancedRegistration = (props: SurveyStep) => {
                         <div className="survey__info__description">
                             <div className="survey__title">
                                 <h2>
-                                    {props.information.title}
+                                    {localizedForm.information.title}
                                 </h2>
                             </div>
                             <p>
-                                {props.information.description}
+                                {localizedForm.information.description}
                             </p>
                         </div>
                         <div className="survey__info__button">
-                            {NavButtons(props, handleBack, handleContinue, handleSubmit)}
+                            {NavButtons(localizedForm, handleBack, handleContinue, handleSubmit)}
                         </div>
                     </div>
                 </div>

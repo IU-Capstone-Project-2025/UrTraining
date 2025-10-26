@@ -8,6 +8,7 @@ import Dot from '../assets/Dot.svg'
 import AuthContext from './context/AuthContext';
 import { useQueryClient } from '@tanstack/react-query';
 import ChatAssistant from './ChatAssistant';
+import { useTranslation } from 'react-i18next';
 
 interface Badge {
     badge_text: string;
@@ -91,6 +92,7 @@ const Course: React.FC<CourseProps> = ({
     const currentTrainerLink = `/catalogue/${trainingData.coach_data.id}`;
     const authData = useContext(AuthContext);
     const queryClient = useQueryClient();
+    const { t } = useTranslation();
     
     const [progress, setProgress] = useState<ProgressData | null>(null);
     const [loadingProgress, setLoadingProgress] = useState(true);
@@ -277,7 +279,7 @@ const Course: React.FC<CourseProps> = ({
                                     className="course__tag tag-basic-gray"
                                     style={{ boxShadow: `inset 0px 0px 0px 1.5px ${badge.badge_color}`, color: badge.badge_color }}
                                 >
-                                    <p>{badge.badge_text}</p>
+                                    <p>{t(`metadata_options.${badge.badge_text}`, { defaultValue: badge.badge_text }) as string}</p>
                                 </div>
                             ))}
                         </div>
@@ -292,7 +294,7 @@ const Course: React.FC<CourseProps> = ({
                             </div>
                             <Link to={currentTrainerLink} state={{ authorName: trainingData.coach_data.username }}>
                                 <div className='course__info__author'>
-                                    <h3>by {trainingData.course_info.author}</h3>
+                                    <h3> {t('course.by')} {trainingData.course_info.author}</h3>
                                 </div>
                             </Link>
                         </div>
@@ -302,7 +304,7 @@ const Course: React.FC<CourseProps> = ({
                                 {trainingData.course_info.rating}/5
                             </p>
                             <p>
-                                {trainingData.course_info.reviews} reviews
+                                {trainingData.course_info.reviews} {t('course.reviews')} 
                             </p>
                         </div>
                     </div>
@@ -311,9 +313,9 @@ const Course: React.FC<CourseProps> = ({
                     {!loadingProgress && progress && savedStatus && (
                         <div className='course__progress course__progress--centered'>
                             <div className='course__progress__header'>
-                                <h4>Training Progress</h4>
+                                <h4>{t('course.progress')}</h4>
                                 <span className='course__progress__percentage'>
-                                    {progress.completed_items.length} / {progress.total_items} completed ({progress.progress_percentage.toFixed(1)}%)
+                                    {progress.completed_items.length} / {progress.total_items} {t('course.completed_status')}  ({progress.progress_percentage.toFixed(1)}%)
                                 </span>
                             </div>
                             <div className='course__progress__bar'>
@@ -333,7 +335,7 @@ const Course: React.FC<CourseProps> = ({
 
                 <div className='course__structure'>
                     <div className='course__structure__header'>
-                        <h3>Course Structure</h3>
+                        <h3>{t('course.course_structure')}</h3>
                         {/* <div className='course__structure__options'>
                             <p>Option 1</p>
                             <p>Option 2</p>
@@ -354,16 +356,16 @@ const Course: React.FC<CourseProps> = ({
                                                 disabled={completingItems.has(index) || isItemCompleted(index)}
                                             >
                                                 {completingItems.has(index) 
-                                                    ? 'Completing...' 
+                                                    ? t('course.completing')
                                                     : isItemCompleted(index) 
-                                                        ? 'Completed ✓' 
-                                                        : 'Complete'
+                                                        ? t('course.completed')
+                                                        : t('course.complete')
                                                 }
                                             </button>
                                         )}
                                     </div>
                                     <div className="course__table__header">
-                                        {["Exercise", "Reps", "Sets", "Duration", "Rest", "Description"]
+                                        {(t('course.table_headers', { returnObjects: true }) as string[])
                                             .map(h => (
                                                 <div key={h} className="course__table__cell">
                                                     {h}
@@ -406,19 +408,19 @@ const Course: React.FC<CourseProps> = ({
 
                                                 <div className="course__row__values">
                                                     <div className="course__row__info">
-                                                        <p>{exercise.repeats === '-' ? 0 : exercise.repeats} reps</p>
+                                                        <p>{exercise.repeats === '-' ? 0 : exercise.repeats} {t("course.reps_mobile")}</p>
                                                         <img src={Dot} alt="" style={{width: '0.4rem', height: '0.4rem'}} />
-                                                        <p>{exercise.sets === '-' ? 0 : exercise.sets} sets</p>
+                                                        <p>{exercise.sets === '-' ? 0 : exercise.sets} {t("course.sets_mobile")}</p>
                                                     </div>
 
                                                     <div className="course__row__rest">
-                                                        <p>Time: {exercise.duration === '-' ? '0 sec' : exercise.duration}</p>
-                                                        <p>Rest: {exercise.rest === '-' ? '0 sec' : exercise.rest} between sets</p>
+                                                        <p>{t("course.time_mobile")} {exercise.duration === '-' ? '0 sec' : exercise.duration}</p>
+                                                        <p>{t("course.rest_mobile", {rest: exercise.rest === '-' ? '0 sec' : exercise.rest})}</p>
                                                     </div>
                                                 </div>
 
                                                 <div className="course__row__description">
-                                                    <h3>Description:</h3>
+                                                    <h3>{t("course.descript_mobile")}</h3>
                                                     <p>{exercise.description}</p>
                                                 </div>
 
@@ -439,7 +441,7 @@ const Course: React.FC<CourseProps> = ({
 
                 <div className='course__coach'>
                     <div className='course__coach__title'>
-                        <h2>About coach:</h2>
+                        <h2>{t("course.about")}</h2>
                     </div>
                     <div className='course__coach__picture'>
                         <img src={trainingData.coach_data.profile_picture} alt="pfp" />
@@ -452,7 +454,7 @@ const Course: React.FC<CourseProps> = ({
                             <div className='course__coach__rating'>
                                 <img src={star} alt="" />
                                 <p>{trainingData.coach_data.rating}/5</p>
-                                <p>{trainingData.coach_data.reviews} reviews</p>
+                                <p>{trainingData.coach_data.reviews} {t("course.reviews")}</p>
                             </div>
                         </div>
                     </Link>
@@ -466,7 +468,7 @@ const Course: React.FC<CourseProps> = ({
                             handleAddToSaved();
                         }
                     }}>
-                        {savedStatus ? "Delete from saved" : "Save training"}
+                        {savedStatus ? t("course.unsave") : t("course.save")}
                     </button>
                     <button 
                         className="btn-basic-white" 
@@ -474,14 +476,14 @@ const Course: React.FC<CourseProps> = ({
                         disabled={addStatus === 'loading'}
                     >
                         {addStatus === 'loading'
-                        ? 'Adding in schedule...'
+                        ? t("course.adding_to_sch")
                         : addStatus === 'success'
-                        ? 'Added successfully'
-                        : 'Add in schedule'}
+                        ? t("course.added_to_sch")
+                        : t("course.add_to_sch")}
                     </button>
                     {isCreated === true && (
                         <button className="btn-basic-red" onClick={() => handleDeleteTraining()}>
-                            Delete the training
+                            {t("course.delete")}
                         </button>
                     )}
                 </div>

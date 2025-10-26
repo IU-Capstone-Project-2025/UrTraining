@@ -5,11 +5,13 @@ import { userInfoRequest, getRecommendations } from '../api/apiRequests';
 import AuthContext from '../components/context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 const RecommendationsPage = () => {
 
   const authData = useContext(AuthContext)
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // vvvvvvvvvvvv
   // PLEASE FIX!!!
@@ -43,17 +45,17 @@ const RecommendationsPage = () => {
   })
 
   if (userDataIsLoading || recsIsLoading) {
-    return <div className="loading-spinner">Recommendation loading...</div>;
+    return <div className="loading-spinner">{t("catalogue.recomm_loading")}</div>;
   }
 
   if (recsError) {
     return (
       <div className="centered-content basic-page">
-        <div className="step-title-main">Oops...</div>
-        <p>Please fill the survey to get personalized recommendations. It takes only 2-3 minutes.</p>
+        <div className="step-title-main">{t("catalogue.oops")}</div>
+        <p>{t("catalogue.no_recomm")}</p>
         <div className="buttons">
-            <button className="btn-basic-black"><Link to={`/survey`}>Go to Survey</Link></button>
-            <button className="btn-basic-white"><Link to="/">Main menu</Link></button>
+            <button className="btn-basic-black"><Link to={`/survey`}>{t("catalogue.go_to_survey")}</Link></button>
+            <button className="btn-basic-white"><Link to="/">{t("catalogue.main_menu")}</Link></button>
         </div>
       </div>
     );

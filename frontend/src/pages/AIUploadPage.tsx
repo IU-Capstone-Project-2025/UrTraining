@@ -4,6 +4,7 @@ import AuthContext from "../components/context/AuthContext";
 import { uploadFilesForAI, submitNewTrainingRequest, userInfoRequest } from "../api/apiRequests";
 import "../css/AIUploadPage.css";
 import MetadataContext from "../components/context/MetadataContext";
+import { useTranslation } from "react-i18next";
 
 interface UploadedFile {
   file: File;
@@ -14,6 +15,7 @@ interface UploadedFile {
 const AIUploadPage = () => {
   const authData = useContext(AuthContext);
   const metadataContext = useContext(MetadataContext)
+  const { t } = useTranslation();
 
   const [dragActive, setDragActive] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -260,7 +262,7 @@ const AIUploadPage = () => {
       </div>
 
       <Link to="/upload-training" className="back-link">
-        <span className="back-arrow">←</span> Back to Creator
+        <span className="back-arrow">←</span> {t("ai_upload.back")}
       </Link>
 
       {/* Success Modal */}
@@ -268,7 +270,7 @@ const AIUploadPage = () => {
         <div className="modal-overlay" onClick={() => setShowSuccessModal(false)}>
           <div className="success-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>🎉 Course Generated Successfully!</h2>
+              <h2>🎉 {t("ai_upload.success")}</h2>
               <button
                 className="modal-close"
                 onClick={() => setShowSuccessModal(false)}
@@ -277,18 +279,18 @@ const AIUploadPage = () => {
               </button>
             </div>
             <div className="modal-content">
-              <p>Your AI-generated training course has been created and uploaded successfully!</p>
+              <p>{t("ai_upload.success_full")}</p>
               <div className="modal-actions">
                 {generatedCourseId && (
                   <Link to={`/course/${generatedCourseId}`} className="btn-basic-black">
-                    View Course
+                    {t("ai_upload.view")}
                   </Link>
                 )}
                 <button
                   className="btn-basic-white"
                   onClick={() => setShowSuccessModal(false)}
                 >
-                  Continue
+                  {t("upload_training.cont")}
                 </button>
               </div>
             </div>
@@ -300,11 +302,10 @@ const AIUploadPage = () => {
         <div className="ai-upload-header">
           <div className="ai-upload-title">
             <span className="ai-title-icon">🤖</span>
-            AI Course Generator
+            {t("ai_upload.title")}
           </div>
           <p className="ai-upload-subtitle">
-            Upload your training materials and let AI create a personalized
-            course for you
+            {t("ai_upload.subtitle")}
           </p>
         </div>
 
@@ -328,18 +329,18 @@ const AIUploadPage = () => {
 
             <div className="drop-zone-content">
               <div className="upload-icon">📁</div>
-              <h3>Drag & Drop your files here</h3>
-              <p>or click to browse files</p>
+              <h3>{t("ai_upload.todo")}</h3>
+              <p>{t("ai_upload.sub_todo")}</p>
               <div className="supported-formats">
-                <span>Supported formats: JPEG, PNG, GIF, WebP, PDF</span>
-                <span>Maximum size: 10MB per file</span>
+                <span>{t("ai_upload.formats")}</span>
+                <span>{t("ai_upload.max_size")}</span>
               </div>
             </div>
           </div>
 
           {uploadedFiles.length > 0 && (
             <div className="uploaded-files">
-              <h4>Uploaded Files ({uploadedFiles.length})</h4>
+              <h4>{t("ai_upload.uploaded")} ({uploadedFiles.length})</h4>
               <div className="files-grid">
                 {uploadedFiles.map((fileData) => (
                   <div key={fileData.id} className="file-item">
@@ -386,12 +387,12 @@ const AIUploadPage = () => {
               {isUploading ? (
                 <>
                   <span className="loading-spinner">⏳</span>
-                  Processing...
+                  {t("ai_upload.process")}
                 </>
               ) : (
                 <>
                   <span className="ai-icon">🚀</span>
-                  Generate Course with AI
+                  {t("ai_upload.action")}
                   <span className="ai-sparkle">✨</span>
                 </>
               )}

@@ -393,7 +393,7 @@
         "Difficulty Level": "Advanced",
         "Course Duration (weeks)": 10,
         "Weekly Training Frequency": "1-2 times",
-        "Average Workout Duration": "More than 60 minutes",
+        "Average Workout Duration": "60+ minutes",
         "Age Group": [
             "Teens (13-17)"
         ],
@@ -643,7 +643,7 @@
         "Difficulty Level": "Beginner",
         "Course Duration (weeks)": 10,
         "Weekly Training Frequency": "5-6 times",
-        "Average Workout Duration": "More than 60 minutes",
+        "Average Workout Duration": "60+ minutes",
         "Age Group": [
             "Adults (31-50)"
         ],
@@ -946,7 +946,7 @@
         "Difficulty Level": "Beginner",
         "Course Duration (weeks)": 2,
         "Weekly Training Frequency": "3-4 times",
-        "Average Workout Duration": "More than 60 minutes",
+        "Average Workout Duration": "60+ minutes",
         "Age Group": [
             "All Ages",
             "Young Adults (18-30)",
@@ -3268,7 +3268,7 @@
         "Difficulty Level": "Advanced",
         "Course Duration (weeks)": 2,
         "Weekly Training Frequency": "3-4 times",
-        "Average Workout Duration": "More than 60 minutes",
+        "Average Workout Duration": "60+ minutes",
         "Age Group": [
             "All Ages"
         ],

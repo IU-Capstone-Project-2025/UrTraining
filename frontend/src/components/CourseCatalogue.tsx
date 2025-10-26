@@ -4,6 +4,7 @@ import TagSearch from './TagSearch';
 import "../css/CoursesCatalogue.css";
 import { Link } from 'react-router-dom';
 import { transformRawCourseData } from '../utils/transformRawCouseData';
+import { useTranslation } from 'react-i18next';
 
 type CourseCatalogueProps = {
   courses: any[];
@@ -18,6 +19,7 @@ type CourseCatalogueProps = {
 const CourseCatalogue = React.memo(({ courses, title, progressData = [], savedCourses = [] }: CourseCatalogueProps) => {
   const [filteredCourses, setFilteredCourses] = useState<any[]>(() => courses);
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   // Обновляем фильтрованные курсы при изменении исходного списка
   React.useEffect(() => {
@@ -49,7 +51,7 @@ const CourseCatalogue = React.memo(({ courses, title, progressData = [], savedCo
             <span className="catalogue__toggle-filters-icon">
               {showFilters ? '▼' : '▶'}
             </span>
-            {showFilters ? 'Hide filtration' : 'Show filtration'}
+            {showFilters ? t("tag_search.hide") : t("tag_search.show") }
           </button>
         </div>
 
@@ -58,7 +60,7 @@ const CourseCatalogue = React.memo(({ courses, title, progressData = [], savedCo
         </div>
 
         <div className="catalogue__results-count">
-          Found {filteredCourses.length} training{filteredCourses.length !== 1 ? 's' : ''}
+          {t("tag_search.found", {num: filteredCourses.length})}
         </div>
 
         <div className="catalogue__grid">

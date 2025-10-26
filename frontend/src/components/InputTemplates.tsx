@@ -1,4 +1,5 @@
 // import React from 'react'
+import { useTranslation } from 'react-i18next';
 import type { InputField, SelectOption } from './interface/interfaces'
 
 interface ControlledInputField extends InputField {
@@ -39,6 +40,7 @@ export const TextInputTemplate = (props: ControlledInputField) => {
 }
 
 export const SelectInputTemplate = (props: ControlledInputField) => {
+    const { t } = useTranslation();
     return (
         <select
             id={props.id}
@@ -47,7 +49,7 @@ export const SelectInputTemplate = (props: ControlledInputField) => {
             value={props.value || "select"}
             onChange={props.onChange}
         >
-            <option disabled value={"select"}>Select... </option>
+            <option disabled value={"select"}>{t("survey.select")}</option>
             {props.options?.map((option: SelectOption, index: number) => (
                 <option key={index} value={option.value}>
                     {option.placeholder}

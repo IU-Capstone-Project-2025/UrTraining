@@ -6,10 +6,19 @@ import AuthContext from './context/AuthContext';
 import type { UserProp } from './interface/userInterface';
 import menu from '../assets/Menu.svg'
 import arrow from '../assets/arrow.svg'
+import { useTranslation } from 'react-i18next';
+import LanguageToggleButton from "./LanguageToggleButton";
+
 
 const Navbar = (data: UserProp) => {
   const authData = useContext(AuthContext)
   const [menuOpen, setMenuOpen] = useState(false);
+  const { t, i18n } = useTranslation();
+
+  const changeLang = (lang: 'en' | 'ru') => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('lang', lang);
+  };
 
   return (
     <>
@@ -25,20 +34,20 @@ const Navbar = (data: UserProp) => {
         </div>
         <div className='navbar__links'>
           <Link to={authData.access_token === "" ? "/signin" : "/profile"}>
-            Profile
+            {t('navbar.profile')}
           </Link>
           <Link to={authData.access_token === "" ? "/signin" : "/catalogue"}>
-            Catalogue
+            {t('navbar.catalogue')}
           </Link>
           <Link to={authData.access_token === "" ? "/signin" : "/recommendations"}>
-            Recommendations
+            {t('navbar.recommendations')}
           </Link>
           <Link to={authData.access_token === "" ? "/signin" : "/upload-training"} style={data.trainer_profile === null ? { display: "none" } : {}}
           >
-            Upload training
+            {t('navbar.upload')}
           </Link>
           <Link to="/about-us">
-            FAQ
+            {t('navbar.faq')}
           </Link>
         </div>
         <div className='navbar__user'>
@@ -48,12 +57,12 @@ const Navbar = (data: UserProp) => {
           >
             <Link to="/signin">
               <button className='btn-basic-white'>
-                Sign In
+                {t('navbar.signin')}
               </button>
             </Link>
             <Link to="/signup">
               <button className='btn-basic-black'>
-                Sign Up
+                {t('navbar.signup')}
               </button>
             </Link>
           </div>
@@ -61,8 +70,9 @@ const Navbar = (data: UserProp) => {
             className='navbar__user__data'
             style={authData.access_token === "" ? { display: "none" } : {}}
           >
-            <h2>Hello, {data?.username ?? "none"}</h2>
+            <Link to={authData.access_token === "" ? "/signin" : "/profile"}><h2>{t('navbar.hello')}, {data?.username ?? "none"}</h2></Link>
           </div>
+          <LanguageToggleButton />
         </div>
       </div>
 
@@ -74,12 +84,12 @@ const Navbar = (data: UserProp) => {
           >
             <Link to="/signin" onClick={() => setMenuOpen(!menuOpen)}>
               <button className='btn-basic-white'>
-                Sign In
+                {t('navbar.signin')}
               </button>
             </Link>
             <Link to="/signup" onClick={() => setMenuOpen(!menuOpen)}>
               <button className='btn-basic-black'>
-                Sign Up
+                {t('navbar.signup')}
               </button>
             </Link>
           </div>
@@ -87,25 +97,25 @@ const Navbar = (data: UserProp) => {
             className='navbar__user__data'
             style={authData.access_token === "" ? { display: "none" } : {}}
           >
-            <h2>Hello, {data?.username ?? "none"}</h2>
+            <h2>{t('navbar.hello')}, {data?.username ?? "none"}</h2>
           </div>
 
           <div className='navbar__links navbar__mobile'>
             <Link to={authData.access_token === "" ? "/signin" : "/profile"} onClick={() => setMenuOpen(!menuOpen)}>
               <div className='navbar__mobile__link'>
-                <h3>Profile</h3>
+                <h3>{t('navbar.profile')}</h3>
                 <img src={arrow} alt="" />
               </div>
             </Link>
             <Link to={authData.access_token === "" ? "/signin" : "/catalogue"} onClick={() => setMenuOpen(!menuOpen)}>
               <div className='navbar__mobile__link'>
-                <h3>Catalogue</h3>
+                <h3>{t('navbar.catalogue')}</h3>
                 <img src={arrow} alt="" />
               </div>
             </Link>
             <Link to={authData.access_token === "" ? "/signin" : "/recommendations"} onClick={() => setMenuOpen(!menuOpen)}>
               <div className='navbar__mobile__link'>
-                <h3>Recommendations</h3>
+                <h3>{t('navbar.recommendations')}</h3>
                 <img src={arrow} alt="" />
               </div>
             </Link>
@@ -114,13 +124,13 @@ const Navbar = (data: UserProp) => {
                   onClick={() => setMenuOpen(!menuOpen)}
             >
               <div className='navbar__mobile__link'>
-                <h3>Upload</h3>
+                <h3>{t('navbar.upload')}</h3>
                 <img src={arrow} alt="" />
               </div>
             </Link>
             <Link to="/about-us" onClick={() => setMenuOpen(!menuOpen)}>
               <div className='navbar__mobile__link'>
-                <h3>FAQ</h3>
+                <h3>{t('navbar.faq')}</h3>
                 <img src={arrow} alt="" />
               </div>
             </Link>

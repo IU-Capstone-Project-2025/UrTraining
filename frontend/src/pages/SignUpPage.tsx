@@ -8,6 +8,7 @@ import AuthContext from "../components/context/AuthContext";
 import { useSignUp, useSignIn } from "../api/mutations";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import type { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 const SignUpPage = () => {
   const [credentials, setCredentials] = useState<CredentialsData>(emptyCredentials)
@@ -16,6 +17,8 @@ const SignUpPage = () => {
   const authData = useContext(AuthContext)
   const signUpMutation = useSignUp()
   const signInMutation = useSignIn()
+  const { t } = useTranslation();
+  const signupData = example_signup_data(t);
 
   const navigate = useNavigate();
 
@@ -76,7 +79,7 @@ const SignUpPage = () => {
 
   return (
     <SignPageContext value={contextValue}>
-      <Sign {...example_signup_data} />
+      <Sign {...signupData} />
     </SignPageContext>
   )
 }

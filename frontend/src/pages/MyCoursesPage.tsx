@@ -8,11 +8,13 @@ import { getMyTrainingsRequest, userInfoRequest } from "../api/apiRequests";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { data, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const MyCoursesPage = () => {
 
   const authData = useContext(AuthContext)
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { data: userData, isLoading: userDataIsLoading, status: userDataStatus } = useQuery({
     queryKey: ['me'],
@@ -26,11 +28,11 @@ const MyCoursesPage = () => {
     enabled: userData!== null
   })
 
-  const title = {title_top: "My trainings:", title_bottom: ""}
+  const title = {title_top: t("catalogue.my"), title_bottom: ""}
 
   if (isLoading) return <div className="centered-content">
-                            <div className="step-title-main">Loading...</div>
-                            <p>It may take a while to upload the data</p>
+                            <div className="step-title-main">{t("catalogue.loading")}</div>
+                            <p>{t("catalogue.load_desc")}</p>
                         </div>
 
   return (
@@ -44,10 +46,10 @@ const MyCoursesPage = () => {
         />
       ) : (
         <div className="centered-content">
-            <div className="step-title-main">Oops...</div>
-            <p>You have no created trainings now, but you can upload new training plan with our tools!</p>
+            <div className="step-title-main">{t("catalogue.oops")}</div>
+            <p>{t("catalogue.no_uploaded")}</p>
             <div className="button-group-welcome">
-                <button className="btn-basic-black" onClick={() => navigate("/upload-training")}>Upload training</button>
+                <button className="btn-basic-black" onClick={() => navigate("/upload-training")}>{t("catalogue.upload")}</button>
             </div>
         </div>
       )}

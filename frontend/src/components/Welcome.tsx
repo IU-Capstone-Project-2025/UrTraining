@@ -1,9 +1,13 @@
 // import React from 'react'
 import { Link } from "react-router-dom";
 import notebook from '../assets/Side image.png'
+import { useTranslation } from "react-i18next";
 import '../css/Welcome.css'
 
 const Welcome = () => {
+
+    const { t } = useTranslation();
+
     return (
         <div className="welcome basic-page">
 
@@ -53,23 +57,21 @@ const Welcome = () => {
 
                 <div className='welcome__info__text'>
                     <h1>
-                        Smart approach to training powered by AI
+                        {t("welcome.title")}
                     </h1>
                     <h3>
-                        Create and share your training programs as a coach faster.
-                        Get AI—personalized workouts based on your goals and condition as user —
-                        all in one place
+                        {t("welcome.subtitle")}
                     </h3>
                 </div>
                 <div className='welcome__info__buttons'>
                     <Link to={"/trainee-begin"}>
                         <button className='btn-basic-blur'>
-                            I want to train
+                            {t("welcome.trainee_button")}
                         </button>
                     </Link>
                     <Link to={"/trainer-begin"}>
                         <button className='btn-basic-black'>
-                            I am a Coach
+                            {t("welcome.trainer_button")}
                         </button>
                     </Link>
                 </div>

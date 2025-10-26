@@ -6,6 +6,7 @@ import { userInfoRequest } from "../api/apiRequests";
 import { useQuery } from "@tanstack/react-query";
 import "../css/ChatAssistant.css"
 import ReactMarkdown from 'react-markdown'
+import { useTranslation } from "react-i18next";
 
 type ChatAssistantProps = {
     onClose: () => void;
@@ -21,6 +22,7 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ onClose, courseData }) =>
 
   const authData = useContext(AuthContext);
   const courseId = courseData?.id ?? "default";
+  const { t } = useTranslation();
 
   const [input, setInput] = useState("");
   const [sessionId, setSessionId] = useState(() => {
@@ -103,14 +105,14 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ onClose, courseData }) =>
         <div className="modal">
             <div className="modal__content">
                 <div className="modal__header">
-                    <button className="chat__button black" onClick={handleNewChat}>New chat</button>
-                    <h3>Chat with AI-assistant</h3>
+                    <button className="chat__button black" onClick={handleNewChat}>{t("chat.newchat")}</button>
+                    <h3>{t("chat.title")}</h3>
                     <button className="chat__button exit" onClick={() => onClose()}>✖</button>
                 </div>
                 <div className="chat__window">
                 {messages.length === 0 ? (
                     <div className="placeholder">
-                        AI-powered assistant will answer all questions about this training course, from special diet to tips on proper technique and schedule making.  
+                        {t("chat.desc")}  
                     </div>
                 ) : (
                     <>
@@ -122,7 +124,7 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ onClose, courseData }) =>
                                 <ReactMarkdown>{msg.content}</ReactMarkdown>
                             </div>
                         ))}
-                        {mutation.isPending && <div className="message bot">Typing...</div>}
+                        {mutation.isPending && <div className="message bot">{t("chat.typing")}</div>}
                     </>
                 )}
                 </div>
@@ -133,9 +135,9 @@ const ChatAssistant: React.FC<ChatAssistantProps> = ({ onClose, courseData }) =>
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                    placeholder="Write a message..."
+                    placeholder={t("chat.todo")}
                 />
-                <button className="chat__button black" onClick={handleSend}>Send</button>
+                <button className="chat__button black" onClick={handleSend}>{t("chat.send")}</button>
                 
                 </div>
             </div>

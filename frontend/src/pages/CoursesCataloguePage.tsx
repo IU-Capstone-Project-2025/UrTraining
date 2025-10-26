@@ -8,11 +8,13 @@ import { trainingsDataRequest, userInfoRequest, getAllTrainingProgress, getSaved
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { data, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const CoursesCataloguePage = React.memo(() => {
 
   const authData = useContext(AuthContext)
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const emptyArray = useMemo(() => [], []);
 
@@ -62,15 +64,15 @@ const CoursesCataloguePage = React.memo(() => {
       navigate("/signin")
   })
 
-  const title = useMemo(() => ({
-    title_top: "All trainings", 
-    title_bottom: "in one place"
-  }), []);
+  const title = {
+    title_top: t("catalogue.title_top"), 
+    title_bottom: t("catalogue.title_bottom")
+  };
 
   if (isLoading) {
     return <div className="centered-content">
-      <div className="step-title-main">Loading...</div>
-      <p>It may take a while to upload the data</p>
+      <div className="step-title-main">{t("catalogue.loading")}</div>
+      <p>{t("catalogue.load_desc")}</p>
     </div>;
   }
 

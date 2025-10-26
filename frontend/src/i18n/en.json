@@ -1,0 +1,305 @@
+{
+  "navbar": {
+    "profile": "Profile",
+    "catalogue": "Catalogue",
+    "recommendations": "Recommendations",
+    "upload": "Upload training",
+    "faq": "FAQ",
+    "signin": "Sign In",
+    "signup": "Sign Up",
+    "hello": "Hello"
+  },
+  "welcome": {
+    "title": "Smart approach to training powered by AI",
+    "subtitle": "Create and share your training programs as a coach faster. Get AI-personalized workouts based on your goals and condition as user — all in one place.",
+    "trainee_button": "I want to train",
+    "trainer_button": "I am a Coach"
+  },
+  "begin_trainer": {
+    "title": "Turn your experience into impact.",
+    "subtitle": "Whether you're a seasoned pro or just starting out, UrTraining lets you create structured workouts, reach new clients, and grow your coaching presence — all in one place.",
+    "button_text": "Upload first training"
+  },
+  "begin_trainee": {
+    "title": "Workouts made for you. Instantly.",
+    "subtitle": "Tell us about yourself — your age, fitness level, goals, and preferences — and let AI build a personalized training plan for you. No generic programs. Just what works for you, updated as you grow.",
+    "button_text": "Tell us your goals"
+  },
+  "signup_data": {
+    "title": "Sign Up",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "google": "Sign Up with Google",
+    "telegram": "Sign Up with Telegram"
+  },
+  "signin_data": {
+    "title": "Welcome back!",
+    "email": "Email",
+    "password": "Password",
+    "google": "Sign In with Google",
+    "telegram": "Sign In with Telegram"
+  },
+  "sign_data": {
+    "hide_pass": "Hide password",
+    "show_pass": "Show password",
+    "terms_of_use": "You agree with our Terms of Service",
+    "warning": "Please, confirm the Terms of Use",
+    "button": "Let's start!"
+  },
+  "course": {
+    "by": "by ",
+    "reviews": " reviews",
+    "progress": "Training Progress",
+    "progress_short": "Progress:",
+    "completed_status": "completed",
+    "course_structure": "Course Structure",
+    "completing": "Completing...",
+    "complete": "Complete",
+    "completed": "Completed ✓",
+    "table_headers": ["Exercise", "Reps", "Sets", "Duration", "Rest", "Description"],
+    "reps_mobile": " reps",
+    "sets_mobile": " sets",
+    "time_mobile": "Time: ",
+    "rest_mobile": "Rest: {{rest}} between sets",
+    "descript_mobile": "Description:",
+    "about": "About coach:",
+    "save": "Save training",
+    "unsave": "Delete from saved",
+    "add_to_sch": "Add in schedule",
+    "added_to_sch": "Added successfully",
+    "adding_to_sch": "Adding in schedule...",
+    "delete": "Delete the training"
+  },
+
+  "catalogue": {
+    "title_top": "All trainings",
+    "title_bottom": "in one place",
+    "loading": "Loading...",
+    "load_desc": "It may take a while to upload the data",
+    "my": "My trainings:",
+    "saved": "Saved trainings:",
+    "oops": "Oops...",
+    "no_uploaded": "You have no created trainings now, but you can upload new training plan with our tools!",
+    "no_saved": "You have no saved trainings now, so it's time to explore something new!",
+    "trainer_loh": "This trainer has no created trainings now, but you can view the millions of other trainings!",
+    "no_today_trainings": "You have no training sessions for today, so it's time for rest or looking for new workouts and plans!",
+    "upload": "Upload training",
+    "save": "Go to Catalogue",
+    "author_title": "{{author_name}}`s training programs:",
+    "recomm_loading": "Recommendation loading...",
+    "no_recomm": "Please fill the survey to get personalized recommendations. It takes only 2-3 minutes.",
+    "go_to_survey": "Go to Survey",
+    "main_menu": "Main menu"
+  },
+  
+  "tag_search": {
+    "found": "Found {{num}} trainings",
+    "hide": "Hide filtration",
+    "show": "Show filtration",
+    "clear": "Clear all",
+    "text_search": "Search by text...",
+    "saved_only": "Show saved trainings only",
+    "act_type": "Activity Type",
+    "goal": "Program Goal",
+    "difficulty": "Difficulty Level",
+    "equip": "Required Equipment",
+    "selected": "Selected tags:"
+  },
+
+  "profile": {
+    "logout": "Log out",
+    "personal": "Personal information",
+    "edit": "Edit",
+    "email": "E-mail",
+    "gender": "Gender",
+    "age": "Age",
+    "profile": "Profile",
+    "today": "Today is",
+    "fullname": "Full name",
+    "tags": "Tags"
+  },
+
+  "trainer_profile": {
+    "type": "trainer",
+    "gender_unspecified": "prefer not to specify",
+    "age_unspecified": "prefer not to specify",
+    "calendar": {
+      "text_top": "Ready to lead the way today? Your athletes are waiting!",
+      "text_button_top": "See the statistics",
+      "text_bottom": "You can discover the programs of other trainers or create your own:",
+      "text_button_bottom": "View all plans"
+    },
+    "trainings": {
+      "text_top": "Have some new ideas on paper?",
+      "text_bottom": "Upload new training plan now"
+    },
+    "upload": {
+      "text_top": "See all the uploaded trainings and edit it, if needed:",
+      "text_button": "View my trainings"
+    }
+  },
+
+  "trainee_profile": {
+    "type": "trainee",
+    "gender_unspecified": "prefer not to specify",
+    "age_unspecified": "prefer not to specify",
+    "calendar": {
+      "text_top": "Welcome to a new day — let’s take one step closer to your goals today!",
+      "text_button_top": "View all training plans",
+      "text_bottom": "You can view all the amount of training plans — everything is in your hands",
+      "text_button_bottom": "View recommendations"
+    },
+    "trainings": {
+      "text_top": "Do you have uncompleted trainings?",
+      "text_bottom": "Try all saved trainings now"
+    },
+    "today": {
+      "text_top": "Let's check the trainings you have today!",
+      "text_button": "See the trainings"
+    },
+    "upload": {
+      "text_top": "Add new preferences and goals to get better training experience",
+      "text_button": "Get new personalized plan"
+    }
+  },
+
+  "upload_training": {
+    "welcome": "Welcome to the Training Course Creator",
+    "wel_desc": "Let's help you design a personalized fitness program from scratch.",
+    "start": "Get Started",
+
+    "step_1": "Step 1: Course Metadata",
+    "back": "Back",
+    "cont": "Continue",
+    "add_opt": "Add option",
+    "select": "Select an option",
+
+    "step_2": "Step 2: Course Plan",
+    "save": "Save the Course",
+    "generate_ai": "Generate with AI",
+    "structure": "Course Structure",
+    "add_day": "Add new day",
+    "add_ex": "Add exercise",
+    "day": "Day {{number}}",
+    "exercise": "Exercise",
+    "title": "Title...",
+
+    "success": "New training plan was succesfully created!",
+    "suc_desc": "You can view it or return to the main page, as you wish.",
+    "view": "View plan",
+    "main": "Main menu"
+  },
+
+  "metadata_names": {
+    "activity_type": "Activity Type",
+    "program_goal": "Program Goal",
+    "training_environment": "Training Environment",
+    "difficulty_level": "Difficulty Level",
+    "course_duration": "Course Duration (in weeks)",
+    "weekly_training_frequency": "Weekly Training Frequency",
+    "average_workout_duration": "Average Workout Duration",
+    "age_group": "Age Group",
+    "gender_orientation": "Gender Orientation",
+    "physical_limitations": "Physical Limitations",
+    "required_equipment": "Required Equipment",
+    "tags": "Tags"
+  },
+
+  "ai_upload": {
+    "title": "AI Course Generator",
+    "subtitle": "Upload your training materials and let AI create a personalized course for you",
+    "todo": "Drag & Drop your files here",
+    "sub_todo": "or click to browse files",
+    "formats": "Supported formats: JPEG, PNG, GIF, WebP, PDF",
+    "max_size": "Maximum size: 10MB per file",
+    "uploaded": "Uploaded Files",
+    "process": "Processing...",
+    "action": "Generate Course with AI",
+    "success": "Course Generated Successfully!",
+    "success_full": "Your AI-generated training course has been created and uploaded successfully!",
+    "view": "View Course",
+    "back": "Back to Creator"
+  },
+
+  "chat": {
+    "newchat": "New Chat",
+    "title": "Chat with AI-assistant",
+    "desc": "AI-powered assistant will answer all questions about this training course, from special diet to tips on proper technique and schedule making.",
+    "typing": "Typing...",
+    "todo": "Write a message...",
+    "send": "Send"
+  },
+
+  "survey": {
+    "continue": "Continue",
+    "back": "Back",
+    "submit": "Submit",
+    "select": "Select..."
+  },
+
+
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "q1": {
+      "question": "What is UrTraining and how does it work?",
+      "answer": "UrTraining is a web-based platform for creating, distributing, and following personalized training plans. Users receive AI-assisted workout recommendations based on their fitness goals and preferences. Trainers can upload and manage their own structured programs for users to follow."
+    },
+    "q2": {
+      "question": "Do I need to register to browse the courses?",
+      "answer": "Currently, registration is required to access full course details. We are working on adding preview options for unregistered users."
+    },
+    "q3": {
+      "question": "How long does the personalization questionnaire take?",
+      "answer": "It takes about 3–5 minutes and helps tailor the training plan to your needs or recommend your plans to the right audience (for trainers)."
+    },
+    "q4": {
+      "question": "Is the platform free to use?",
+      "answer": "Yes, UrTraining is free. However, we may introduce paid features in the future for advanced tools or monetization options."
+    },
+    "q5": {
+      "question": "How do I start a workout or course after registering?",
+      "answer": "Once registered and the questionnaire is complete, you'll receive workout recommendations and can start directly from the catalog. Your active programs appear in your profile."
+    },
+    "q6": {
+      "question": "How do I switch between trainer and trainee roles?",
+      "answer": "The role is selected during registration and currently cannot be changed. You can log out and create a new account. Role-switching will be available in future updates."
+    },
+    "q7": {
+      "question": "What kind of workouts are available on the platform?",
+      "answer": "We currently offer strength training, cardio, HIIT, yoga, pilates, functional training, CrossFit, bodybuilding, stretching, running, swimming, cycling, boxing, and dancing... You can upload your own training type - the structure of training plan is uniform!"
+    },
+    "q8": {
+      "question": "How are personalized workouts generated?",
+      "answer": "After completing the questionnaire, AI selects and adjusts workouts based on your fitness level, goals, preferences, and available equipment. Workouts are authored by qualified trainers. Recommendational model considers all the aspects of your training process to propose you the best options."
+    },
+    "q9": {
+      "question": "Will I receive money for creating the courses?",
+      "answer": "At the moment, there is no monetization. However, trainer compensation features are being considered for future updates."
+    },
+    "q10": {
+      "question": "Why do I need to add certificates of my education?",
+      "answer": "Certificates help verify your qualifications and build user trust. Verified trainers may receive more visibility on the platform."
+    },
+    "q11": {
+      "question": "What if I have a workout type not listed in the predefined list?",
+      "answer": "We are continuously expanding the list. Feel free to suggest new workout categories."
+    },
+    "q12": {
+      "question": "Can I upload photos of the exercise plan?",
+      "answer": "Photo and video support for exercise plans is in development. Stay tuned for future updates."
+    },
+    "q13": {
+      "question": "Is there a Russian version of the platform?",
+      "answer": "Yes, just switch the language using the navbar button."
+    },
+    "q14": {
+      "question": "What are the terms I agree to during registration?",
+      "answer": "You agree to our terms of service, which cover content usage, data privacy, user conduct, and platform policies."
+    },
+    "q15": {
+      "question": "How do I log out of my account?",
+      "answer": "Just go to your profile page and click the logout button."
+    }
+  }
+}

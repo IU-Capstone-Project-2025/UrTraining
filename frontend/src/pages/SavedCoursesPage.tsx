@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useTransition } from 'react';
 //import courses from '../components/data/selected_courses_with_ids_plus_plan.json';
 import { transformRawCourseData } from '../utils/transformRawCouseData';
 import '../css/CoursesCatalogue.css';
@@ -8,11 +8,13 @@ import { getMyTrainingsRequest, getSavedCoursesRequest, userInfoRequest, getAllT
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { data, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const SavedCoursesPage = () => {
 
   const authData = useContext(AuthContext)
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // vvvvvvvvvvvv
   // PLEASE FIX!!!
@@ -45,11 +47,11 @@ const SavedCoursesPage = () => {
     refetchOnWindowFocus: false,
   })
 
-  const title = {title_top: "Saved trainings:", title_bottom: ""}
+  const title = {title_top: t("catalogue.saved"), title_bottom: ""}
 
   if (isLoading) return <div className="centered-content">
-                            <div className="step-title-main">Loading...</div>
-                            <p>It may take a while to upload the data</p>
+                            <div className="step-title-main">{t("catalogue.loading")}</div>
+                            <p>{t("catalogue.load_desc")}</p>
                         </div>                      
 
   return (
@@ -63,10 +65,10 @@ const SavedCoursesPage = () => {
         />
       ) : (
         <div className="centered-content">
-            <div className="step-title-main">Oops...</div>
-            <p>You have no saved trainings now, so it's time to explore something new!</p>
+            <div className="step-title-main">{t("catalogue.oops")}</div>
+            <p>{t("catalogue.no_saved")}</p>
             <div className="button-group-welcome">
-                <button className="btn-basic-black" onClick={() => navigate("/catalogue")}>Go to Catalogue</button>
+                <button className="btn-basic-black" onClick={() => navigate("/catalogue")}>{t("catalogue.save")}</button>
             </div>
         </div>
       )}

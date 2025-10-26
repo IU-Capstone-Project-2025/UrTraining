@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import '../css/Course.css'
 import MetadataContext from './context/MetadataContext'
+import { useTranslation } from 'react-i18next';
 
 interface StepData {
   [key: string]: any;
@@ -15,6 +16,7 @@ interface MetadataProps {
 
 const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, onNext }) => {
   const metadataContext = useContext(MetadataContext)
+  const { t } = useTranslation();
 
   const [arrayCounts, setArrayCounts] = useState<Record<string, number>>({
     program_goal: 1,
@@ -56,18 +58,18 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
   };
 
   const metadataNames = {
-    activity_type: "Activity Type",
-    program_goal: "Program Goal",
-    training_environment: "Training Environment",
-    difficulty_level: "Difficulty Level",
-    course_duration: "Course Duration",
-    weekly_training_frequency: "Weekly Training Frequency",
-    average_workout_duration: "Average Workout Duration",
-    age_group: "Age Group",
-    gender_orientation: "Gender Orientation",
-    physical_limitations: "Physical Limitations",
-    required_equipment: "Required Equipment",
-    tags: "Tags"
+    activity_type: t("metadata_names.activity_type"),
+    program_goal: t("metadata_names.program_goal"),
+    training_environment: t("metadata_names.training_environment"),
+    difficulty_level: t("metadata_names.difficulty_level"),
+    course_duration: t("metadata_names.course_duration"),
+    weekly_training_frequency: t("metadata_names.weekly_training_frequency"),
+    average_workout_duration: t("metadata_names.average_workout_duration"),
+    age_group: t("metadata_names.age_group"),
+    gender_orientation: t("metadata_names.gender_orientation"),
+    physical_limitations: t("metadata_names.physical_limitations"),
+    required_equipment: t("metadata_names.required_equipment"),
+    tags: t("metadata_names.tags")
   };
 
   const metadataOptions: Record<MetadataKey, string[]> = {
@@ -77,7 +79,7 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
     difficulty_level: ["Beginner", "Intermediate", "Advanced", "All Levels (Adaptive Program)"],
     course_duration: ["1", "2", "5"],
     weekly_training_frequency: ["1-2 times", "3-4 times", "5-6 times"],
-    average_workout_duration: ["Up to 30 minutes", "30-45 minutes", "45-60 minutes", "More than 60 minutes"],
+    average_workout_duration: ["Up to 30 minutes", "30-45 minutes", "45-60 minutes", "60+ minutes"],
     age_group: ["Teens (13-17)", "Young Adults (18-30)", "Adults (31-50)", "Seniors (51+)", "All Ages"],
     gender_orientation: ["For Women", "For Men", "Unisex"],
     physical_limitations: ["Joint Issues", "Back Problems", "Post-Injury Recovery", "Pregnancy/Postpartum", "Limited Mobility", "Cardiovascular Diseases", "Diabetes", "Overweight", "Not Adapted (Healthy Only)"],
@@ -108,7 +110,7 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
 
   return (
     <div className="course__container">
-      <h2 className="step-title">Step 1: Course Metadata</h2>
+      <h2 className="step-title">{t("upload_training.step_1")}</h2>
       <div className='course__structure__metadata'>
         <div className='course__metadata__fields'>
           {metadataKeys.map((key) => (
@@ -125,9 +127,9 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
                       value={savedData[key]?.[i] || ""}
                       onChange={e => handleSelectChange(key, e.target.value, i)}
                     >
-                      <option value="" disabled>Select an option</option>
+                      <option value="" disabled>{t("upload_training.select")}</option>
                       {metadataOptions[key].map((option, idx) => (
-                        <option key={idx} value={option}>{option}</option>
+                        <option key={idx} value={option}>{t(`metadata_options.${option}`, option)}</option>
                       ))}
                     </select>
                   ))}
@@ -136,7 +138,7 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
                     type="button"
                     onClick={() => handleAddOption(key)}
                   >
-                    Add option
+                    {t("upload_training.add_opt")}
                   </button>
                 </div>
               )}
@@ -148,9 +150,9 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
                   value={savedData[key] || ""}
                   onChange={e => handleSelectChange(key, e.target.value)}
                 >
-                  <option value="" disabled>Select an option</option>
+                  <option value="" disabled>{t("upload_training.select")}</option>
                   {metadataOptions[key].map((option, index) => (
-                    <option key={index} value={option}>{option}</option>
+                    <option key={index} value={option}>{t(`metadata_options.${option}`, option)}</option>
                   ))}
                 </select>
               )}
@@ -159,8 +161,8 @@ const Metadata: React.FC<MetadataProps> = ({ savedData, setSavedData, onBack, on
         </div>
       </div>
       <div className="button-row">
-        <button className="btn-basic-black" onClick={onBack}>Back</button>
-        <button className="btn-basic-black" onClick={onNext}>Continue</button>
+        <button className="btn-basic-black" onClick={onBack}>{t("upload_training.back")}</button>
+        <button className="btn-basic-black" onClick={onNext}>{t("upload_training.cont")}</button>
       </div>
     </div>
   );

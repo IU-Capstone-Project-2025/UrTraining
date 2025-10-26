@@ -4,12 +4,14 @@ import type { SignProps, InputField, SocialLink, CredentialsData } from "./inter
 import '../css/Sing.css'
 import SignInPageContext from "./context/SignPageContext";
 import { emptyCredentials } from "./context/SignPageContext";
+import { useTranslation } from "react-i18next";
 
 const Sign = (props: SignProps) => {
     const [savedData, setSavedData] = useState<CredentialsData>(emptyCredentials);
     const [agreementChecked, setAgreementChecked] = useState(false);
     const [showAgreementError, setShowAgreementError] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const { t } = useTranslation();
 
     const credentialsContext = useContext(SignInPageContext)
 
@@ -62,7 +64,7 @@ const Sign = (props: SignProps) => {
                                         cursor: "pointer",
                                         }}
                                     >
-                                        {showPassword ? "Hide password" : "Show password"}
+                                        {showPassword ? t("sign_data.hide_pass") : t("sign_data.show_pass")}
                                     </button>
                                     )}
                                 </>
@@ -85,14 +87,14 @@ const Sign = (props: SignProps) => {
                                     }}
                                 ></input>
                                 <p style={{ marginLeft: "8px" }}>
-                                    You agree with our Terms of Service
+                                    {t("sign_data.terms_of_use")}
                                 </p>
                             </label> :
                             <></>
                         }
                         {showAgreementError && (
                         <div className="signup__form-area__error">
-                            Please, confirm the Terms of Use
+                            {t("sign_data.warning")}
                         </div>
                         )}
                         {
@@ -104,7 +106,7 @@ const Sign = (props: SignProps) => {
                         <button
                             className='btn-basic-black'
                             onClick={handleSubmit}
-                        >Let's start!</button>
+                        >{t("sign_data.button")}</button>
                     </form>
                     <div className='signup__form-area__divider' style={{ display: "none" }}></div>
                     <div className='signup__form-area__social' style={{ display: "none" }}>

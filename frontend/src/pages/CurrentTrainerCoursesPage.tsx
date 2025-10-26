@@ -8,6 +8,7 @@ import { getMyTrainingsRequest, userInfoRequest } from "../api/apiRequests";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { data, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const MyCoursesPage = () => {
 
@@ -16,6 +17,7 @@ const MyCoursesPage = () => {
   const authorName = location.state?.authorName;
   const authData = useContext(AuthContext);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // vvvvvvvvvvvv
   // PLEASE FIX!!!
@@ -37,11 +39,11 @@ const MyCoursesPage = () => {
     enabled: userData!== null
   })
 
-  const title = {title_top: `${authorName}'s training programs:`, title_bottom: `found ${trainingsData.length} trainings`}
+  const title = {title_top: t("catalogue.author_title", {author_name: authorName}), title_bottom: ``}
 
   if (isLoading) return <div className="centered-content">
-                            <div className="step-title-main">Loading...</div>
-                            <p>It may take a while to upload the data</p>
+                            <div className="step-title-main">{t("catalogue.loading")}</div>
+                            <p>{t("catalogue.load_desc")}</p>
                         </div>
 
   return (
@@ -55,10 +57,10 @@ const MyCoursesPage = () => {
         />
       ) : (
         <div className="centered-content">
-            <div className="step-title-main">Oops...</div>
-            <p>This trainer has no created trainings now, but you can view the millions of other trainings!</p>
+            <div className="step-title-main">{t("catalogue.oops")}</div>
+            <p>{t("catalogue.trainer_loh")}</p>
             <div className="button-group-welcome">
-                <button className="btn-basic-black" onClick={() => navigate("/catalogue")}>Go to Catalogue</button>
+                <button className="btn-basic-black" onClick={() => navigate("/catalogue")}>{t("catalogue.save")}</button>
             </div>
         </div>
       )}

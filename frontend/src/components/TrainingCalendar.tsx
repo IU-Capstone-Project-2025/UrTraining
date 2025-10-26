@@ -1,8 +1,9 @@
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../css/CustomCalendar.css'
-import { useMemo, type JSX } from 'react';
+import { useMemo, useTransition, type JSX } from 'react';
 import type { TrackerProp } from './interface/TrackerInterface';
+import { useTranslation } from 'react-i18next';
 
 type TrainingCalendarProps = {
     schedule: TrackerProp[]
@@ -20,6 +21,8 @@ const formattedDate = (date: Date): string => {
 };
 
 const TrainingCalendar: React.FC<TrainingCalendarProps>  = ({ schedule, onDateClick }) => {
+
+    const { i18n } = useTranslation();
   // Преобразуем данные в Map: 'DD.MM.YYYY' => [array of trainings]
     const trainingByDate = useMemo<Record<string, boolean>>(() => {
 
@@ -53,7 +56,7 @@ const TrainingCalendar: React.FC<TrainingCalendarProps>  = ({ schedule, onDateCl
         <Calendar
             onClickDay={handleClick}
             tileClassName={tileClassName}
-            locale="en-EN"
+            locale={i18n.language === "ru" ? "ru-RU" : "en-EN"}
         />
     );
 };

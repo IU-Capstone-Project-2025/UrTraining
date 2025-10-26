@@ -1,6 +1,7 @@
 import type { SignProps } from "../interface/interfaces";
+import type { TFunction } from "i18next";
 
-export const example_survey_data: any = {
+export const example_survey_data = (t: TFunction): any => ({
     steps_total: [
         {
             value: "step-1",
@@ -136,75 +137,75 @@ export const example_survey_data: any = {
         description:
             "Before we dive into training, we’d love to get to know you better. Your name and a few basic details help us personalize your journey — like a good coach who remembers your story from day one.",
     },
-};
+});
 
-export const example_signin_data: SignProps = {
+export const example_signin_data = (t: TFunction): SignProps => ({
     user_exists: true,
     image_path: "images/signin_image.jpg",
-    page_title: "Welcome back!",
+    page_title: t("signin_data.title"),
     input_fields: [
         {
             name: "email",
             id: "email",
             input_type: "text",
-            placeholder: "Email",
+            placeholder: t("signin_data.email"),
             options: [],
         },
         {
             name: "password",
             id: "password",
             input_type: "password",
-            placeholder: "Password",
+            placeholder: t("signin_data.password"),
             options: [],
         },
     ],
     social_links: [
         {
             name: "google-socials",
-            placeholder: "Sign In with Google",
+            placeholder: t("signin_data.google"),
         },
         {
             name: "telegram-socials",
-            placeholder: "Sign In with Telegram",
+            placeholder: t("signin_data.telegram"),
         },
     ],
-};
+});
 
-export const example_signup_data: SignProps = {
+export const example_signup_data = (t: TFunction): SignProps => ({
     user_exists: false,
     image_path: "images/signup_image.jpg",
-    page_title: "Sign Up",
+    page_title: t("signup_data.title"),
     input_fields: [
         {
             name: "username",
             id: "username",
             input_type: "text",
-            placeholder: "Username",
+            placeholder: t("signup_data.username"),
             options: [],
         },
         {
             name: "email",
             id: "email",
             input_type: "email",
-            placeholder: "Email",
+            placeholder: t("signup_data.email"),
             options: [],
         },
         {
             name: "password",
             id: "password",
             input_type: "password",
-            placeholder: "Password",
+            placeholder: t("signup_data.password"),
             options: [],
         },
     ],
     social_links: [
         {
             name: "google-socials",
-            placeholder: "Sign Up with Google",
+            placeholder: t("signup_data.google"),
         },
         {
             name: "telegram-socials",
-            placeholder: "Sign Up with Telegram",
+            placeholder: t("signup_data.telegram"),
         },
     ],
-};
+});

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import notebook from '../assets/Side image.png';
 import "../css/AboutUs.css";
 import { useState } from "react";
@@ -13,6 +14,7 @@ type AboutUsProps = {
 
 const AboutUs = ({ faqItems }: AboutUsProps) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const { t } = useTranslation();
 
   const toggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -71,7 +73,7 @@ const AboutUs = ({ faqItems }: AboutUsProps) => {
 
       {/* Правая часть — FAQ */}
       <div className="faq-section">
-        <h2>Frequently Asked Questions</h2>
+        <h2>{t("faq.title")}</h2>
         {faqItems.map((item, index) => (
           <div
             key={index}

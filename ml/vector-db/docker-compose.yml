@@ -2,7 +2,7 @@ services:
   vector-db:
     build: .
     ports:
-      - "8000:8000"
+      - "1337:8000"
     volumes:
       - ./data:/app/data
     environment:

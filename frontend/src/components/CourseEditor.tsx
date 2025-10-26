@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import '../css/Course.css';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface Exercise {
   exercise: string;
@@ -27,7 +28,8 @@ type EditableField = ExerciseField | 'title';
 
 const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, onSubmit }) => {
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [editing, setEditing] = useState<{
     dayIndex: number | null;
@@ -74,9 +76,9 @@ const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, 
       training_plan: [
         ...prev.training_plan,
         {
-          title: `Day ${prev.training_plan.length + 1}`,
+          title: t("upload_training.day", {number: prev.training_plan.length + 1}),
           exercises: [{
-            Exercise: "Exercise",
+            Exercise: t("upload_training.exercise"),
             Reps: "-",
             Sets: "-",
             Duration: "-",
@@ -92,7 +94,7 @@ const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, 
     setSavedData((prev: any) => {
       const updatedPlan = [...prev.training_plan];
       updatedPlan[dayIndex].exercises.push({
-        exercise: "Exercise",
+        exercise: t("upload_training.exercise"),
         repeats: "-",
         sets: "-",
         duration: "-",
@@ -125,18 +127,18 @@ const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, 
     <div className="course basic-page" onDoubleClick={stopEditing}>
       <button className="btn-ai-generate" onClick={() => navigate('/ai-upload')}>
         <span className="ai-icon">✨</span>
-        Generate with AI
+        {t("upload_training.generate_ai")}
         <span className="ai-sparkle">⚡</span>
       </button>
       <div className="course__container">
-        <h2 className="step-title">Step 2: Course Plan</h2>
+        <h2 className="step-title">{t("upload_training.step_2")}</h2>
         <div className='course__info'>
           <div className='course__info__title'>
             <div className='course__info__text'>
               <input
                 type="text"
                 value={savedData.course_title}
-                placeholder='Title...'
+                placeholder={t("upload_training.title")}
                 onChange={(e) => setSavedData((prev: any) => ({
                   ...prev,
                   course_title: e.target.value
@@ -150,9 +152,9 @@ const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, 
         {/* Редактор структуры тренировки */}
         <div className='course__structure'>
           <div className='course__structure__header'>
-            <h3>Course Structure</h3>
+            <h3>{t("upload_training.structure")}</h3>
             <button onClick={addTrainingDay} className="btn-basic-white">
-              Add new day
+              {t("upload_training.add_day")}
             </button>
           </div>
 
@@ -179,7 +181,8 @@ const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, 
                   )}
 
                   <div className="course__table__header">
-                    {["Exercise", "Reps", "Sets", "Duration", "Rest", "Description"].map((h) => (
+                    {(t('course.table_headers', { returnObjects: true }) as string[])
+                    .map((h) => (
                       <div key={h} className="course__table__cell">{h}</div>
                     ))}
                   </div>
@@ -216,7 +219,7 @@ const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, 
                       onClick={() => addExercise(dayIndex)}
                       className="btn-basic-white"
                     >
-                      Add exercise
+                      {t("upload_training.add_ex")}
                     </button>
                   </div>
                 </div>
@@ -230,8 +233,8 @@ const TrainingEditor: React.FC<DataProps> = ({ savedData, setSavedData, onBack, 
         {/* Кнопка сохранения */}
         <div className="editor-actions">
           <div className="button-row">
-            <button className="btn-basic-black" onClick={onBack}>Back</button>
-            <button className="btn-basic-black" onClick={onSubmit}>Save the course</button>
+            <button className="btn-basic-black" onClick={onBack}>{t("upload_training.back")}</button>
+            <button className="btn-basic-black" onClick={onSubmit}>{t("upload_training.save")}</button>
           </div>
         </div>
       </div>

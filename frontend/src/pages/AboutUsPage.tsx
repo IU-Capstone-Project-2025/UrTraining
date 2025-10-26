@@ -1,78 +1,79 @@
 import AboutUs from "../components/AboutUs";
+import { useTranslation } from "react-i18next";
 
 type FAQItem = {
   question: string;
   answer: string;
 };
 
-const faqItems: FAQItem[] = [
+const getFaqItems = (t: (key: string) => string): FAQItem[] => [
   {
-    question: "What is UrTraining and how does it work?",
-    answer: "UrTraining is a web-based platform for creating, distributing, and following personalized training plans. Users receive AI-assisted workout recommendations based on their fitness goals and preferences. Trainers can upload and manage their own structured programs for users to follow.",
+    question: t("faq.q1.question"),
+    answer: t("faq.q1.answer"),
   },
   {
-    question: "Do I need to register to browse the courses?",
-    answer: "Currently, registration is required to access full course details. We are working on adding preview options for unregistered users.",
+    question: t("faq.q2.question"),
+    answer: t("faq.q2.answer"),
   },
   {
-    question: "How long does the personalization questionnaire take?",
-    answer: "It takes about 3–5 minutes and helps tailor the training plan to your needs or recommend your plans to the right audience (for trainers).",
+    question: t("faq.q3.question"),
+    answer: t("faq.q3.answer"),
   },
   {
-    question: "Is the platform free to use?",
-    answer: "Yes, UrTraining is free. However, we may introduce paid features in the future for advanced tools or monetization options.",
+    question: t("faq.q4.question"),
+    answer: t("faq.q4.answer"),
   },
   {
-    question: "How do I start a workout or course after registering?",
-    answer: "Once registered and the questionnaire is complete, you'll receive workout recommendations and can start directly from the catalog. Your active programs appear in your profile.",
+    question: t("faq.q5.question"),
+    answer: t("faq.q5.answer"),
   },
   {
-    question: "How do I switch between trainer and trainee roles?",
-    answer: "The role is selected during registration and currently cannot be changed. You can log out and create a new account. Role-switching will be available in future updates.",
+    question: t("faq.q6.question"),
+    answer: t("faq.q6.answer"),
   },
   {
-    question: "What kind of workouts are available on the platform?",
-    answer: "We currently offer strength training, cardio, HIIT, yoga, pilates, functional training, CrossFit, bodybuilding, stretching, running, swimming, cycling, boxing, and dancing. You can suggest new types!",
+    question: t("faq.q7.question"),
+    answer: t("faq.q7.answer"),
   },
   {
-    question: "How are personalized workouts generated?",
-    answer: "After completing the questionnaire, AI selects and adjusts workouts based on your fitness level, goals, preferences, and available equipment. Workouts are authored by qualified trainers.",
+    question: t("faq.q8.question"),
+    answer: t("faq.q8.answer"),
   },
   {
-    question: "Will I receive money for creating the courses?",
-    answer: "At the moment, there is no monetization. However, trainer compensation features are being considered for future updates.",
+    question: t("faq.q9.question"),
+    answer: t("faq.q9.answer"),
   },
   {
-    question: "Why do I need to add certificates of my education?",
-    answer: "Certificates help verify your qualifications and build user trust. Verified trainers may receive more visibility on the platform.",
+    question: t("faq.q10.question"),
+    answer: t("faq.q10.answer"),
   },
   {
-    question: "What if I have a workout type not listed in the predefined list?",
-    answer: "We are continuously expanding the list. Feel free to suggest new workout categories.",
+    question: t("faq.q11.question"),
+    answer: t("faq.q11.answer"),
   },
   {
-    question: "Can I upload photos of the exercise plan?",
-    answer: "Photo and video support for exercise plans is in development. Stay tuned for future updates.",
+    question: t("faq.q12.question"),
+    answer: t("faq.q12.answer"),
   },
   {
-    question: "Is there a Russian version of the platform?",
-    answer: "Not yet, but localization is in progress — a Russian version is planned soon.",
+    question: t("faq.q13.question"),
+    answer: t("faq.q13.answer"),
   },
   {
-    question: "What are the terms I agree to during registration?",
-    answer: "You agree to our terms of service, which cover content usage, data privacy, user conduct, and platform policies.",
+    question: t("faq.q14.question"),
+    answer: t("faq.q14.answer"),
   },
   {
-    question: "How do I log out of my account?",
-    answer: "Just go to your profile page and click the logout button.",
+    question: t("faq.q15.question"),
+    answer: t("faq.q15.answer"),
   },
 ];
 
 const AboutUsPage = () => {
+  const { t } = useTranslation();
+  const faqItems = getFaqItems(t);
 
-  return (
-    <AboutUs faqItems={faqItems} />
-  )
-}
+  return <AboutUs faqItems={faqItems} />;
+};
 
 export default AboutUsPage;

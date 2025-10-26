@@ -3,6 +3,7 @@ import '../css/TagSearch.css';
 import AuthContext from './context/AuthContext';
 import { getSavedCoursesRequest } from '../api/apiRequests';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 interface TagSearchProps {
   courses: any[];
@@ -28,6 +29,7 @@ const TagSearch: React.FC<TagSearchProps> = React.memo(({ courses, onFilterChang
   });
 
   const authData = useContext(AuthContext);
+  const { t } = useTranslation();
 
   // Получаем сохраненные тренировки
   const { data: savedCourses = [], isLoading: savedCoursesLoading, refetch: refetchSavedCourses } = useQuery({
@@ -205,7 +207,7 @@ const TagSearch: React.FC<TagSearchProps> = React.memo(({ courses, onFilterChang
             onClick={() => handleTagClick(tag)}
             className={`tag-search__tag ${selectedTags.includes(tag) ? 'tag-search__tag--selected' : ''}`}
           >
-            {tag}
+            {t(`metadata_options.${tag}`, tag)}
           </button>
         ))}
       </div>
@@ -215,10 +217,9 @@ const TagSearch: React.FC<TagSearchProps> = React.memo(({ courses, onFilterChang
   return (
     <div className="tag-search">
       <div className="tag-search__header">
-        <h3>Filter trainings</h3>
         {(selectedTags.length > 0 || searchText.trim() || showSavedOnly) && (
           <button onClick={clearAllTags} className="tag-search__clear">
-            Clear all
+            {t("tag_search.clear")}
           </button>
         )}
       </div>
@@ -226,7 +227,7 @@ const TagSearch: React.FC<TagSearchProps> = React.memo(({ courses, onFilterChang
       <div className="tag-search__text-search">
         <input
           type="text"
-          placeholder="Search by training name..."
+          placeholder={t("tag_search.text_search")}
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           className="tag-search__input"
@@ -247,23 +248,23 @@ const TagSearch: React.FC<TagSearchProps> = React.memo(({ courses, onFilterChang
             onChange={(e) => setShowSavedOnly(e.target.checked)}
             className="tag-search__checkbox"
           />
-          <span className="tag-search__checkbox-text">Show saved trainings only</span>
+          <span className="tag-search__checkbox-text">{t("tag_search.saved_only")}</span>
         </label>
       </div>
       
       <div className="tag-search__groups">
-        {tagGroups.activityType.length > 0 && renderTagGroup("Activity Type", tagGroups.activityType)}
-        {tagGroups.programGoal.length > 0 && renderTagGroup("Program Goal", tagGroups.programGoal)}
-        {tagGroups.difficultyLevel.length > 0 && renderTagGroup("Difficulty Level", tagGroups.difficultyLevel)}
-        {tagGroups.requiredEquipment.length > 0 && renderTagGroup("Required Equipment", tagGroups.requiredEquipment)}
+        {tagGroups.activityType.length > 0 && renderTagGroup(t("tag_search.act_type"), tagGroups.activityType)}
+        {tagGroups.programGoal.length > 0 && renderTagGroup(t("tag_search.goal"), tagGroups.programGoal)}
+        {tagGroups.difficultyLevel.length > 0 && renderTagGroup(t("tag_search.difficulty"), tagGroups.difficultyLevel)}
+        {tagGroups.requiredEquipment.length > 0 && renderTagGroup(t("tag_search.equip"), tagGroups.requiredEquipment)}
       </div>
       
       {selectedTags.length > 0 && (
         <div className="tag-search__selected">
-          <span>Selected tags: </span>
+          <span>{t("tag_search.selected")} </span>
           {selectedTags.map((tag: string) => (
             <span key={tag} className="tag-search__selected-tag">
-              {tag}
+              {t(`metadata_options.${tag}`, tag)}
               <button 
                 onClick={() => handleTagClick(tag)}
                 className="tag-search__remove"

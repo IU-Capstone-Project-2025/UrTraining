@@ -1,10 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useTransition } from "react";
 import { useQuery } from "@tanstack/react-query";
 import AuthContext from "../components/context/AuthContext";
 import { getTrainingsByDateRequest } from "../api/apiRequests";
 import TrainingsByDate from "../components/TrainingsByDate";
 import type { TrackerWithDataProp } from "../components/interface/TrackerInterface";
+import { useTranslation } from "react-i18next";
 
 
 const TrainingsByDatePage = () => {
@@ -12,6 +13,7 @@ const TrainingsByDatePage = () => {
     const { currentDate } = useParams();
     const authData = useContext(AuthContext);
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const { data : trainingsByDate = [], isLoading: isLoadingTraining, status } = useQuery<TrackerWithDataProp[], Error>({
         queryKey: ['trainingsThisDay'],
@@ -33,10 +35,10 @@ const TrainingsByDatePage = () => {
                 />
             ) : (
                 <div className="centered-content">
-                    <div className="step-title-main">Oops...</div>
-                    <p>You have no training sessions for today, so it's time for rest or looking for new workouts and plans!</p>
+                    <div className="step-title-main">{t("catalogue.oops")}</div>
+                    <p>{t("catalogue.no_today_trainings")}</p>
                     <div className="button-group-welcome">
-                        <button className="btn-basic-black" onClick={() => navigate("/catalogue")}>Go to catalogue</button>
+                        <button className="btn-basic-black" onClick={() => navigate("/catalogue")}>{t("catalogue.save")}</button>
                     </div>
                 </div>
             )}

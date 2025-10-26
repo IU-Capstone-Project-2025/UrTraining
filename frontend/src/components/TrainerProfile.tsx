@@ -1,15 +1,22 @@
-import React, { useContext } from 'react'
+import React, { useContext, useTransition } from 'react'
 import kanye from '../assets/kanye.jpg'
 import arrow from '../assets/arrow.svg'
 import '../css/Profile.css'
 import { logOutRequest } from '../api/apiRequests'
 import { Link, useNavigate } from 'react-router-dom'
 import AuthContext from './context/AuthContext'
+import { useTranslation } from 'react-i18next'
 
 const TrainerProfile = (data: any) => {
 
     const authData = useContext(AuthContext)
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
+
+    const changeLang = (lang: 'en' | 'ru') => {
+        i18n.changeLanguage(lang);
+        localStorage.setItem('lang', lang);
+    };
 
     const grid_template = "'" + data.grid_template.join("' '") + "'"
 
@@ -106,7 +113,7 @@ const TrainerProfile = (data: any) => {
                 <div className='profile__frame profile__info'>
                     <div className='profile__info__header'>
                         <button className='btn-basic-white profile__header__logout' onClick={() => handleLogout()}>
-                            Log out
+                            {t("profile.logout")}
                         </button>
                     </div>
                     <div className='profile__info__avatar'>
@@ -120,16 +127,16 @@ const TrainerProfile = (data: any) => {
                 <div className='profile__frame profile__personal'>
                     <div className='profile__personal__header'>
                         <h3>
-                            Personal information
+                            {t("profile.personal")}
                         </h3>
                         <button className='btn-basic-white profile__personal__edit'>
-                            Edit
+                            {t("profile.edit")}
                         </button>
                     </div>
                     <div className='profile__personal__fields'>
                         <div className='profile__personal__field'>
                             <div className='profile__field__name'>
-                                <h3>E-mail</h3>
+                                <h3>{t("profile.email")}</h3>
                             </div>
                             <div className='profile__field__value'>
                                 <p>{data.email}</p>
@@ -137,7 +144,7 @@ const TrainerProfile = (data: any) => {
                         </div>
                         <div className='profile__personal__field'>
                             <div className='profile__field__name'>
-                                <h3>Gender</h3>
+                                <h3>{t("profile.gender")}</h3>
                             </div>
                             <div className='profile__field__value'>
                                 <p>{data.gender}</p>
@@ -145,7 +152,7 @@ const TrainerProfile = (data: any) => {
                         </div>
                         <div className='profile__personal__field'>
                             <div className='profile__field__name'>
-                                <h3>Age</h3>
+                                <h3>{t("profile.age")}</h3>
                             </div>
                             <div className='profile__field__value'>
                                 <p>{data.age}</p>
@@ -153,7 +160,7 @@ const TrainerProfile = (data: any) => {
                         </div>
                         <div className='profile__personal__field'>
                             <div className='profile__field__name'>
-                                <h3>Profile</h3>
+                                <h3>{t("profile.profile")}</h3>
                             </div>
                             <div className='profile__field__value'>
                                 <p>{data.profile}</p>
@@ -163,7 +170,7 @@ const TrainerProfile = (data: any) => {
                 </div>
                 <div className='profile__frame profile__calendar'>
                     <div className='profile__calendar__date'>
-                        <h3>Today is {data.date}</h3>
+                        <h3>{t("profile.today")} {data.date}</h3>
                     </div>
                     <div className='profile__calendar__option'>
                         <p>{data.calendar_text.text_top}</p>
