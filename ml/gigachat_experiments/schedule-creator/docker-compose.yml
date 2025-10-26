@@ -9,6 +9,6 @@ services:
     ports:
       - "1341:8000"
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - MODEL_ID=${MODEL_ID}
+      - GIGACHAT_CLIENT_ID=${GIGACHAT_CLIENT_ID}
+      - GIGACHAT_CLIENT_SECRET=${GIGACHAT_CLIENT_SECRET}
     restart: unless-stopped

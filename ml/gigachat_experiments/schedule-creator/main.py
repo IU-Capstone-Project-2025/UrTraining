@@ -1,19 +1,12 @@
 import os
 import uvicorn
 import fastapi
-from openai import AsyncOpenAI
 from fastapi.middleware.cors import CORSMiddleware
-
+from gigachat_client import get_gigachat_client
 from models import TrackerAssistantRequest
 from schedule_assistant import TrackerAssistant
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-if not OPENAI_API_KEY:
-    raise ValueError("OPENAI_API_KEY environment variable is not set")
-
-MODEL_ID = os.getenv("MODEL_ID", "google/gemma-7b-it")
-
-client = AsyncOpenAI(api_key=OPENAI_API_KEY, base_url="https://api.together.xyz/v1")
+giga = get_gigachat_client()
 
 app = fastapi.FastAPI()
 app.add_middleware(
@@ -24,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-tracker_instance = TrackerAssistant(client, MODEL_ID)
+tracker_instance = TrackerAssistant(giga, "GigaChat:latest")
 
 @app.get("/")
 async def health_check():

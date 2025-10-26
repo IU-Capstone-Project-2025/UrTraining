@@ -1,5 +1,3 @@
-from openai import AsyncOpenAI
-from openai.types.chat.chat_completion import ChatCompletion
 import logging
 from typing import List, Dict, Any
 import re, json
@@ -11,7 +9,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 class TrackerAssistant:
-    def __init__(self, client: AsyncOpenAI, model: str) -> None:
+    def __init__(self, client, model: str) -> None:
         self.client = client
         self.model = model
 
@@ -62,11 +60,11 @@ class TrackerAssistant:
             },
         ]
 
-        response: ChatCompletion = await self.client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            temperature=0.0
-        )
+        full_prompt = ""
+        for msg in messages:
+            full_prompt += f"{msg['role'].upper()}: {msg['content']}\n"
+
+        response = self.client.chat(full_prompt)
 
         content = response.choices[0].message.content.strip()
         logger.info(f"Generated content: {content}")
