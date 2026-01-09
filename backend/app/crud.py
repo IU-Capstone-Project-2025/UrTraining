@@ -144,17 +144,44 @@ def update_training_profile(db: Session, user_id: int, profile_data: Dict[str, A
 
 # Active Session CRUD operations
 def create_active_session(db: Session, user_id: int, token: str, expires_at: datetime, user_agent: str = None, ip_address: str = None) -> ActiveSession:
-    db_session = ActiveSession(
-        user_id=user_id,
-        token=token,
-        expires_at=expires_at,
-        user_agent=user_agent,
-        ip_address=ip_address
-    )
-    db.add(db_session)
-    db.commit()
-    db.refresh(db_session)
-    return db_session
+    try:
+        db_session = ActiveSession(
+            user_id=user_id,
+            token=token,
+            expires_at=expires_at,
+            user_agent=user_agent,
+            ip_address=ip_address
+        )
+        db.add(db_session)
+        db.commit()
+        db.refresh(db_session)
+        return db_session
+    except IntegrityError as e:
+        db.rollback()
+        
+        # Проверяем, является ли ошибка дублированием токена
+        if "duplicate key value violates unique constraint" in str(e) and "token" in str(e):
+            # Удаляем существующую сессию с таким же токеном
+            existing_session = db.query(ActiveSession).filter(ActiveSession.token == token).first()
+            if existing_session:
+                db.delete(existing_session)
+                db.commit()
+                
+                # Пытаемся создать сессию еще раз
+                db_session = ActiveSession(
+                    user_id=user_id,
+                    token=token,
+                    expires_at=expires_at,
+                    user_agent=user_agent,
+                    ip_address=ip_address
+                )
+                db.add(db_session)
+                db.commit()
+                db.refresh(db_session)
+                return db_session
+        
+        # Если это другая ошибка IntegrityError, пробрасываем дальше
+        raise e
 
 
 def get_active_session(db: Session, token: str) -> Optional[ActiveSession]:
